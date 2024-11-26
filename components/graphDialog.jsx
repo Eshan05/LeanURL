@@ -10,29 +10,48 @@ const AccessGraphDialog = ({ open, setOpen, recentAccesses }) => {
 
     accesses.forEach((access) => {
       const date = new Date(access);
-      const startOfWeek = new Date(date.setDate(date.getDate() - date.getDay())); // Start of the week (Sunday)
 
-      const weekKey = `${startOfWeek.getFullYear()}-W${Math.ceil((startOfWeek.getDate() - 1) / 7)}`;
-      if (!weeks[weekKey]) {
-        weeks[weekKey] = { week: weekKey, count: 0 };
-      }
+      // (Monday)
+      const startOfWeek = new Date(date);
+      startOfWeek.setDate(date.getDate() - date.getDay() + 1);
+
+      const year = startOfWeek.getFullYear();
+      const month = startOfWeek.getMonth();
+      const firstDayOfYear = new Date(year, 0, 1);
+      const dayOfYear = Math.floor((startOfWeek - firstDayOfYear) / (24 * 60 * 60 * 1000));
+      const weekNumber = Math.ceil((dayOfYear + 1) / 7);
+
+      const weekKey = `${year}-W${weekNumber < 10 ? '0' + weekNumber : weekNumber}`;
+
+      if (!weeks[weekKey]) { weeks[weekKey] = { week: weekKey, count: -1 }; }
       weeks[weekKey].count += 1;
     });
 
     // Convert the object to an array and sort by week
-    return Object.values(weeks).sort((a, b) => new Date(a.week) - new Date(b.week));
+    return Object.values(weeks).sort((a, b) => {
+      const [aYear, aWeek] = a.week.split('-W').map(Number);
+      const [bYear, bWeek] = b.week.split('-W').map(Number);
+
+      // Sort by year first, then by week number
+      return aYear === bYear ? aWeek - bWeek : aYear - bYear;
+    });
   };
 
   const weeklyAccesses = groupByWeek(recentAccesses);
+  // console.log(weeklyAccesses); 
+  // console.log('R', recentAccesses); 
+
   // Prepare the data for the graph
   const graphData = {
     series: [
       {
         name: 'Accesses',
-        data: weeklyAccesses.map((weekData) => ({
-          x: weekData.week,
-          y: weekData.count,
-        })),
+        data: weeklyAccesses.map((weekData, index) => {
+          return {
+            x: index + 1,
+            y: weekData.count,
+          };
+        }),
       },
     ],
     options: {
@@ -81,12 +100,12 @@ const AccessGraphDialog = ({ open, setOpen, recentAccesses }) => {
         </DialogHeader>
 
         <section className="h-full p-3 overflow-auto">
-          <div className="w-full mt-3 bg-gray-100 dark:bg-[#0c0e0f] rounded-lg">
+          <div className="w-full mt-3 bg-gray-100 dark:bg-[#0c0e0f] rounded-lg p-1">
             <Chart
               options={graphData.options}
               series={graphData.series}
               type="line"
-              height="350"
+              height="380"
             />
           </div>
         </section>
