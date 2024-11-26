@@ -1,4 +1,3 @@
-import { Trash2 } from "lucide-react";
 import { Button } from "@components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@components/ui/dialog";
 
@@ -8,8 +7,8 @@ export function DeleteUrlDialog({ open, setOpen, urlToDelete, handleDelete }) {
   };
 
   const handleDeleteAndClose = () => {
-    handleDelete(urlToDelete); // Perform the delete action
-    setOpen(false); // Close the dialog after deletion
+    handleDelete(urlToDelete);
+    setOpen(false);
   };
 
   return (

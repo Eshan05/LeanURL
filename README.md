@@ -21,7 +21,7 @@
 
 ## 🍁 Overview
 
-A Link Shortener + QR Code Generator for personal use or use within a small team. Fast, reliable and visually appealing UI. Scales and supports tons of extra features like scheduled live links, expiration dates and more easily integrable. Features an admin dashboard with everything you need
+A Link Shortener + QR Code Generator for personal use or use within a small team. Fast, reliable and with a visually appealing UI. Scales and supports tons of extra features like scheduled live links, expiration dates and more easily integrable. Features an admin dashboard with everything you need.
 
 ### 💻 Technolgoies
 
@@ -81,3 +81,4 @@ npm run dev
 
 - See LICENSE (GPLv3)
 - Feel free to raise issues if you notice anything wrong
+- [Hero section](https://shadcn-ui-blocks.vercel.app/blocks/hero-sections) 
