@@ -68,7 +68,7 @@ const SearchUrls = () => {
       <CommandInput
         placeholder="Search for a link..."
         onChange={handleSearchChange}
-        className="z-10 px-4 pb-2"
+        className="px-4 pb-2 "
       />
       <CommandList className="px-2 py-4">
         {urls.length === 0 ? (
