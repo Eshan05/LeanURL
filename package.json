@@ -1,0 +1,49 @@
+{
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-slot": "^1.1.0",
+    "apexcharts": "^4.1.0",
+    "axios": "^1.7.8",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "cmdk": "1.0.0",
+    "json2csv": "6.0.0-alpha.2",
+    "lucide-react": "^0.460.0",
+    "mongoose": "^8.8.2",
+    "mongoose-sequence": "^6.0.1",
+    "next": "^15.0.3",
+    "next-themes": "^0.4.3",
+    "qrcode.react": "^4.1.0",
+    "react": "^18.3.1",
+    "react-apexcharts": "^1.6.0",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
+    "sonner": "^1.7.0",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "name": "qr-code-generator",
+  "version": "1.0.0",
+  "description": "This is a repository to be used by us to shorten URLs",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "22.9.3",
+    "@types/react": "18.3.12",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "5.7.2"
+  }
+}
