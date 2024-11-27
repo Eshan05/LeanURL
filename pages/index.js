@@ -1,6 +1,7 @@
+import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react';
-import { ChartArea, Check, Copy, Github, HomeIcon, Link, Share } from 'lucide-react';
+import { ChartArea, Check, Copy, Github, HomeIcon, Share, LinkIcon, Trash2Icon, SearchIcon, Command } from 'lucide-react';
 
 import { Nav } from '../components/nav'
 import { Input } from '../components/ui/input'
@@ -8,11 +9,7 @@ import { Button } from '../components/ui/button'
 import { toast } from 'sonner';
 import { ImageDown } from 'lucide-react';
 import SearchUrls from '@components/searchURL';
-import { Command } from 'lucide-react';
 import { GradientTop } from '@components/gradientTop';
-import { LinkIcon } from 'lucide-react';
-import { Trash2Icon } from 'lucide-react';
-import { SearchIcon } from 'lucide-react';
 
 export default function Home() {
   const [originalUrl, setOriginalUrl] = useState('');
@@ -79,8 +76,8 @@ export default function Home() {
   const BASE_URL = process.env.BASE_URL || originalUrl;
   const generateQRCodeValue = (url) => {
     if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
-      if (process.env.BASE_URL == '') return `http://${BASE_URL}`;
-      else return `${url}`;
+      if (process.env.BASE_URL == '') return `https://${BASE_URL}`;
+      else return `http://${url}`;
     }
     return url;
   };
@@ -309,9 +306,9 @@ export default function Home() {
                 <div className='flex flex-col items-center justify-center gap-4'>
                   <header className='relative flex flex-col items-center justify-center gap-2 mt-6 mb-2 w-max'>
                     <h2 className='absolute -top-[20%] font-mono pe-2 ps-2 bg-[#fafafa] dark:bg-[#09090b] font-light text-md text-muted-foreground small-caps'>Short url</h2>
-                    <a href={shortenUrl}
+                    <a href={generateQRCodeValue(shortenUrl)}
                       target="_blank" rel="noopener noreferrer"
-                      className='inline-block px-6 py-4 font-mono border rounded-lg text-primary hover:underline'
+                      className='z-10 inline-block px-6 py-4 font-mono border rounded-lg text-primary hover:underline'
                     >{shortenUrl}</a>
                   </header>
                   <footer className='p-3 bg-white rounded-lg shadow' ref={qrCodeRef}>
