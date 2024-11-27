@@ -3,7 +3,16 @@ import mongoose from 'mongoose';
 const BASE_URL = process.env.BASE_URL || 'http://';
 const AccessSchema = new mongoose.Schema({
   count: { type: Number, default: 0 },
-  lastAccessed: { type: [Date], default: [] },
+  lastAccessed: {
+    type: [
+      {
+        date: { type: Date, default: Date.now },
+        userAgent: { type: String, default: 'Unknown' },
+        referrer: { type: String, default: 'Unknown' },
+      }
+    ],
+    default: []
+  },
 });
 
 const URLSchema = new mongoose.Schema(
@@ -33,7 +42,7 @@ const URLSchema = new mongoose.Schema(
       type: AccessSchema,
       default: () => ({
         count: 0,
-        lastAccessed: [new Date()],
+        lastAccessed: [],
       }),
     },
     expirationDate: {

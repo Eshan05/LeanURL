@@ -3,13 +3,15 @@ import Url from '../models/url';
 
 export async function getServerSideProps(context) {
   const { shortUrl } = context.params;
+  const { req } = context;
   await dbConnect();
 
   try {
     // Query
     const urlDocument = await Url.findOne({ shortenUrl: shortUrl });
     if (urlDocument) {
-      if (!urlDocument.isActive) {
+      if (urlDocument.isActive) {
+        console.log('URL is not active');
         return {
           notFound: true,
           // redirect: {
@@ -18,18 +20,27 @@ export async function getServerSideProps(context) {
           // }
         };
       }
+
       const currentTime = new Date();
+      const userAgent = req.headers['user-agent'] || 'Unknown';
+      const referrer = req.headers['referer'] || 'Direct';
+
       await Url.updateOne(
         { shortenUrl: shortUrl },
         {
           $inc: { 'accesses.count': 1 },
           $push: {
             'accesses.lastAccessed': {
-              $each: [currentTime],
+              $each: [{
+                date: currentTime,
+                userAgent: userAgent,
+                referrer: referrer,
+              }],
               $slice: -100,
             },
-          }
-        }
+          },
+        },
+        { upsert: true }
       );
 
       // if (!urlDocument.accesses) {

@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     const now = new Date();
 
     // If there is a scheduledDate and it's in the past, set isActive to false
-    if (scheduled && scheduled <= now) {
+    if (scheduled || scheduled <= now) {
       isActive = false;
     }
 

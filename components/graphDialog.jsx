@@ -5,11 +5,12 @@ import dynamic from 'next/dynamic';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const AccessGraphDialog = ({ open, setOpen, recentAccesses }) => {
+  // console.log('Recent Accesses', recentAccesses);
   const groupByWeek = (accesses) => {
     const weeks = {};
 
     accesses.forEach((access) => {
-      const date = new Date(access);
+      const date = new Date(access.date);
 
       // (Monday)
       const startOfWeek = new Date(date);
@@ -38,8 +39,7 @@ const AccessGraphDialog = ({ open, setOpen, recentAccesses }) => {
   };
 
   const weeklyAccesses = groupByWeek(recentAccesses);
-  // console.log(weeklyAccesses); 
-  // console.log('R', recentAccesses); 
+  // console.log('Weekly Access', weeklyAccesses);
 
   // Prepare the data for the graph
   const graphData = {

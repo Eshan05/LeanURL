@@ -101,7 +101,7 @@ const QRCodeDialog = ({ open, setOpen, shortenUrl }) => {
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={downloadQRCode} className="my-2">
+          <Button variant="outline" onClick={downloadQRCode} className="my-2 sm:my-0">
             Download QR Code
           </Button>
           <DialogClose asChild>
