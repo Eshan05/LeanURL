@@ -1,16 +1,16 @@
-import dbConnect from "../../utils/db"; // Import the database connection utility
+import dbConnect from "../../utils/db";
+import Url from '../../models/url';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { passcode } = req.body;
     try {
       await dbConnect();
-
-      const { db } = await dbConnect();
-      const url = await db.collection('urls').findOne({ q: passcode });
+      const url = await Url.findOne({ q: passcode });
 
       if (url) {
-        res.setHeader('Set-Cookie', 'authenticated=true; Path=/; Max-Age=86400; HttpOnly; Secure; SameSite=Strict');
+        res.setHeader('Set-Cookie', 'authenticated=true; Path=/; Max-Age=3600; SameSite=Strict');
+        // res.setHeader('Set-Cookie', 'authenticated=true; Path=/; Max-Age=86400; HttpOnly; Secure; SameSite=Strict');
 
         return res.status(200).json({ message: 'Authenticated successfully' });
       } else {

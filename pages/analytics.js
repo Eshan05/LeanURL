@@ -33,24 +33,10 @@ export default function Analytics() {
   const [openGraphDialog, setOpenGraphDialog] = useState(false);
   const [sortOption, setSortOption] = useState('dateAsc')
 
+  const inputRef = useRef(null);;
   const router = useRouter();
   const { query } = router;
   const [authenticated, setAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const cookies = document.cookie.split('; ');
-    const authCookie = cookies.find(cookie => cookie.startsWith('authenticated='));
-
-    if (authCookie && authCookie.split('=')[1] === 'true') {
-      setAuthenticated(true);
-    } else {
-      router.push('/');
-    }
-  }, [router]);
-
-  if (!authenticated) {
-    return null;
-  }
 
   const addDuplicateCounts = (urls) => {
     const urlCountMap = urls.reduce((acc, url) => {
@@ -78,6 +64,18 @@ export default function Analytics() {
   useEffect(() => {
     fetchUrls();
   }, []);
+
+  useEffect(() => {
+    const handleShortcut = (e) => {
+      if (e.altKey && e.key === 'l') {
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleShortcut);
+    return () => {
+      window.removeEventListener('keydown', handleShortcut);
+    };
+  }, [])
 
   const refreshData = () => {
     fetchUrls();
@@ -164,18 +162,6 @@ export default function Analytics() {
     }
   };
 
-  const inputRef = useRef(null);
-  useEffect(() => {
-    const handleShortcut = (e) => {
-      if (e.altKey && e.key === 'l') {
-        inputRef.current?.focus();
-      }
-    };
-    window.addEventListener('keydown', handleShortcut);
-    return () => {
-      window.removeEventListener('keydown', handleShortcut);
-    };
-  }, []);
 
   const downloadCSV = async () => {
     try {
@@ -245,6 +231,21 @@ export default function Analytics() {
     url.shortenUrl.toLowerCase().includes(searchTerm.toLowerCase()) ||
     url.originalUrl.toLowerCase().includes(searchTerm.toLowerCase())
   ));
+
+  useEffect(() => {
+    const cookies = document.cookie.split('; ');
+    const authCookie = cookies.find(cookie => cookie.startsWith('authenticated='));
+
+    if (authCookie && authCookie.split('=')[1] === 'true') {
+      setAuthenticated(true);
+    } else {
+      router.push('/');
+    }
+  }, [router]);
+
+  if (!authenticated) {
+    return null;
+  }
 
   return (
     <main className="relative overflow-x-hidden flex flex-col items-center justify-center h-screen font-inter min-h-svh bg-zinc-50 dark:bg-[#09090b]">

@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 
+import { Input } from "@components/ui/input";
+import { Button } from "@components/ui/button";
+import { ThemeToggle } from "@components/themeToggle";
+
 export default function Home() {
   const [passcode, setPasscode] = useState("");
   const [error, setError] = useState("");
@@ -26,18 +30,22 @@ export default function Home() {
   };
 
   return (
-    <div>
-      <h1>Enter Passcode</h1>
-      <form onSubmit={handleSubmit}>
-        <input
+    <maim className="flex flex-col items-center justify-center h-screen">
+      <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4">
+        <h1 className="text-2xl font-bold">Hello :)</h1>
+        <Input
           type="text"
           value={passcode}
           onChange={(e) => setPasscode(e.target.value)}
           placeholder="Enter passcode"
+          className="text-base"
         />
-        <button type="submit">Submit</button>
+        <section className="flex space-x-3">
+          <Button type="submit" className="text-sm" variant="outline">Submit</Button>
+          <Button className="text-sm" variant="secondary"><ThemeToggle /></Button>
+        </section>
       </form>
       {error && <p>{error}</p>}
-    </div>
+    </maim>
   );
 }
