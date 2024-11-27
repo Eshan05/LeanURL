@@ -73,7 +73,7 @@ const QRCodeDialog = ({ open, setOpen, shortenUrl }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="max-w-[90%] sm:max-w-md">
         <DialogHeader>
           <DialogTitle className='flex space-x-2'>QR Code</DialogTitle>
         </DialogHeader>
@@ -101,7 +101,7 @@ const QRCodeDialog = ({ open, setOpen, shortenUrl }) => {
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={downloadQRCode}>
+          <Button variant="outline" onClick={downloadQRCode} className="my-2">
             Download QR Code
           </Button>
           <DialogClose asChild>

@@ -14,22 +14,23 @@ import QRCodeDialog from "@components/qrcodeDialog";
 import RecentAccessesDialog from "@components/recentAccesses";
 import AccessGraphDialog from "@components/graphDialog";
 import { GradientTop } from '@components/gradientTop';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@components/ui/select';
 
 export default function Analytics() {
   const [urls, setUrls] = useState([]);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [clickedButton, setClickedButton] = useState(null);
   const [copiedUrl, setCopiedUrl] = useState(null);
   const [open, setOpen] = useState(false);
   const [urlToDelete, setUrlToDelete] = useState(null);
-  const [openEdit, setOpenEdit] = useState(false);
   const [urlToEdit, setUrlToEdit] = useState(null);
-  const [openQR, setOpenQR] = useState(false);
   const [urlToQRCode, setUrlToQRCode] = useState(null);
-  const [openRecents, setOpenRecents] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openQR, setOpenQR] = useState(false);
+  const [openRecents, setOpenRecents] = useState(false);
   const [openGraphDialog, setOpenGraphDialog] = useState(false);
+  const [sortOption, setSortOption] = useState('dateAsc')
 
   const router = useRouter();
   const { query } = router;
@@ -108,14 +109,6 @@ export default function Analytics() {
     }
   };
 
-  const handleClick = (buttonName, action = () => { }) => {
-    action();
-    setClickedButton(buttonName);
-    setTimeout(() => {
-      setClickedButton(null);
-    }, 1000);
-  };
-
   const handleClickQRCode = (shortenUrl) => {
     setUrlToQRCode(shortenUrl);
     setOpenQR(true);
@@ -140,11 +133,6 @@ export default function Analytics() {
       setOpenGraphDialog(false);
     }
   };
-
-  const filteredUrls = urls.filter((url) =>
-    url.shortenUrl.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    url.originalUrl.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const inputRef = useRef(null);
   useEffect(() => {
@@ -204,6 +192,26 @@ export default function Analytics() {
     }, 500);
   }, [query.id]);
 
+  const sortUrls = (urls) => {
+    switch (sortOption) {
+      case 'dateAsc':
+        return [...urls].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      case 'dateDesc':
+        return [...urls].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      case 'clicksAsc':
+        return [...urls].sort((a, b) => a.accesses.count - b.accesses.count);
+      case 'clicksDesc':
+        return [...urls].sort((a, b) => b.accesses.count - a.accesses.count);
+      default:
+        return urls;
+    }
+  };
+
+  const filteredUrls = sortUrls(urls.filter((url) =>
+    url.shortenUrl.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    url.originalUrl.toLowerCase().includes(searchTerm.toLowerCase())
+  ));
+
   return (
     <main className="relative overflow-x-hidden flex flex-col items-center justify-center h-screen font-inter min-h-svh bg-zinc-50 dark:bg-[#09090b]">
       <div className='relative'>
@@ -212,20 +220,22 @@ export default function Analytics() {
       <Nav />
 
       <div className="relative w-full py-24 overflow-x-hidden">
-        <div className="container py-10 mx-auto lg:py-16">
-
+        <div className="w-full px-[1.15rem] py-10 mx-auto lg:px-8 lg:py-16">
+          <p className='mb-2 font-mono text-center small-caps'>LeanURL</p>
           <header className="relative flex flex-col items-center justify-center w-full mb-10 space-y-10 overflow-hidden">
-            <Button variant="outline" className="-mb-8 group" onClick={downloadCSV}>
-              <Database className="w-4 h-4 mr-2 group-hover:animate-pulse" /> Export as CSV
-            </Button>
-            <Button variant="outline" className="-mb-5 group" onClick={refreshData}>
-              <RefreshCcw className="w-4 h-4 mr-2 group-hover:animate-spin" /> Refresh Data
-            </Button>
             <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl">
               Analytics
             </h1>
             {/* <SearchUrls /> */}
             {/* //! Make this work somehow */}
+            <div className='flex space-x-2'>
+              <Button variant="outline" className="-mb-8 group" onClick={downloadCSV}>
+                <Database className="w-4 h-4 mr-2 group-hover:animate-pulse" /> Export as CSV
+              </Button>
+              <Button variant="outline" className="-mb-5 group" onClick={refreshData}>
+                <RefreshCcw className="w-4 h-4 mr-2 group-hover:animate-spin" /> Refresh Data
+              </Button>
+            </div>
             <section className="flex items-center p-2 border rounded-lg dark:bg-[#0c0e0f] bg-white">
               <Input
                 ref={inputRef}
@@ -243,6 +253,23 @@ export default function Analytics() {
             </section>
           </header>
           {error && <p style={{ color: 'red' }}>{error}</p>}
+          <section className="flex items-center my-4 ml-4 space-x-4">
+            <Select value={sortOption} onValueChange={setSortOption}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Sort Options</SelectLabel>
+                  <SelectItem value="dateAsc">Date (Ascending)</SelectItem>
+                  <SelectItem value="dateDesc">Date (Descending)</SelectItem>
+                  <SelectItem value="clicksAsc">Clicks (Ascending)</SelectItem>
+                  <SelectItem value="clicksDesc">Clicks (Descending)</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </section>
+
           {urls.length > 0 ? (
             <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {filteredUrls.map((url) => {
@@ -267,9 +294,8 @@ export default function Analytics() {
 
                           <img
                             src={`http://www.google.com/s2/favicons?sz=64&domain=${url.originalUrl}`}
-                            width="35" height="35"
                             alt="L"
-                            className='block rounded aspect-square'
+                            className='block rounded !aspect-square h-10'
                             loading='lazy'
                           />
                         </aside>
@@ -279,7 +305,7 @@ export default function Analytics() {
                           <ExternalLink className="w-5 h-5" />
                           <a href={url.originalUrl}
                             target="_blank" rel="noopener noreferrer"
-                            className='inline-block px-3 py-1.5 font-mono border rounded-lg text-primary hover:underline overflow-x-auto max-w-[150px] scrollbar-none whitespace-nowrap'
+                            className='inline-block px-3 py-1.5 font-mono border rounded-lg text-primary hover:underline overflow-x-auto max-w-[128px] scrollbar-none whitespace-nowrap'
                           >{url.originalUrl}</a>
                         </main>
                         <aside className="flex gap-2">
@@ -288,7 +314,7 @@ export default function Analytics() {
                               <Trash2 className="text-red-400" />
                             </span>
                           </Button>
-                          <Button type="button" variant="outline" onClick={() => { console.log(url); setUrlToEdit(url); setOpenEdit(true) }}>
+                          <Button type="button" variant="outline" onClick={() => { setUrlToEdit(url); setOpenEdit(true) }}>
                             <span className="flex w-4 aspect-square">
                               <Pencil className="text-yellow-600 dark:text-yellow-400" />
                             </span>
@@ -297,18 +323,18 @@ export default function Analytics() {
                       </h2>
                     </header>
                     <section className="flex justify-between gap-2">
-                      <article className="flex flex-col my-4 space-y-1 text-sm *:flex *:items-center *:space-x-2">
+                      <article className="flex flex-col my-4 space-y-1 text-sm *:flex *:items-center *:space-x-2 *:truncate">
                         <span className=""><Calendar className="w-4 h-4" /> <span className="text-muted-foreground">{new Date(url.createdAt).toLocaleString()}</span></span>
                         <span className=""><Pencil className="w-4 h-4" /> <span className="text-muted-foreground">{new Date(url.updatedAt).toLocaleString()}</span></span>
                         <span className=""><MousePointerClick className="w-4 h-4" /> <span className="text-muted-foreground">Clicks: {url.accesses.count}</span></span>
                       </article>
                       <aside className="flex flex-col items-end space-y-2">
-                        <Button type="button" className="mt-2" variant="outline" onClick={() => handleShowRecents(url)}>
+                        <Button type="button" className="mt-1" variant="outline" onClick={() => handleShowRecents(url)}>
                           <span className="flex">
                             Recents
                           </span>
                         </Button>
-                        <div className='flex items-center mt-2 space-x-2'>
+                        <div className='flex items-center gap-2 mt-2'>
                           <Button type="button" variant="outline" onClick={() => handleClickQRCode(url.shortenUrl)}>
                             <span className="flex w-4 aspect-square">
                               <QrCode className="text-gray-600 dark:text-gray-400" />
