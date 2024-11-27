@@ -20,7 +20,6 @@ const URLSchema = new mongoose.Schema(
   {
     originalUrl: {
       type: String,
-      unique: true,
       required: true,
       set(value) {
         // If no protocol is provided, prepend http://

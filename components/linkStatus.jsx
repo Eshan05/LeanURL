@@ -1,3 +1,5 @@
+import { PiStackDuotone } from "react-icons/pi"
+
 export const URLStatus = ({ url }) => {
   return (
     <section className="flex justify-between gap-2">
@@ -21,7 +23,9 @@ export const URLStatus = ({ url }) => {
           }
         </span>
       </article>
-      <aside>
+      <aside className="mt-2">
+        {url.duplicateCount > 1 && (
+          <span title="Duplicate count" className="flex flex-row items-center space-x-2"><PiStackDuotone className="w-5 h-5" /><span>{url.duplicateCount}</span></span>)}
       </aside>
     </section>
   )

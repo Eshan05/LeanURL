@@ -13,9 +13,9 @@ export default async function handler(req, res) {
   await dbConnect();
   try {
     const existingUrl = await Url.findOne({ originalUrl });
-    if (existingUrl) {
-      return res.status(400).json({ message: 'This URL has already been shortened' });
-    }
+    // if (existingUrl) {
+    //   return res.status(400).json({ message: 'This URL has already been shortened' });
+    // }
 
     // Check if alias already exists (Only if alias is provided)
     if (alias) {

@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     await dbConnect();
 
     if (req.method === 'GET') {
-      const urls = await Url.find({});
+      const urls = await Url.find({ q: { $exists: false } });
       return res.status(200).json(urls);
     }
 
