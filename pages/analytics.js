@@ -14,7 +14,8 @@ import QRCodeDialog from "@components/qrcodeDialog";
 import RecentAccessesDialog from "@components/recentAccesses";
 import AccessGraphDialog from "@components/graphDialog";
 import { GradientTop } from '@components/gradientTop';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@components/ui/select';
+import { URLStatus } from '@components/linkStatus';
+import SortSelect from '@components/analyticsSort';
 
 export default function Analytics() {
   const [urls, setUrls] = useState([]);
@@ -254,20 +255,7 @@ export default function Analytics() {
           </header>
           {error && <p style={{ color: 'red' }}>{error}</p>}
           <section className="flex items-center my-4 ml-4 space-x-4">
-            <Select value={sortOption} onValueChange={setSortOption}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Sort Options</SelectLabel>
-                  <SelectItem value="dateAsc">Date (Ascending)</SelectItem>
-                  <SelectItem value="dateDesc">Date (Descending)</SelectItem>
-                  <SelectItem value="clicksAsc">Clicks (Ascending)</SelectItem>
-                  <SelectItem value="clicksDesc">Clicks (Descending)</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <SortSelect sortOption={sortOption} onSortChange={setSortOption} />
           </section>
 
           {urls.length > 0 ? (
@@ -348,30 +336,7 @@ export default function Analytics() {
                         </div>
                       </aside>
                     </section>
-                    <section className="flex justify-between gap-2">
-                      <article className="flex flex-col mb-4 mt-2 space-y-1 text-sm *:flex *:items-center *:space-x-2">
-                        <span className="">
-                          {
-                            new Date(url.expirationDate) < new Date()
-                              ? <span className='px-2 py-.5 font-bold rounded-lg bg-red-400/20 small-caps text-red-500/80'>Expired</span>
-                              : <span><b>Expiration: </b> <span className="text-muted-foreground">
-                                {isNaN(new Date(url.expirationDate).getTime())
-                                  ? "Not set"
-                                  : new Date(url.expirationDate).toLocaleString()}</span>
-                              </span>
-                          }
-                        </span>
-                        <span className="">
-                          {
-                            new Date(url.scheduledDate) <= new Date()
-                              ? <span className='px-2 py-.5 mt-1 font-bold rounded-lg bg-green-400/20 small-caps text-green-500/80'>Live</span>
-                              : <span><b>Scheduled: </b><span class="text-muted-foreground">{new Date(url.scheduledDate).toLocaleString()}</span></span>
-                          }
-                        </span>
-                      </article>
-                      <aside>
-                      </aside>
-                    </section>
+                    <URLStatus url={url} />
                   </li>
                 )
               })}
