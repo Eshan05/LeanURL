@@ -10,7 +10,6 @@ export const ThemeToggle = () => {
     return false;
   });
 
-
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add("dark");
@@ -21,11 +20,20 @@ export const ThemeToggle = () => {
     }
   }, [isDarkMode]);
 
-
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+    const handleShortcut = (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === "m") {
+        setIsDarkMode((prev) => !prev);
+      }
+    };
+
+    window.addEventListener("keydown", handleShortcut);
+    return () => {
+      window.removeEventListener("keydown", handleShortcut);
+    };
   }, []);
 
   if (!isClient) return null;

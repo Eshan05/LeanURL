@@ -10,6 +10,9 @@ import { ImageDown } from 'lucide-react';
 import SearchUrls from '@components/searchURL';
 import { Command } from 'lucide-react';
 import { GradientTop } from '@components/gradientTop';
+import { LinkIcon } from 'lucide-react';
+import { Trash2Icon } from 'lucide-react';
+import { SearchIcon } from 'lucide-react';
 
 export default function Home() {
   const [originalUrl, setOriginalUrl] = useState('');
@@ -111,6 +114,14 @@ export default function Home() {
     setError('');
   };
 
+  const handleSearchMobile = () => {
+    const event = new KeyboardEvent('keydown', {
+      key: 'k',
+      metaKey: true,
+    });
+    document.dispatchEvent(event);
+  }
+
   const downloadQRCode = () => {
     if (qrCodeRef.current) {
       const svgElement = qrCodeRef.current.querySelector('svg');
@@ -165,7 +176,7 @@ export default function Home() {
             <article className="max-w-2xl mt-5">
               <p className="text-base lg:text-lg text-muted-foreground">
                 Enter your link below. In case you want to<br className='md:hidden' /> see analytics or manage links
-                head over to the <a href='/analytics' className='hover:underline hover:text-blue-500'><span>analytics page</span><Link className='inline-block w-6 ps-1 pe-1 aspect-square' /></a>.<br className='md:hidden' /> Each link can only be shortened once <span className='hidden lg:inline-flex'>(Press <kbd className="inline-flex items-center p-1 ml-2 mr-2 font-mono text-xs bg-gray-100 rounded ring-1 ring-gray-900/10 dark:bg-zinc-800 dark:ring-gray-900/50 dark:text-zinc-300 whitespace-nowrap">
+                head over to the <a href='/analytics' className='hover:underline hover:text-blue-500'><span>analytics page</span><LinkIcon className='inline-block w-6 ps-1 pe-1 aspect-square' /></a><br className='md:hidden' /> Each link can only be shortened once <span className='hidden lg:inline-flex'>(Press <kbd className="inline-flex items-center p-1 ml-2 mr-2 font-mono text-xs bg-gray-100 rounded ring-1 ring-gray-900/10 dark:bg-zinc-800 dark:ring-gray-900/50 dark:text-zinc-300 whitespace-nowrap">
                   <Command className="inline-block w-3 h-3" /><span className="text-[.25rem]">&nbsp;</span>+<span className="text-[.25rem]">&nbsp;</span>K
                 </kbd> to see all URLs).</span>
               </p>
@@ -202,10 +213,22 @@ export default function Home() {
                 <Button
                   tabIndex={2}
                   type="button"
-                  className="flex flex-1 w-max"
+                  className="flex-1 hidden lg:flex w-max"
                   onClick={() => handleClick("clear", handleClear)}
                 >
                   {clickedButton === "clear" ? <Check /> : "Clear"}
+                </Button>
+                <Button
+                  tabIndex={2}
+                  type="button"
+                  className="flex lg:hidden w-max"
+                >
+                  <span
+                    className="flex w-4 aspect-square"
+                    onClick={() => handleClick("clear", handleClear)}
+                  >
+                    {clickedButton === "clear" ? <Check /> : <Trash2Icon />}
+                  </span>
                 </Button>
                 <Button type="button" tabIndex={2} variant="outline">
                   <span
@@ -225,10 +248,15 @@ export default function Home() {
                     {clickedButton === "share" ? <Check /> : <ImageDown />}
                   </span>
                 </Button>
-                <Button type="button" variant="outline">
+                <Button type="button" variant="outline" className="hidden lg:block">
                   <a className="flex w-4 aspect-square"
-                    href="https://github.com/Eshan05">
+                    href="https://github.com/Eshan05/LeanURL">
                     <Github /></a>
+                </Button>
+                <Button type="button" variant="outline" className="flex lg:hidden" onClick={handleSearchMobile}>
+                  <span className="flex w-4 aspect-square">
+                    <SearchIcon />
+                  </span>
                 </Button>
               </footer>
               <section className='flex flex-col justify-start items-start gap-3 mt-2 md:flex-row *:flex-1 p-2 md:mx-6 mx-10'>
