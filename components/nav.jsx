@@ -10,7 +10,7 @@ export const Nav = () => {
       <h2 className='font-bold '> short.en </h2>
       <section className='flex space-x-4'>
         <ThemeToggle />
-        <a href='/' className='hover:text-blue-500'><HomeIcon className="w-5 h-5" /></a>
+        <a href='/share' className='hover:text-blue-500'><HomeIcon className="w-5 h-5" /></a>
         <a href='/analytics' className='hover:text-blue-500'><ChartArea className="w-5 h-5" /></a>
       </section>
     </nav>

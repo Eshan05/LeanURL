@@ -4,18 +4,8 @@ import { useEffect, useState, useRef } from "react";
 import { ChartSpline, Copy, Check, Mouse, Trash2, ImageDown, MousePointerClick, Database } from "lucide-react";
 import { QrCode, Calendar, Pencil, Link, ExternalLink, RefreshCcw } from "lucide-react";
 
-import { Nav } from "@components/nav";
-import { Input } from "@components/ui/input";
-import { Button } from "@components/ui/button";
 import { toast } from "sonner";
-import { DeleteUrlDialog } from "@components/deleteUrl";
-import { EditUrlDialog } from "@components/editUrl";
-import QRCodeDialog from "@components/qrcodeDialog";
-import RecentAccessesDialog from "@components/recentAccesses";
-import AccessGraphDialog from "@components/graphDialog";
-import { GradientTop } from '@components/gradientTop';
-import { URLStatus } from '@components/linkStatus';
-import SortSelect from '@components/analyticsSort';
+import { Nav, Input, Button, SortSelect, URLStatus, GradientTop, DeleteUrlDialog, EditUrlDialog, QRCodeDialog, RecentAccessesDialog, AccessGraphDialog } from "@components/index";
 
 export default function Analytics() {
   const [urls, setUrls] = useState([]);

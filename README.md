@@ -30,24 +30,26 @@ A Link Shortener + QR Code Generator for personal use or use within a small team
 - **Language**: Javascript
 - **Backend**: [Next.js 15](https://nextjs.org/) + [MongoDB](https://www.mongodb.com/) with Mongoose
 - **Frontend**: [Next.js 15](https://nextjs.org/) + UI Components via [`shadcn/ui`](https://ui.shadcn.com/) + Tailwind
-- **Others**: [Apexcharts](https://apexcharts.com/), [QRCode.React](https://www.npmjs.com/package/qrcode.react), NanoId
+- **Others**: [Apexcharts](https://apexcharts.com/), [QRCode.React](https://www.npmjs.com/package/qrcode.react), NanoId, IP-API, React Icons, Axios
 
 ## 🚀 Features
 
 - 🔗 **Shorten any link** and generate a corresponding **QR code** (with custom image). You can also assign a **custom alias** if needed.
 - 📋 **Quickly copy** the shortened URL or **export the QR code** as a `PNG` file.
 - 🌙 **Toggle between light mode and dark mode** for a personalized viewing experience.
-- 🖥️ **Admin dashboard** that provides all the necessary operations to manage links, view detailed information for each, and export all data as a **CSV**.
+- 🖥️ **Admin dashboard** that provides all the necessary operations to manage links, filter links, view detailed information for each, and export all data as a **CSV**.
 - 🎨 **Beautiful UI elements** designed using **Tailwind CSS** and `ChadCN`, along with icons from **Lucide**.
-- 📈 **Insightful graphs** powered by **ApexCharts**, showing detailed analytics such as the number of times a shortened URL has been used, as well as recent accesses via timestamps.
+- 📈 **Insightful graphs** powered by **ApexCharts**, showing detailed analytics such as the number of times a shortened URL has been used, as well as recent accesses via timestamps, device, browser and country.
 - 📅 **Scheduling feature** for setting link live after a certain day and **Expiration Date** which automatically deletes the link from the database using **TTL**.
 - 🏗️ **Scalable** architecture to easily add new features as needed.
+- 🔒 ** Restrictive** access, because who would want someone to come and abuse the service
 
 
 ## 🤝 Usage 
 
 1. IN home page simply put in link and fill extra fields if need be and you're good to go
 2. Then in admin dashboard you can perform various operations which you can see in the screenshots below
+3. For the authorization part just simply go to Mongo and manually insert a document with field `q` and value of the secret code in the same collection as the URLs.
 
 ## ⚙️ Setup
 
