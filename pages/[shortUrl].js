@@ -1,5 +1,24 @@
 import dbConnect from '../utils/db';
 import Url from '../models/url';
+import axios from 'axios';
+
+const getClientIp = (req) => {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) {
+    return forwarded.split(',')[0];
+  }
+  return req.connection.remoteAddress || req.socket.remoteAddress;
+};
+
+const getCountryByIp = async (ip) => {
+  try {
+    const response = await axios.get(`http://ip-api.com/json/`);
+    return response.data.country || 'Unknown';
+  } catch (error) {
+    console.error('Error fetching country:', error);
+    return 'Unknown';
+  }
+};
 
 export async function getServerSideProps(context) {
   const { shortUrl } = context.params;
@@ -10,7 +29,7 @@ export async function getServerSideProps(context) {
     // Query
     const urlDocument = await Url.findOne({ shortenUrl: shortUrl });
     if (urlDocument) {
-      if (urlDocument.isActive) {
+      if (urlDocument.isActive == false) {
         console.log('URL is not active');
         return {
           notFound: true,
@@ -21,9 +40,11 @@ export async function getServerSideProps(context) {
         };
       }
 
+      const clientIp = getClientIp(req);
       const currentTime = new Date();
       const userAgent = req.headers['user-agent'] || 'Unknown';
       const referrer = req.headers['referer'] || 'Direct';
+      const country = await getCountryByIp(clientIp);
 
       await Url.updateOne(
         { shortenUrl: shortUrl },
@@ -35,6 +56,7 @@ export async function getServerSideProps(context) {
                 date: currentTime,
                 userAgent: userAgent,
                 referrer: referrer,
+                country: country,
               }],
               $slice: -100,
             },
@@ -43,20 +65,9 @@ export async function getServerSideProps(context) {
         { upsert: true }
       );
 
-      // if (!urlDocument.accesses) {
-      //   urlDocument.accesses = { count: 0, lastAccessed: [] };
-      //   console.log('no accesses');
-      // }
-
-      // urlDocument.accesses.count += 1;
-      // urlDocument.accesses.lastAccessed.push(currentTime);
-      // if (urlDocument.accesses.lastAccessed.length > 100)
-      //   urlDocument.accesses.lastAccessed.shift();
-      // await urlDocument.save();
-
       let originalUrl = urlDocument.originalUrl;
       if (!/^https?:\/\//i.test(originalUrl)) {
-        originalUrl = `http://${originalUrl}`;  // Prepend http:// if missing
+        originalUrl = `https://${originalUrl}`;  // Prepend http:// if missing
       }
 
       return {

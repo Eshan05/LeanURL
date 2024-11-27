@@ -9,6 +9,7 @@ const AccessSchema = new mongoose.Schema({
         date: { type: Date, default: Date.now },
         userAgent: { type: String, default: 'Unknown' },
         referrer: { type: String, default: 'Unknown' },
+        country: { type: String, default: 'Unknown' },
       }
     ],
     default: []
