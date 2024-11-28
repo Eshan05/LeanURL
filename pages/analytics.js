@@ -7,19 +7,26 @@ import { QrCode, Calendar, Pencil, Link, ExternalLink, RefreshCcw, ChartSpline, 
 import { useHandleDialogs } from '../hooks/useHandleDialogs';
 import { downloadCSV } from '@utils/utils';
 import { useAuthen } from '@hooks/useAuthen';
+import { Checkbox } from '@components/ui/checkbox';
 
 export default function Analytics() {
+  const router = useRouter();
+  const { query } = router;
+  const { dialogs, openDialog, closeDialog } = useHandleDialogs();
+  const authenticated = useAuthen();
+
   const [urls, setUrls] = useState([]);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedUrl, setCopiedUrl] = useState(null);
   const [sortOption, setSortOption] = useState('dateAsc')
-  const { dialogs, openDialog, closeDialog } = useHandleDialogs();
+  const [showConfirmation, setShowConfirmation] = useState(true);
 
-  const inputRef = useRef(null);;
-  const router = useRouter();
-  const { query } = router;
-  const authenticated = useAuthen();
+  const inputRef = useRef(null);
+
+  const handleToggleConfirmation = () => {
+    setShowConfirmation(!showConfirmation);
+  };
 
   const addDuplicateCounts = (urls) => {
     const urlCountMap = urls.reduce((acc, url) => {
@@ -214,8 +221,12 @@ export default function Analytics() {
             </section>
           </header>
           {error && <p style={{ color: 'red' }}>{error}</p>}
-          <section className="flex items-center my-4 ml-4 space-x-4">
+          <section className="flex flex-col items-start gap-2 my-4 ml-4 md:gap-4 md:items-center md:flex-row">
             <SortSelect sortOption={sortOption} onSortChange={setSortOption} />
+            <label className='flex h-10 items-center justify-center rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 space-x-3 w-[180px]'>
+              <Checkbox checked={showConfirmation} onCheckedChange={handleToggleConfirmation} />
+              <span className="cursor-pointer">Confirm before delete</span>
+            </label>
           </section>
 
           {urls.length > 0 ? (
@@ -257,7 +268,19 @@ export default function Analytics() {
                           >{url.originalUrl}</a>
                         </main>
                         <aside className="flex gap-2">
-                          <Button type="button" variant="outline" onClick={() => openDialog("delete", url._id)}>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => {
+                              if (showConfirmation) {
+                                // If confirmation is enabled, open the delete dialog
+                                openDialog("delete", url._id);
+                              } else {
+                                // If confirmation is disabled, directly delete the URL
+                                handleDelete(url._id);
+                              }
+                            }}
+                          >
                             <span className="flex w-4 aspect-square">
                               <Trash2 className="text-red-400" />
                             </span>
