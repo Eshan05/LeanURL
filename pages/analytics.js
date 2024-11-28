@@ -223,7 +223,7 @@ export default function Analytics() {
           {error && <p style={{ color: 'red' }}>{error}</p>}
           <section className="flex flex-col items-start gap-2 my-4 ml-4 md:gap-4 md:items-center md:flex-row">
             <SortSelect sortOption={sortOption} onSortChange={setSortOption} />
-            <label className='flex h-10 items-center justify-center rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 space-x-3 w-[180px]'>
+            <label className='flex h-10 items-center justify-center rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 space-x-3'>
               <Checkbox checked={showConfirmation} onCheckedChange={handleToggleConfirmation} />
               <span className="cursor-pointer">Confirm before delete</span>
             </label>

@@ -93,28 +93,39 @@ const AccessGraphDialog = ({ open, setOpen, recentAccesses }) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen} className="w-1/2">
-      <DialogContent className="hidden h-2/3 lg:block max-w-[80%]">
+    <Dialog open={open} onOpenChange={setOpen} className="w-full md:w-1/2">
+      <DialogContent className="rounded max-w-[80%]">
         <DialogHeader>
           <DialogTitle>Weekly Access Graph</DialogTitle>
         </DialogHeader>
 
-        <section className="h-full p-3 overflow-auto">
-          <div className="w-full mt-3 bg-gray-100 dark:bg-[#0c0e0f] rounded-lg p-1">
-            <Chart
-              options={graphData.options}
-              series={graphData.series}
-              type="line"
-              height="380"
-            />
+        <section className="h-full p-3">
+          {/* Desktop Content */}
+          <div className="hidden h-full lg:block">
+            <div className="w-full mt-3 bg-gray-100 dark:bg-[#0c0e0f] rounded-lg p-1 h-full">
+              <Chart
+                options={graphData.options}
+                series={graphData.series}
+                type="line"
+                height="380"
+              />
+            </div>
+          </div>
+
+          {/* Mobile Content */}
+          <div className="lg:hidden">
+            <p>Only viewable on Desktop</p>
           </div>
         </section>
+
         <DialogFooter>
           <DialogClose asChild>
+            <Button variant="outline">Close</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
   );
 };
 
