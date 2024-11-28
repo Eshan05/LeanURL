@@ -2,12 +2,13 @@ import { useRouter } from 'next/router';
 import { useEffect, useState, useRef } from "react";
 
 import { toast } from "sonner";
-import { Nav, Input, Button, SortSelect, URLStatus, GradientTop, DeleteUrlDialog, EditUrlDialog, QRCodeDialog, RecentAccessesDialog, AccessGraphDialog } from "@components/index";
 import { QrCode, Calendar, Pencil, Link, ExternalLink, RefreshCcw, ChartSpline, Copy, Check, Trash2, MousePointerClick, Database } from "lucide-react";
+import { Nav, Input, Button, SortSelect, URLStatus, GradientTop, DeleteUrlDialog, EditUrlDialog, QRCodeDialog, RecentAccessesDialog, AccessGraphDialog } from "@components/index";
+import { Checkbox } from '@components/ui/checkbox';
 import { useHandleDialogs } from '../hooks/useHandleDialogs';
 import { downloadCSV } from '@utils/utils';
 import { useAuthen } from '@hooks/useAuthen';
-import { Checkbox } from '@components/ui/checkbox';
+import Image from 'next/image';
 
 export default function Analytics() {
   const router = useRouter();
@@ -53,7 +54,13 @@ export default function Analytics() {
 
   useEffect(() => {
     fetchUrls();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const refreshData = () => {
+    fetchUrls();
+    toast.success('Data refreshed successfully!');
+  };
 
   useEffect(() => {
     const handleShortcut = (e) => {
@@ -66,11 +73,6 @@ export default function Analytics() {
       window.removeEventListener('keydown', handleShortcut);
     };
   }, [])
-
-  const refreshData = () => {
-    fetchUrls();
-    toast.success('Data refreshed successfully!');
-  };
 
   const handleCopy = (shortenUrl) => {
     if (shortenUrl) {
