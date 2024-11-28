@@ -1,17 +1,14 @@
-import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useRef, useState, useEffect } from 'react';
 import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react';
-import { ChartArea, Check, Copy, Github, HomeIcon, Share, LinkIcon, Trash2Icon, SearchIcon, Command } from 'lucide-react';
+import { ChartArea, Check, Copy, Github, HomeIcon, Share, LinkIcon, Trash2Icon, SearchIcon, Command, ImageDown } from 'lucide-react';
 
 import { Nav } from '../components/nav'
 import { Input } from '../components/ui/input'
 import { Button } from '../components/ui/button'
 import { toast } from 'sonner';
-import { ImageDown } from 'lucide-react';
 import SearchUrls from '@components/searchURL';
 import { GradientTop } from '@components/gradientTop';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 
 export default function Home() {
   const [originalUrl, setOriginalUrl] = useState('');

@@ -6,6 +6,7 @@ import { QrCode, Calendar, Pencil, Link, ExternalLink, RefreshCcw } from "lucide
 
 import { toast } from "sonner";
 import { Nav, Input, Button, SortSelect, URLStatus, GradientTop, DeleteUrlDialog, EditUrlDialog, QRCodeDialog, RecentAccessesDialog, AccessGraphDialog } from "@components/index";
+import { useHandleDialogs } from './useHandleDialogs';
 
 export default function Analytics() {
   const [urls, setUrls] = useState([]);
@@ -22,6 +23,7 @@ export default function Analytics() {
   const [openRecents, setOpenRecents] = useState(false);
   const [openGraphDialog, setOpenGraphDialog] = useState(false);
   const [sortOption, setSortOption] = useState('dateAsc')
+  const { dialogs, openDialog, closeDialog } = useHandleDialogs();
 
   const inputRef = useRef(null);;
   const router = useRouter();
@@ -124,6 +126,8 @@ export default function Analytics() {
       }
     } catch (error) {
       toast.error('Error deleting URL');
+    } finally {
+      closeDialog("delete");
     }
   };
 
@@ -321,7 +325,7 @@ export default function Analytics() {
                           >{url.originalUrl}</a>
                         </main>
                         <aside className="flex gap-2">
-                          <Button type="button" variant="outline" onClick={() => { setUrlToDelete(url._id); setOpen(true) }}>
+                          <Button type="button" variant="outline" onClick={() => openDialog("delete", url._id)}>
                             <span className="flex w-4 aspect-square">
                               <Trash2 className="text-red-400" />
                             </span>
@@ -371,9 +375,9 @@ export default function Analytics() {
           )}
         </div>
         <DeleteUrlDialog
-          open={open}
-          setOpen={setOpen}
-          urlToDelete={urlToDelete}
+          open={dialogs.delete.isOpen}
+          setOpen={() => { closeDialog("delete"); }}
+          urlToDelete={dialogs.delete.data}
           handleDelete={handleDelete}
         />
         <EditUrlDialog
