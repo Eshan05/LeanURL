@@ -12,18 +12,23 @@ import {
 } from "@components/ui/command";
 import { DialogDescription, DialogTitle } from "./ui/dialog";
 import { LinkIcon, ExternalLinkIcon } from "lucide-react";
+import { Input } from "./ui/input";
+import { SearchIcon } from "lucide-react";
 
 const SearchUrls = () => {
   const [error, setError] = useState('');
   const [urls, setUrls] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(''); // This holds the final search query
+  const [inputValue, setInputValue] = useState('');   // This holds the input field value for instant typing
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery); // This holds the debounced search query
   const router = useRouter();
 
-  const fetchUrls = async () => {
+  const fetchUrls = async (searchQuery = '') => {
     try {
-      const res = await fetch('/api/analytics');
+      const query = searchQuery ? `?search=${searchQuery}` : ''; // Append search query if present
+      const res = await fetch(`/api/searchDialogPages${query}`);
       const data = await res.json();
       setUrls(data);
     } catch (error) {
@@ -32,9 +37,28 @@ const SearchUrls = () => {
   };
 
   useEffect(() => {
-    if (open)
-      fetchUrls();
-  }, [open]);
+    const timer = setTimeout(() => {
+      setDebouncedQuery(inputValue);
+    }, 500);
+
+    return () => clearTimeout(timer);  // Clean up the timer on component unmount or before the next input change
+  }, [inputValue]);
+
+  // Fetch URLs whenever the debounced query changes
+  useEffect(() => {
+    setSearchQuery(debouncedQuery);
+  }, [debouncedQuery]);
+
+  // Fetch URLs whenever the final search query changes
+  useEffect(() => {
+    fetchUrls(searchQuery);
+  }, [searchQuery]);
+
+  // Handle changes in the search input field
+  const handleSearchChange = (e) => {
+    setInputValue(e.target.value);  // Instant typing updates inputValue
+  };
+
 
   const filteredUrls = useMemo(() =>
     urls.filter((url) =>
@@ -53,10 +77,6 @@ const SearchUrls = () => {
     }
   }, [filteredUrls, selectedIndex]);
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
     return () => {
@@ -65,19 +85,30 @@ const SearchUrls = () => {
   }, [filteredUrls, selectedIndex, handleKeyDown]);
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen} className="border rounded-lg max-w-3/4 lg:w-1/4" aria-describedby={undefined}>
+    <CommandDialog open={open} onOpenChange={setOpen} className="border rounded-lg max-w-3/4 lg:w-1/4">
       <DialogTitle className="hidden"></DialogTitle>
       <DialogDescription className="hidden"></DialogDescription>
-      <CommandInput
+      {/* <CommandInput
         placeholder="Search for a link..."
         onChange={handleSearchChange}
+        value={inputValue}
         className="px-4 pb-2 "
-      />
+      /> */}
+      <div className="flex items-center px-3 pb-1 border-b" cmdk-input-wrapper="">
+        <SearchIcon className="w-4 h-4 mr-2 opacity-50 shrink-0" />
+        <Input
+          className={
+            "flex h-11 w-full rounded-md bg-transparent py-3 px-4 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 border-none focus-visible:ring-0 focus-visible:ring-offset-0"}
+          placeholder="Search for a link..."
+          value={inputValue}
+          onChange={handleSearchChange}
+        />
+      </div>
       <CommandList className="px-2 py-4">
         {urls.length === 0 ? (
           <CommandEmpty>{error ? error : "No URLs found"}</CommandEmpty>
         ) : (
-          <CommandGroup heading="Search URLs">
+          <CommandGroup heading={searchQuery ? "Search Results" : "Recent URLs"}>
             {filteredUrls.map((url, index) => (
               <CommandItem
                 key={index}
