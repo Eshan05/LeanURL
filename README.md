@@ -1,7 +1,7 @@
 <div align="center">
   <br />
     <a href="https://.vercel.app" target="_blank">
-      <img src="./pages/images/HomeDark.png" alt="Project Banner">
+      <img src="./public/images/HomeDark.png" alt="Project Banner">
     </a>
   <br />
   <div>
@@ -65,17 +65,17 @@ npm run dev
 
 <div align="center">
 
-![HomeQR](pages/images/HomeDark_QR.png)
-![SearchHome](pages/images/SearchHome.png)
-![Analytics](pages/images/Analytics.png)
-![AnalyticsDark_Search](pages/images/AnalyticsDark_Search.png)
-![MobileAnalytics_Delete](pages/images/MobileAnalytics_Delete.png)
-![MobileHome](pages/images/MobileHome.png)
-![AnalyticsDark_Edit](pages/images/AnalyticsDark_Edit.png)
-![AnalyticsDark_Graph](pages/images/AnalyticsDark_Graph.png)
-![AnalyticsDark_Recent](pages/images/AnalyticsDark_Recent.png)
-![AnalyticsDark_Toast](pages/images/AnalyticsDark_Toast.png)
-![AnalyticsDark_QR](pages/images/AnalyticsDark_QR.png)
+![HomeQR](public/images/HomeDark_QR.png)
+![SearchHome](public/images/SearchHome.png)
+![Analytics](public/images/Analytics.png)
+![AnalyticsDark_Search](public/images/AnalyticsDark_Search.png)
+![MobileAnalytics_Delete](public/images/MobileAnalytics_Delete.png)
+![MobileHome](public/images/MobileHome.png)
+![AnalyticsDark_Edit](public/images/AnalyticsDark_Edit.png)
+![AnalyticsDark_Graph](public/images/AnalyticsDark_Graph.png)
+![AnalyticsDark_Recent](public/images/AnalyticsDark_Recent.png)
+![AnalyticsDark_Toast](public/images/AnalyticsDark_Toast.png)
+![AnalyticsDark_QR](public/images/AnalyticsDark_QR.png)
 
 </div>
 

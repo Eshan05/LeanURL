@@ -3,11 +3,16 @@ import Url from '../models/url';
 import axios from 'axios';
 
 const getCountryByIp = async (ip) => {
-  console.log('IP', ip);
+  console.log('IP:', ip);
   try {
-    const response = await axios.get(`http://ip-api.com/json/${ip}`);
-    // console.log(response);
-    return response.country || 'Unknown';
+    const response = await axios.get(`http://ip-api.com/json/${ip}?fields=status,country`);
+    if (response.data.status === 'success') {
+      console.log('Country:', response.data.country);
+      return response.data.country || 'Unknown';
+    } else {
+      console.error('Error fetching country:', response.data.message);
+      return 'Unknown';
+    }
   } catch (error) {
     console.error('Error fetching country:', error);
     return 'Unknown';
@@ -36,7 +41,7 @@ export async function getServerSideProps(context) {
 
       const forwarded = req.headers["x-forwarded-for"];
       console.log('Forwarded IP:', forwarded);
-      let clientIp = forwarded ? forwarded.split(',')[0].trim() : req.socket.remoteAddress;
+      let clientIp = forwarded ? String(forwarded.split(',')[0].trim()) : req.socket.remoteAddress;
       if (clientIp.startsWith('::ffff:')) {
         clientIp = clientIp.slice(7); // Remove the IPv6 prefix
       }

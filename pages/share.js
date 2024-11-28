@@ -9,6 +9,8 @@ import { Button } from '../components/ui/button'
 import { toast } from 'sonner';
 import SearchUrls from '@components/searchURL';
 import { GradientTop } from '@components/gradientTop';
+import { downloadQRCode } from '@utils/utils';
+import { useAuthen } from '@hooks/useAuthen';
 
 export default function Home() {
   const [originalUrl, setOriginalUrl] = useState('');
@@ -20,19 +22,8 @@ export default function Home() {
 
   const [expirationDate, setExpirationDate] = useState('');
   const [scheduledDate, setScheduledDate] = useState('');
-  const [authenticated, setAuthenticated] = useState(false);
+  const authenticated = useAuthen();
   const router = useRouter();
-
-  useEffect(() => {
-    const cookies = document.cookie.split('; ');
-    const authCookie = cookies.find(cookie => cookie.startsWith('authenticated='));
-
-    if (authCookie && authCookie.split('=')[1] === 'true') {
-      setAuthenticated(true);
-    } else {
-      router.push('/');
-    }
-  }, [router]);
 
   if (!authenticated) {
     return null;
@@ -47,21 +38,10 @@ export default function Home() {
       ? originalUrl
       : `http://${originalUrl}`;
 
-    if (expirationDate && new Date(expirationDate) > new Date(Date.now() + 2 * 365 * 24 * 60 * 60 * 1000)) {
-      return toast.error('Expiration date cannot be more than 2 years from the current date');
-    }
-
-    if (scheduledDate && new Date(scheduledDate) < new Date(Date.now())) {
-      return toast.error('Scheduled date cannot be in the past');
-    }
-
-    if (expirationDate && scheduledDate && new Date(expirationDate) <= new Date(scheduledDate)) {
-      return toast.error('Expiration date cannot be before or equal to scheduled date');
-    }
-
-    if (expirationDate && expirationDate <= new Date(Date.now())) {
-      return toast.error('Expiration date cannot be in the past');
-    }
+    if (expirationDate && new Date(expirationDate) > new Date(Date.now() + 2 * 365 * 24 * 60 * 60 * 1000)) { return toast.error('Expiration date cannot be more than 2 years from the current date'); }
+    if (scheduledDate && new Date(scheduledDate) < new Date(Date.now())) { return toast.error('Scheduled date cannot be in the past'); }
+    if (expirationDate && scheduledDate && new Date(expirationDate) <= new Date(scheduledDate)) { return toast.error('Expiration date cannot be before or equal to scheduled date'); }
+    if (expirationDate && expirationDate <= new Date(Date.now())) { return toast.error('Expiration date cannot be in the past'); }
 
     try {
       const res = await fetch('/api/shorten', {
@@ -134,56 +114,6 @@ export default function Home() {
     });
     document.dispatchEvent(event);
   }
-
-  const downloadQRCode = async () => {
-    if (qrCodeRef.current) {
-      const svgElement = qrCodeRef.current.querySelector('svg');
-      if (svgElement) {
-        const svgData = new XMLSerializer().serializeToString(svgElement);
-
-        // Find the image tag within the SVG and fetch the image as a Blob
-        const imageElement = svgElement.querySelector('image');
-        if (imageElement && imageElement.href.baseVal) {
-          const imageUrl = imageElement.href.baseVal;
-
-          // Fetch the image and convert it to Base64
-          const imageResponse = await fetch(imageUrl);
-          const imageBlob = await imageResponse.blob();
-          const reader = new FileReader();
-
-          reader.onloadend = () => {
-            // Get the Base64 encoded image data
-            const base64Image = reader.result.split(',')[1]; // Get data after 'data:image/png;base64,'
-            // Replace the image URL with Base64 data in the SVG
-            const updatedSvgData = svgData.replace(imageUrl, `data:image/png;base64,${base64Image}`);
-            // Create a new Blob with the updated SVG content
-            const updatedSvgBlob = new Blob([updatedSvgData], { type: 'image/svg+xml' });
-            // Create a canvas to draw the SVG
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const img = new Image();
-
-            img.onload = function () {
-              canvas.width = img.width;
-              canvas.height = img.height;
-              ctx.drawImage(img, 0, 0);
-
-              // Convert to PNG and trigger download
-              const pngUrl = canvas.toDataURL('image/png');
-              const a = document.createElement('a');
-              a.href = pngUrl;
-              a.download = `qr-code_${shortenUrl}.png`;
-              a.click();
-            };
-
-            img.src = URL.createObjectURL(updatedSvgBlob);
-          };
-
-          reader.readAsDataURL(imageBlob);
-        }
-      }
-    }
-  };
 
   // console.log("Look at me: ", generateQRCodeValue(shortenUrl));
   return (
@@ -273,7 +203,7 @@ export default function Home() {
                   tabIndex={2}
                   onClick={() => {
                     setClickedButton('share');
-                    downloadQRCode();
+                    downloadQRCode(qrCodeRef, shortenUrl);
                   }}>
                   <span className="flex w-4 aspect-square">
                     {clickedButton === "share" ? <Check /> : <ImageDown />}

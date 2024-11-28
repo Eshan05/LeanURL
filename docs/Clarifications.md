@@ -1,0 +1,1 @@
+1. Using `useAuthen.js` instead of `useAuth.js` incase I wanna have proper authentication later on
