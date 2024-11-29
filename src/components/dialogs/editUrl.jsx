@@ -28,7 +28,7 @@ export function EditUrlDialog({ open, setOpen, urlToEdit, handleEdit }) {
     return localDate.toLocaleString('sv-SE', {
       timeZoneName: 'short',
       hour12: false,
-    }).replace(' ', 'T').slice(0, 16); // Convert to "YYYY-MM-DDTHH:MM" format
+    }); // Convert to "YYYY-MM-DDTHH:MM" format
   };
 
   const handleCancel = () => {
