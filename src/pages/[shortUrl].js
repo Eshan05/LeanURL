@@ -1,5 +1,5 @@
-import dbConnect from '../utils/db';
-import Url from '../models/url';
+import dbConnect from '@utils/db'
+import Url from '@models/url';
 import axios from 'axios';
 
 const getCountryByIp = async (ip) => {

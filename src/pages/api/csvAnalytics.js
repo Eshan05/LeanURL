@@ -1,5 +1,5 @@
-import dbConnect from '../../utils/db';
-import Url from '../../models/url';
+import dbConnect from '@utils/db';
+import Url from '@models/url';
 import { Parser } from 'json2csv';
 
 export default async function handler(req, res) {

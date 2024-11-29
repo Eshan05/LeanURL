@@ -1,4 +1,4 @@
-import { Button } from '../components/ui/button'
+import { Button } from "@components/ui/button"
 import { useState, useEffect } from "react";
 import { Sun, Moon } from "lucide-react";
 

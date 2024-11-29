@@ -1,6 +1,6 @@
+import { useState } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogClose } from '@components/ui/dialog';
 import { Button } from '@components/ui/button';
-import { useState } from 'react';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { FaChrome, FaFirefox, FaSafari, FaEdge, FaMobileAlt, FaLaptop } from 'react-icons/fa';
 import { PiDevicesLight } from "react-icons/pi";

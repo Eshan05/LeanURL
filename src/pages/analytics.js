@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { QrCode, Calendar, Pencil, Link, ExternalLink, RefreshCcw, ChartSpline, Copy, Check, Trash2, MousePointerClick, Database } from "lucide-react";
 import { Nav, Input, Button, SortSelect, URLStatus, GradientTop, DeleteUrlDialog, EditUrlDialog, QRCodeDialog, RecentAccessesDialog, AccessGraphDialog } from "@components/index";
 import { Checkbox } from '@components/ui/checkbox';
-import { useHandleDialogs } from '../hooks/useHandleDialogs';
+import { useHandleDialogs } from '@hooks/useHandleDialogs';
 import { downloadCSV } from '@utils/utils';
 import { useAuthen } from '@hooks/useAuthen';
 import Image from 'next/image';
