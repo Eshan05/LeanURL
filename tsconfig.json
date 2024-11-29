@@ -1,0 +1,73 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // Modern JavaScript (ES2020) syntax
+    "module": "ESNext", // Use ES module syntax
+    "moduleResolution": "node", // Node-style module resolution (supports importing from node_modules)
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ], // Include relevant standard library files (DOM and ESNext features)
+    "jsx": "preserve", // If using React, use the new JSX transform (React 17+)
+    "esModuleInterop": true, // Enable default import syntax for CommonJS modules
+    "skipLibCheck": true, // Skip type checking of declaration files for faster compilation
+    "strict": true, // Enable strict type-checking options
+    "noImplicitAny": true, // Ensure explicit type annotations (no `any` types)
+    "strictNullChecks": true, // Ensure stricter null checks
+    "resolveJsonModule": true, // Allow importing JSON modules
+    "baseUrl": ".", // Base directory for non-relative module imports
+    "paths": {
+      "@components/*": [
+        "src/components/*"
+      ], // Alias @components to src/components
+      "@components/ui/*": [
+        "src/components/ui/*"
+      ],
+      "@models/*": [
+        "src/models/*"
+      ], // Alias @models to src/models
+      "@pages/*": [
+        "src/pages/*"
+      ], // Alias @pages to src/pages
+      "@styles/*": [
+        "src/styles/*"
+      ], // Alias @styles to src/styles
+      "@utils/*": [
+        "src/utils/*"
+      ], // Alias @utils to src/utils
+      "@hooks/*": [
+        "src/hooks/*"
+      ] // Alias @hooks to src/hooks
+    },
+    "forceConsistentCasingInFileNames": true, // Ensure consistent casing of file names
+    "noUnusedLocals": true, // Flag unused variables in the code
+    "noUnusedParameters": true, // Flag unused function parameters
+    "noImplicitReturns": true, // Ensure all functions return values or throw errors
+    "noFallthroughCasesInSwitch": true, // Prevent fallthrough in switch cases
+    "noEmitOnError": true,
+    "allowJs": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./.tsbuildinfo",
+  },
+  "include": [
+    "src/components/**/*",
+    "src/models/**/*",
+    "src/pages/**/*",
+    "src/hooks/**/*",
+    "src/styles/**/*",
+    "src/utils/**/*",
+    "docs/**/*",
+    "next-env.d.ts",
+    "src/cnutils.js"
+  ],
+  "exclude": [
+    "node_modules", // Exclude third-party modules
+    "dist", // Exclude build folder (output of TypeScript)
+    ".next", // Exclude Next.js build output
+    ".vercel", // Exclude Vercel deployment output
+    "public", // Exclude public assets
+    "build" // Exclude build folder if applicable
+  ]
+}

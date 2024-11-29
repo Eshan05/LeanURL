@@ -1,27 +1,27 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
       "@components/*": [
-        "components/*"
+        "src/components/*"
       ],
       "@components/ui/*": [
-        "components/ui/*"
+        "src/components/ui/*"
       ],
       "@models/*": [
-        "models/*"
+        "src/models/*"
       ],
       "@pages/*": [
-        "pages/*"
+        "src/pages/*"
       ],
       "@styles/*": [
-        "styles/*"
+        "src/styles/*"
       ],
       "@utils/*": [
-        "utils/*"
+        "src/utils/*"
       ],
       "@hooks/*": [
-        "hooks/*"
+        "src/hooks/*"
       ]
     }
   },
@@ -33,5 +33,13 @@
     "src/styles/**/*",
     "src/utils/**/*",
     "docs/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".next",
+    ".vercel",
+    "public",
+    "build"
   ]
 }
