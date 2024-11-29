@@ -1,55 +1,65 @@
 {
   "compilerOptions": {
-    "target": "ES2020", // Modern JavaScript (ES2020) syntax
-    "module": "ESNext", // Use ES module syntax
-    "moduleResolution": "node", // Node-style module resolution (supports importing from node_modules)
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
-    ], // Include relevant standard library files (DOM and ESNext features)
-    "jsx": "preserve", // If using React, use the new JSX transform (React 17+)
-    "esModuleInterop": true, // Enable default import syntax for CommonJS modules
-    "skipLibCheck": true, // Skip type checking of declaration files for faster compilation
-    "strict": true, // Enable strict type-checking options
-    "noImplicitAny": true, // Ensure explicit type annotations (no `any` types)
-    "strictNullChecks": true, // Ensure stricter null checks
-    "resolveJsonModule": true, // Allow importing JSON modules
-    "baseUrl": ".", // Base directory for non-relative module imports
+    ],
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
     "paths": {
+      "@/*": [
+        "./src/*",
+        "./src/components/*",
+        "./src/components/ui/*",
+        "./src/models/*",
+        "./src/pages/*",
+        "./src/styles/*",
+        "./src/utils/*",
+        "./src/hooks/*"
+      ],
       "@components/*": [
         "src/components/*"
-      ], // Alias @components to src/components
+      ],
       "@components/ui/*": [
         "src/components/ui/*"
       ],
       "@models/*": [
         "src/models/*"
-      ], // Alias @models to src/models
+      ],
       "@pages/*": [
         "src/pages/*"
-      ], // Alias @pages to src/pages
+      ],
       "@styles/*": [
         "src/styles/*"
-      ], // Alias @styles to src/styles
+      ],
       "@utils/*": [
         "src/utils/*"
-      ], // Alias @utils to src/utils
+      ],
       "@hooks/*": [
         "src/hooks/*"
-      ] // Alias @hooks to src/hooks
+      ]
     },
-    "forceConsistentCasingInFileNames": true, // Ensure consistent casing of file names
-    "noUnusedLocals": true, // Flag unused variables in the code
-    "noUnusedParameters": true, // Flag unused function parameters
-    "noImplicitReturns": true, // Ensure all functions return values or throw errors
-    "noFallthroughCasesInSwitch": true, // Prevent fallthrough in switch cases
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
     "noEmitOnError": true,
     "allowJs": true,
     "noEmit": true,
     "isolatedModules": true,
     "incremental": true,
-    "tsBuildInfoFile": "./.tsbuildinfo",
+    "tsBuildInfoFile": "./.tsbuildinfo"
   },
   "include": [
     "src/components/**/*",
@@ -59,15 +69,14 @@
     "src/styles/**/*",
     "src/utils/**/*",
     "docs/**/*",
-    "next-env.d.ts",
-    "src/cnutils.js"
+    "next-env.d.ts"
   ],
   "exclude": [
-    "node_modules", // Exclude third-party modules
-    "dist", // Exclude build folder (output of TypeScript)
-    ".next", // Exclude Next.js build output
-    ".vercel", // Exclude Vercel deployment output
-    "public", // Exclude public assets
-    "build" // Exclude build folder if applicable
+    "node_modules",
+    "dist",
+    ".next",
+    ".vercel",
+    "public",
+    "build"
   ]
 }

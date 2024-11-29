@@ -67,3 +67,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+.small-caps { font-variant: small-caps; }
+.scrollbar-none { scrollbar-width: none; }
+
+.url-card {
+  border: 1px solid rgba(155, 155, 155, 0.1);
+}
+
+.dark .url-card {
+  box-shadow:
+    0 0 .25rem rgba(200, 200, 200, 0.1),
+    0 .125rem .25rem rgba(0, 0, 0, 0.5),
+    0 .25rem .25rem rgba(0, 0, 0, 0.25);
+}
