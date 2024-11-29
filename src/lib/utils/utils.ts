@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 
-export const downloadCSV = async () => {
+export const downloadCSV = async (): Promise<void> => {
   try {
     const res = await fetch('/api/csvAnalytics');
     if (!res.ok) throw new Error('Failed to fetch CSV');
@@ -21,16 +21,19 @@ export const downloadCSV = async () => {
   }
 };
 
-export const downloadQRCode = async (qrCodeRef, shortenUrl) => {
+export const downloadQRCode = async (
+  qrCodeRef: React.RefObject<HTMLElement>,
+  shortenUrl: string
+): Promise<void> => {
   if (qrCodeRef.current) {
     const svgElement = qrCodeRef.current.querySelector('svg');
     if (svgElement) {
-      const svgData = new XMLSerializer().serializeToString(svgElement);
+      const svgData: string = new XMLSerializer().serializeToString(svgElement);
 
       // Find the image tag within the SVG and fetch the image as a Blob
       const imageElement = svgElement.querySelector('image');
       if (imageElement && imageElement.href.baseVal) {
-        const imageUrl = imageElement.href.baseVal;
+        const imageUrl: string = imageElement.href.baseVal;
 
         // Fetch the image and convert it to Base64
         const imageResponse = await fetch(imageUrl);
@@ -38,25 +41,28 @@ export const downloadQRCode = async (qrCodeRef, shortenUrl) => {
         const reader = new FileReader();
 
         reader.onloadend = () => {
+          if (!reader.result || typeof reader.result !== 'string') return;
           // Get the Base64 encoded image data
-          const base64Image = reader.result.split(',')[1]; // Get data after 'data:image/png;base64,'
+          console.log(reader.result);
+          const base64Image: string = reader.result.split(',')[1]; // Get data after 'data:image/png;base64,'
           // Replace the image URL with Base64 data in the SVG
-          const updatedSvgData = svgData.replace(imageUrl, `data:image/png;base64,${base64Image}`);
+          const updatedSvgData: string = svgData.replace(imageUrl, `data:image/png;base64,${base64Image}`);
           // Create a new Blob with the updated SVG content
-          const updatedSvgBlob = new Blob([updatedSvgData], { type: 'image/svg+xml' });
+          const updatedSvgBlob: Blob = new Blob([updatedSvgData], { type: 'image/svg+xml' });
           // Create a canvas to draw the SVG
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          const img = new Image();
+          const canvas: HTMLCanvasElement = document.createElement('canvas');
+          const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+          const img: HTMLImageElement = new Image();
 
           img.onload = function () {
             canvas.width = img.width;
             canvas.height = img.height;
+            // @ts-ignore
             ctx.drawImage(img, 0, 0);
 
             // Convert to PNG and trigger download
-            const pngUrl = canvas.toDataURL('image/png');
-            const a = document.createElement('a');
+            const pngUrl: string = canvas.toDataURL('image/png');
+            const a: HTMLAnchorElement = document.createElement('a');
             a.href = pngUrl;
             a.download = `qr-code_${shortenUrl}.png`;
             a.click();

@@ -350,7 +350,7 @@ export default function Analytics() {
         <DeleteUrlDialog
           open={dialogs.delete.isOpen}
           setOpen={() => { closeDialog("delete"); }}
-          urlToDelete={dialogs.delete.data}
+          urlToDelete={dialogs.delete.data || ""}
           handleDelete={handleDelete}
         />
         <EditUrlDialog
@@ -362,7 +362,8 @@ export default function Analytics() {
         <QRCodeDialog
           open={dialogs.qrCode.isOpen}
           setOpen={() => { closeDialog("qrCode"); }}
-          shortenUrl={dialogs.qrCode.data}
+          shortenUrl={dialogs.qrCode.data || ""}
+        // shortenUrl={dialogs.qrCode.data}
         />
         {dialogs.recents.data && (
           <RecentAccessesDialog
