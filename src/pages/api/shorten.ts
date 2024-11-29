@@ -1,8 +1,9 @@
 import dbConnect from '@utils/db';
 import Url from '@models/url';
 import { nanoid } from 'nanoid';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') { return res.status(405).json({ message: 'Method not allowed' }); }
   const { originalUrl, alias, expirationDate, scheduledDate } = req.body;
   // console.log(req.body);

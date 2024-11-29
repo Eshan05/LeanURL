@@ -11,7 +11,7 @@ export function EditUrlDialog({ open, setOpen, urlToEdit, handleEdit }) {
 
   useEffect(() => {
     if (urlToEdit?.expirationDate) {
-      setNewExpirationDate(formatDateForInput(urlToEdit.expirationDate));
+      setNewExpirationDate(formatDateForInput(urlToEdit.expirationDate) || "");
     }
     if (urlToEdit?.scheduledDate) {
       setNewScheduledDate(formatDateForInput(urlToEdit.scheduledDate));
@@ -43,7 +43,7 @@ export function EditUrlDialog({ open, setOpen, urlToEdit, handleEdit }) {
 
     const updatedFields = {
       shortenUrl: typeof newShortenUrl === 'string' ? newShortenUrl.trim() : '',
-      expirationDate: newExpirationDate ? new Date(newExpirationDate) : null,
+      expirationDate: newExpirationDate ? new Date(newExpirationDate) : undefined,
       scheduledDate: newScheduledDate ? new Date(newScheduledDate) : null,
     };
 

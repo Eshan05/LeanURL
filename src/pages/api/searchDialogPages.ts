@@ -1,14 +1,15 @@
 import dbConnect from '@utils/db';
 import Url from '@models/url';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     await dbConnect();
     if (req.method === 'GET') {
       const { search } = req.query;
 
       // If there's a search query, perform a case-insensitive search by originalUrl or shortenUrl
-      if (search) {
+      if (search && typeof search === 'string') {
         const regex = new RegExp(search, 'i'); // Create case-insensitive regex
         const urls = await Url.find({
           $or: [

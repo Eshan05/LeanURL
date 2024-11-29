@@ -1,6 +1,6 @@
 import { PiStackDuotone } from "react-icons/pi"
 
-export const URLStatus = ({ url }) => {
+export const URLStatus = ({ url }: ) => {
   return (
     <section className="flex justify-between gap-2">
       <article className="flex flex-col mb-4 mt-2 space-y-1 text-sm *:flex *:items-center *:space-x-2">

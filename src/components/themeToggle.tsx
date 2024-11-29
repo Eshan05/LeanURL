@@ -24,7 +24,7 @@ export const ThemeToggle = () => {
 
   useEffect(() => {
     setIsClient(true);
-    const handleShortcut = (event) => {
+    const handleShortcut = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === "m") {
         setIsDarkMode((prev) => !prev);
       }

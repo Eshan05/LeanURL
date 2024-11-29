@@ -21,7 +21,7 @@ const URLSchema = new mongoose.Schema(
     originalUrl: {
       type: String,
       required: true,
-      set(value) {
+      set(value: string) {
         // If no protocol is provided, prepend http://
         if (!/^https?:\/\//i.test(value))
           value = `https://${value}`;
@@ -45,18 +45,9 @@ const URLSchema = new mongoose.Schema(
         lastAccessed: [],
       }),
     },
-    expirationDate: {
-      type: Date,
-      default: undefined
-    },
-    scheduledDate: {
-      type: Date,
-      default: null
-    },
-    isActive: {
-      type: Boolean,
-      default: true
-    }
+    expirationDate: { type: Date, default: undefined },
+    scheduledDate: { type: Date, default: null },
+    isActive: { type: Boolean, default: true }
   },
   { timestamps: true }
 );

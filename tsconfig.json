@@ -24,8 +24,9 @@
         "./src/models/*",
         "./src/pages/*",
         "./src/styles/*",
-        "./src/utils/*",
-        "./src/hooks/*"
+        "./src/lib/utils/*",
+        "./src/hooks/*",
+        "./src/types/*"
       ],
       "@components/*": [
         "src/components/*"
@@ -43,10 +44,16 @@
         "src/styles/*"
       ],
       "@utils/*": [
-        "src/utils/*"
+        "src/lib/utils/*"
+      ],
+      "@lib/*": [
+        "src/lib/*"
       ],
       "@hooks/*": [
         "src/hooks/*"
+      ],
+      "types/*": [
+        "src/types/*"
       ]
     },
     "forceConsistentCasingInFileNames": true,
@@ -56,6 +63,7 @@
     "noFallthroughCasesInSwitch": true,
     "noEmitOnError": true,
     "allowJs": true,
+    "checkJs": true,
     "noEmit": true,
     "isolatedModules": true,
     "incremental": true,
@@ -67,7 +75,7 @@
     "src/pages/**/*",
     "src/hooks/**/*",
     "src/styles/**/*",
-    "src/utils/**/*",
+    "src/lib/utils/**/*",
     "docs/**/*",
     "next-env.d.ts"
   ],

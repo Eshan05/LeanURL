@@ -1,7 +1,8 @@
 import dbConnect from '@utils/db';
 import Url from '@models/url';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     await dbConnect();
 

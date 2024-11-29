@@ -8,32 +8,32 @@ import { Checkbox } from '@components/ui/checkbox';
 import { useHandleDialogs } from '@hooks/useHandleDialogs';
 import { downloadCSV } from '@utils/utils';
 import { useAuthen } from '@hooks/useAuthen';
-import Image from 'next/image';
+import { URLDocument, URLWithDuplicateCount, SortOption } from 'types/types';
 
 export default function Analytics() {
   const router = useRouter();
   const { query } = router;
   const { dialogs, openDialog, closeDialog } = useHandleDialogs();
   const authenticated = useAuthen();
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const [urls, setUrls] = useState([]);
-  const [error, setError] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [copiedUrl, setCopiedUrl] = useState(null);
-  const [sortOption, setSortOption] = useState('dateAsc')
-  const [showConfirmation, setShowConfirmation] = useState(true);
-
-  const inputRef = useRef(null);
+  const [urls, setUrls] = useState<URLWithDuplicateCount[]>([]);
+  const [error, setError] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+  const [sortOption, setSortOption] = useState<SortOption>('dateAsc')
+  const [showConfirmation, setShowConfirmation] = useState<boolean>(true);
 
   const handleToggleConfirmation = () => {
     setShowConfirmation(!showConfirmation);
   };
 
-  const addDuplicateCounts = (urls) => {
-    const urlCountMap = urls.reduce((acc, url) => {
+  const addDuplicateCounts = (urls: URLDocument[]): URLWithDuplicateCount[] => {
+    // const urlCountMap: Record<string, number> = urls.reduce((acc, url) => {
+    const urlCountMap: { [key: string]: number } = urls.reduce((acc, url) => {
       acc[url.originalUrl] = (acc[url.originalUrl] || 0) + 1;
       return acc;
-    }, {});
+    }, {} as { [key: string]: number });
 
     return urls.map((url) => {
       const count = urlCountMap[url.originalUrl] || 0;
@@ -41,11 +41,11 @@ export default function Analytics() {
     })
   };
 
-  const fetchUrls = async () => {
+  const fetchUrls = async (): Promise<void> => {
     try {
       const res = await fetch('/api/analytics');
-      const data = await res.json();
-      const processedData = addDuplicateCounts(data);
+      const data: URLDocument[] = await res.json();
+      const processedData: URLWithDuplicateCount[] = addDuplicateCounts(data);
       setUrls(processedData);
     } catch (error) {
       setError('Failed to fetch URLs');
@@ -63,7 +63,7 @@ export default function Analytics() {
   };
 
   useEffect(() => {
-    const handleShortcut = (e) => {
+    const handleShortcut = (e: KeyboardEvent) => {
       if (e.altKey && e.key === 'l') {
         inputRef.current?.focus();
       }
@@ -74,7 +74,7 @@ export default function Analytics() {
     };
   }, [])
 
-  const handleCopy = (shortenUrl) => {
+  const handleCopy = (shortenUrl: string) => {
     if (shortenUrl) {
       navigator.clipboard.writeText(shortenUrl)
         .then(() => {
@@ -87,7 +87,7 @@ export default function Analytics() {
     }
   };
 
-  const handleEdit = async (urlId, updatedFields) => {
+  const handleEdit = async (urlId: string, updatedFields: Partial<URLDocument>) => {
     try {
       const res = await fetch(`/api/analytics?id=${urlId}`, {
         method: 'PUT',
@@ -114,7 +114,7 @@ export default function Analytics() {
   };
 
 
-  const handleDelete = async (urlId) => {
+  const handleDelete = async (urlId: string) => {
     try {
       const res = await fetch(`/api/analytics?id=${urlId}`, {
         method: 'DELETE',
@@ -134,20 +134,26 @@ export default function Analytics() {
   };
 
   useEffect(() => {
-    if (!query.id) return;
+    if (!(typeof query.id === 'string')) return;
+    const id = query.id as string;
+    if (!id) return;
 
     setTimeout(() => {
-      const element = document.getElementById(query.id);
+      const element = document.getElementById(id);
       if (element) {
         // console.log("Element found:", element);
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         const iconElement = element.querySelector('.short-link');
         element.classList.add('animate-pulse');
-        iconElement.classList.add('animate-spin', 'text-blue-500');
+        if (iconElement) {
+          iconElement.classList.add('animate-spin', 'text-blue-500');
+        }
 
         setTimeout(() => {
           element.classList.remove('animate-pulse');
-          iconElement.classList.remove('animate-spin', 'text-blue-500');
+          if (iconElement) {
+            iconElement.classList.add('animate-spin', 'text-blue-500');
+          }
           window.history.replaceState(null, '', window.location.pathname);
         }, 2000);
       } else {
@@ -156,12 +162,22 @@ export default function Analytics() {
     }, 500);
   }, [query.id]);
 
-  const sortUrls = (urls) => {
+  const sortUrls = (urls: URLWithDuplicateCount[]) => {
     switch (sortOption) {
+      // case 'dateAsc': return [...urls].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      // case 'dateDesc': return [...urls].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       case 'dateAsc':
-        return [...urls].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        return [...urls].sort((a, b) => {
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+          return dateA - dateB;
+        });
       case 'dateDesc':
-        return [...urls].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        return [...urls].sort((a, b) => {
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+          return dateB - dateA;
+        });
       case 'clicksAsc':
         return [...urls].sort((a, b) => a.accesses.count - b.accesses.count);
       case 'clicksDesc':
