@@ -6,12 +6,12 @@ import { ThemeToggle } from "@components/themeToggle";
 import Image from "next/image";
 
 export default function Home() {
-  const [passcode, setPasscode] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [passcode, setPasscode] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
@@ -33,7 +33,7 @@ export default function Home() {
     }
   };
 
-  const handleThemeClick = (e) => {
+  const handleThemeClick = (e: React.MouseEvent) => {
     e.preventDefault();
   };
 

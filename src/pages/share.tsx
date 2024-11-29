@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router';
-import { useRef, useState, useEffect } from 'react';
-import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react';
-import { ChartArea, Check, Copy, Github, HomeIcon, Share, LinkIcon, Trash2Icon, SearchIcon, Command, ImageDown } from 'lucide-react';
+// import { useRouter } from 'next/router';
+import { useRef, useState } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
+import { Check, Copy, Github, LinkIcon, Trash2Icon, SearchIcon, Command, ImageDown } from 'lucide-react';
 
 import { Nav } from '@components/nav'
 import { Input } from '@components/ui/input'
@@ -14,23 +14,23 @@ import { useAuthen } from '@hooks/useAuthen';
 import Link from 'next/link';
 
 export default function Home() {
-  const [originalUrl, setOriginalUrl] = useState('');
-  const [alias, setCustomAlias] = useState('');
-  const [shortenUrl, setShortUrl] = useState('');
-  const [error, setError] = useState('');
-  const [clickedButton, setClickedButton] = useState(null);
-  const qrCodeRef = useRef(null);
+  const authenticated = useAuthen();
+  // const router = useRouter();
+  const qrCodeRef = useRef<HTMLDivElement>(null);
+  const [originalUrl, setOriginalUrl] = useState<string>('');
+  const [alias, setCustomAlias] = useState<string>('');
+  const [shortenUrl, setShortUrl] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [clickedButton, setClickedButton] = useState<string | null>(null);
 
   const [expirationDate, setExpirationDate] = useState('');
   const [scheduledDate, setScheduledDate] = useState('');
-  const authenticated = useAuthen();
-  const router = useRouter();
 
   if (!authenticated) {
     return null;
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setShortUrl('');
@@ -42,7 +42,7 @@ export default function Home() {
     if (expirationDate && new Date(expirationDate) > new Date(Date.now() + 2 * 365 * 24 * 60 * 60 * 1000)) { return toast.error('Expiration date cannot be more than 2 years from the current date'); }
     if (scheduledDate && new Date(scheduledDate) < new Date(Date.now())) { return toast.error('Scheduled date cannot be in the past'); }
     if (expirationDate && scheduledDate && new Date(expirationDate) <= new Date(scheduledDate)) { return toast.error('Expiration date cannot be before or equal to scheduled date'); }
-    if (expirationDate && expirationDate <= new Date(Date.now())) { return toast.error('Expiration date cannot be in the past'); }
+    if (expirationDate && new Date(expirationDate) <= new Date(Date.now())) { return toast.error('Expiration date cannot be in the past'); }
 
     try {
       const res = await fetch('/api/shorten', {
@@ -62,16 +62,17 @@ export default function Home() {
       if (!res.ok) throw new Error(data.message);
       setShortUrl(data.shortenUrl);
     } catch (err) {
-      setError(err.message);
+      if (err instanceof Error) {
+        setError(err.message);
 
-      if (err.message === 'This URL has already been shortened') { toast.error('This URL has already been shortened'); }
-      else toast.error('An error occurred: ' + err.message);
-
+        if (err.message === 'This URL has already been shortened') { toast.error('This URL has already been shortened'); }
+        else toast.error('An error occurred: ' + err.message);
+      }
     }
   };
 
   const BASE_URL = process.env.BASE_URL || originalUrl;
-  const generateQRCodeValue = (url) => {
+  const generateQRCodeValue = (url: string) => {
     if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
       if (process.env.BASE_URL == '') return `https://${BASE_URL}`;
       else return `http://${url}`;
@@ -91,7 +92,7 @@ export default function Home() {
     }
   };
 
-  const handleClick = (buttonName, action = () => { }) => {
+  const handleClick = (buttonName: string, action = () => { }) => {
     action();
     setClickedButton(buttonName);
     setTimeout(() => {

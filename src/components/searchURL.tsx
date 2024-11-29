@@ -14,22 +14,23 @@ import { DialogDescription, DialogTitle } from "./ui/dialog";
 import { LinkIcon, ExternalLinkIcon } from "lucide-react";
 import { Input } from "./ui/input";
 import { SearchIcon } from "lucide-react";
+import { URLDocument } from "@/types/types";
 
 const SearchUrls = () => {
-  const [error, setError] = useState('');
-  const [urls, setUrls] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [searchQuery, setSearchQuery] = useState(''); // This holds the final search query
-  const [inputValue, setInputValue] = useState('');   // This holds the input field value for instant typing
-  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery); // This holds the debounced search query
+  const [error, setError] = useState<string>('');
+  const [urls, setUrls] = useState<URLDocument[]>([]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [searchQuery, setSearchQuery] = useState<string>(''); // This holds the final search query
+  const [inputValue, setInputValue] = useState<string>('');   // This holds the input field value for instant typing
+  const [debouncedQuery, setDebouncedQuery] = useState<string>(searchQuery); // This holds the debounced search query
   const router = useRouter();
 
-  const fetchUrls = async (searchQuery = '') => {
+  const fetchUrls = async (searchQuery: string = '') => {
     try {
       const query = searchQuery ? `?search=${searchQuery}` : ''; // Append search query if present
       const res = await fetch(`/api/searchDialogPages${query}`);
-      const data = await res.json();
+      const data: URLDocument[] = await res.json();
       setUrls(data);
     } catch (error) {
       setError('Failed to fetch URLs');
@@ -55,7 +56,7 @@ const SearchUrls = () => {
   }, [searchQuery]);
 
   // Handle changes in the search input field
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);  // Instant typing updates inputValue
   };
 
@@ -66,14 +67,14 @@ const SearchUrls = () => {
       url.shortenUrl.toLowerCase().includes(searchQuery.toLowerCase())
     ), [urls, searchQuery]);
 
-  const handleKeyDown = useCallback((e) => {
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Enter" && filteredUrls.length > 0) {
       const selectedUrl = filteredUrls[selectedIndex];
     }
 
     if (e.key === "k" && (e.metaKey || e.ctrlKey || e.altKey)) {
       e.preventDefault();
-      setOpen((prev) => !prev);
+      setOpen((prev: boolean) => !prev);
     }
   }, [filteredUrls, selectedIndex]);
 
@@ -85,6 +86,7 @@ const SearchUrls = () => {
   }, [filteredUrls, selectedIndex, handleKeyDown]);
 
   return (
+    // @ts-ignore
     <CommandDialog open={open} onOpenChange={setOpen} className="border rounded-lg max-w-3/4 lg:w-1/4">
       <DialogTitle className="hidden"></DialogTitle>
       <DialogDescription className="hidden"></DialogDescription>

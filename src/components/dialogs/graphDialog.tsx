@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogC
 import { Button } from '@components/ui/button';
 import dynamic from 'next/dynamic';
 import { Access, Accesses } from '@/types/types';
+import { ApexOptions } from 'apexcharts';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -13,8 +14,8 @@ interface AccessGraphDialogProps {
 
 const AccessGraphDialog = ({ open, setOpen, recentAccesses }: AccessGraphDialogProps) => {
   // console.log('Recent Accesses', recentAccesses);
-  const groupByWeek = (accesses) => {
-    const weeks = {};
+  const groupByWeek = (accesses: Access[]) => {
+    const weeks: { [key: string]: { week: string, count: number } } = {};
 
     accesses.forEach((access) => {
       const date = new Date(access.date);
@@ -26,7 +27,7 @@ const AccessGraphDialog = ({ open, setOpen, recentAccesses }: AccessGraphDialogP
       const year = startOfWeek.getFullYear();
       const month = startOfWeek.getMonth();
       const firstDayOfYear = new Date(year, 0, 1);
-      const dayOfYear = Math.floor((startOfWeek - firstDayOfYear) / (24 * 60 * 60 * 1000));
+      const dayOfYear = Math.floor((startOfWeek.getTime() - firstDayOfYear.getTime()) / (24 * 60 * 60 * 1000));
       const weekNumber = Math.ceil((dayOfYear + 1) / 7);
 
       const weekKey = `${year}-W${weekNumber < 10 ? '0' + weekNumber : weekNumber}`;
@@ -96,10 +97,11 @@ const AccessGraphDialog = ({ open, setOpen, recentAccesses }: AccessGraphDialogP
       dataLabels: {
         enabled: true,
       },
-    },
+    } as ApexOptions,
   };
 
   return (
+    // @ts-ignore
     <Dialog open={open} onOpenChange={setOpen} className="w-full md:w-1/2">
       <DialogContent className="rounded max-w-[80%]">
         <DialogHeader>
