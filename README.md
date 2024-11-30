@@ -36,7 +36,7 @@ A Link Shortener + QR Code Generator for personal use or use within a small team
 
 - 🔗 **Shorten any link** and generate a corresponding **QR code** (with custom image). You can also assign a **custom alias** if needed.
 - 📋 **Quickly copy** the shortened URL or **export the QR code** as a `PNG` file.
-- 🌙 **Toggle between light mode and dark mode** for a personalized viewing experience.
+- 🌙 **Toggle between themes** for a personalized viewing experience (Custom theme too!).
 - 🖥️ **Admin dashboard** that provides all the necessary operations to manage links, filter links, view detailed information for each, and export all data as a **CSV**.
 - 🎨 **Beautiful UI elements** designed using **Tailwind CSS** and `ChadCN`, along with icons from **Lucide**.
 - 📈 **Insightful graphs** powered by **ApexCharts**, showing detailed analytics such as the number of times a shortened URL has been used, as well as recent accesses via timestamps, device, browser and country.

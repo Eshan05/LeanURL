@@ -38,19 +38,19 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center h-screen winter:bg-winter-200 winter:text-[#222a]">
+    <main className="flex flex-col items-center justify-center h-screen c-beige:bg-beige-100">
       <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4">
-        <h1 className="text-2xl font-bold">Hello :)</h1>
+        <h1 className="text-3xl font-bold c-beige:text-beige-700/90">Hello :)</h1>
         <Input
           type="text"
           value={passcode}
           onChange={(e) => setPasscode(e.target.value)}
           placeholder="Enter passcode"
-          className="text-base winter:bg-background/80 winter:border-winter-300/50"
+          className="text-base c-beige:bg-beige-50/80 c-beige:border-beige-100 c-beige:placeholder:text-beige-800/50 c-beige:text-beige-800/80 c-beige:focus-visible:ring-beige-200 focus-visible:ring-offset-0"
         />
         <section className="flex space-x-3">
           <Button type="submit"
-            className="text-sm"
+            className="text-sm c-beige:bg-beige-50/20 c-beige:border-beige-200 c-beige:focus-visible:ring-beige-200 c-beige:text-beige-700/80 focus-visible:ring-offset-0"
             variant="outline"
             disabled={loading}
           >
@@ -63,7 +63,7 @@ export default function Home() {
                 alt="..." />
             )}
           </Button>
-          <Button type="button" className="text-sm"
+          <Button type="button" className="text-sm c-beige:bg-beige-50/60 c-beige:border-beige-200 c-beige:focus-visible:ring-beige-200 c-beige:text-beige-800/80 focus-visible:ring-offset-0"
             variant="secondary"
             onClick={handleThemeClick}>
             <ThemeToggle />

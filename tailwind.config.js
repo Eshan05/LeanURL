@@ -24,18 +24,18 @@ module.exports = {
 				mono: ['"JetBrains Mono"', 'monospace']
 			},
 			colors: {
-				winter: {
-					'50': '#f3f7fb',
-					'100': '#e4edf5',
-					'200': '#cbdeed',
-					'300': '#adcce3',
-					'400': '#86b2d4',
-					'500': '#6a98c7',
-					'600': '#5680ba',
-					'700': '#4c6fa9',
-					'800': '#425b8b',
-					'900': '#394d6f',
-					'950': '#263145',
+				'beige': {
+					'50': '#f8f6ee',
+					'100': '#ede8d0',
+					'200': '#dfd3a9',
+					'300': '#ccb878',
+					'400': '#bc9e53',
+					'500': '#ad8b45',
+					'600': '#956f39',
+					'700': '#785430',
+					'800': '#65462e',
+					'900': '#573c2c',
+					'950': '#322016',
 				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -110,10 +110,10 @@ module.exports = {
 	plugins: [
 		require('tailwindcss-animate'),
 		plugin(function ({ addVariant, e }) {
-			addVariant('winter', ({ modifySelectors, separator }) => {
+			addVariant('c-beige', ({ modifySelectors, separator }) => {
 				modifySelectors(({ className }) => {
-					// Modify selectors to include .winter in the class
-					return `.winter .${e(`winter${separator}${className}`)}`;
+					// Modify selectors to include .c-beige in the class
+					return `.c-beige .${e(`c-beige${separator}${className}`)}`;
 				});
 			});
 		}),

@@ -111,7 +111,7 @@ const AccessGraphDialog = ({ open, setOpen, recentAccesses }: AccessGraphDialogP
         <section className="h-full p-3">
           {/* Desktop Content */}
           <div className="hidden h-full lg:block">
-            <div className="w-full mt-3 bg-gray-100 dark:bg-[#0c0e0f] rounded-lg p-1 h-full">
+            <div className="w-full mt-3 bg-gray-100 c-beige:bg-beige-50 dark:bg-[#0c0e0f] rounded-lg p-1 h-full">
               <Chart
                 options={graphData.options}
                 series={graphData.series}

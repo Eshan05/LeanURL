@@ -1,6 +1,7 @@
 import { Button } from "@components/ui/button";
 import { useState, useEffect } from "react";
 import { Sun, Moon, Snowflake } from "lucide-react";
+import { LuScroll } from "react-icons/lu";
 
 export const ThemeToggle = () => {
   const [theme, setTheme] = useState(() => {
@@ -11,7 +12,7 @@ export const ThemeToggle = () => {
   });
 
   useEffect(() => {
-    document.body.classList.remove("dark", "light", "winter"); // Remove all themes first
+    document.body.classList.remove("dark", "light", "c-beige"); // Remove all themes first
     document.body.classList.add(theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
@@ -22,7 +23,7 @@ export const ThemeToggle = () => {
     setIsClient(true);
     const handleShortcut = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === "m") {
-        setTheme((prev) => (prev === "dark" ? "light" : prev === "light" ? "winter" : "dark"));
+        setTheme((prev) => (prev === "dark" ? "light" : prev === "light" ? "c-beige" : "dark"));
       }
     };
 
@@ -37,15 +38,15 @@ export const ThemeToggle = () => {
   return (
     <Button
       aria-label="Toggle theme"
-      onClick={() => setTheme((prev) => (prev === "dark" ? "light" : prev === "light" ? "winter" : "dark"))}
+      onClick={() => setTheme((prev) => (prev === "dark" ? "light" : prev === "light" ? "c-beige" : "dark"))}
       variant="ghost"
       size="icon"
       className="w-5 h-5 transition-all duration-200 hover:bg-transparent !bg-transparent"
     >
       {theme === "dark" ? (
         <Moon size={20} className="dark:text-white" />
-      ) : theme === "winter" ? (
-        <Snowflake size={20} />
+      ) : theme === "c-beige" ? (
+        <LuScroll size={20} />
       ) : (
         <Sun size={20} />
       )}

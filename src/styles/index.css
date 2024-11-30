@@ -57,6 +57,28 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+
+  .c-beige {
+    --background: 47 45% 94%;
+    --foreground: 40 5% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 40 5% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 5% 3.9%;
+    --primary: 50 45% 92%; /* Button primary */
+    --primary-foreground: 31 28% 44%; /* Button text */
+    --secondary: 47 5% 96%;
+    --secondary-foreground: 240 5% 3.9%;
+    --muted: 47 5% 96%;
+    --muted-foreground: 47 5% 50%;
+    --accent: 47 40% 90%; /* Hover */
+    --accent-foreground: 47 5% 3.9%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 47 42% 77%;
+    --input: 47 44% 94%;
+    --ring: 47 46% 77%;
+  }
 }
 
 @layer base {
@@ -66,6 +88,10 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.text-shadow-c-beige {
+  text-shadow: 0px 1px 3px rgba(155, 155, 155, 0.5);
 }
 
 .small-caps { font-variant: small-caps; }

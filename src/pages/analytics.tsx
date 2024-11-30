@@ -201,7 +201,7 @@ export default function Analytics() {
   }
 
   return (
-    <main className="relative overflow-x-hidden flex flex-col items-center justify-center h-screen font-inter min-h-svh bg-zinc-50 dark:bg-[#09090b]">
+    <main className="relative overflow-x-hidden flex flex-col items-center justify-center h-screen font-inter min-h-svh bg-zinc-50 dark:bg-[#09090b] c-beige:bg-beige-100">
       <div className='relative'>
         <GradientTop />
       </div>
@@ -222,7 +222,7 @@ export default function Analytics() {
                 <RefreshCcw className="w-4 h-4 mr-2 group-hover:animate-spin" /> Refresh Data
               </Button>
             </div>
-            <section className="flex items-center p-2 border rounded-lg dark:bg-[#0c0e0f] bg-white">
+            <section className="flex items-center p-2 border rounded-lg dark:bg-[#0c0e0f] bg-white c-beige:bg-[#f7f4e9]">
               <Input
                 ref={inputRef}
                 type="text"
@@ -252,14 +252,14 @@ export default function Analytics() {
               {filteredUrls.map((url) => {
                 return (
                   // url._id
-                  <li key={url._id} id={url._id} className="p-4 rounded-lg shadow-lg url-card dark:border dark:bg-[#0c0e0f88] dark:backdrop-blur">
+                  <li key={url._id} id={url._id} className="p-4 rounded-lg shadow-lg url-card dark:border dark:bg-[#0c0e0f88] dark:backdrop-blur c-beige:bg-[hsl(48,44%,90%)] c-beige:text-beige-900">
                     <header className="flex flex-col gap-0 !text-sm">
                       <h2 className="flex justify-between p-1 space-x-4">
                         <main className="flex items-center ml-1 space-x-4">
                           <Link className="w-5 h-5 short-link" />
                           <a href={url.shortenUrl}
                             target="_blank" rel="noopener noreferrer"
-                            className='inline-block px-3 py-1.5 font-mono border rounded-lg text-primary hover:underline'
+                            className='inline-block px-3 py-1.5 font-mono border rounded-lg text-primary c-beige:text-beige-700 hover:underline'
                           >{url.shortenUrl}</a>
                         </main>
                         <aside className="flex gap-2">
@@ -282,7 +282,7 @@ export default function Analytics() {
                           <ExternalLink className="w-5 h-5" />
                           <a href={url.originalUrl}
                             target="_blank" rel="noopener noreferrer"
-                            className='inline-block px-3 py-1.5 font-mono border rounded-lg text-primary hover:underline overflow-x-auto max-w-[128px] scrollbar-none whitespace-nowrap'
+                            className='inline-block px-3 py-1.5 font-mono border rounded-lg text-primary hover:underline overflow-x-auto max-w-[128px] scrollbar-none whitespace-nowrap c-beige:text-beige-700'
                           >{url.originalUrl}</a>
                         </main>
                         <aside className="flex gap-2">
