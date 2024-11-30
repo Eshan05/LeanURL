@@ -1,8 +1,9 @@
 import dbConnect from '@utils/db'
 import Url from '@models/url';
 import axios from 'axios';
+import { GetServerSidePropsContext } from 'next';
 
-const getCountryByIp = async (ip) => {
+const getCountryByIp = async (ip: string) => {
   console.log('IP:', ip);
   try {
     const response = await axios.get(`http://ip-api.com/json/${ip}?fields=status,country`);
@@ -19,7 +20,17 @@ const getCountryByIp = async (ip) => {
   }
 };
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  if (!context.params) {
+    return {
+      notFound: true
+    }
+  }
+  if (typeof context.params.shortUrl !== 'string') {
+    return {
+      notFound: true
+    }
+  }
   const { shortUrl } = context.params;
   const { req } = context;
   await dbConnect();
@@ -41,9 +52,16 @@ export async function getServerSideProps(context) {
 
       const forwarded = req.headers["x-forwarded-for"];
       console.log('Forwarded IP:', forwarded);
-      let clientIp = forwarded ? String(forwarded.split(',')[0].trim()) : req.socket.remoteAddress;
+      // let clientIp = forwarded ? String(forwarded.split(',')[0].trim()) : req.socket.remoteAddress;
+      let clientIp = '';
+      if (typeof forwarded === 'string') {
+        clientIp = String(forwarded.split(',')[0].trim());
+      } else if (Array.isArray(forwarded)) {
+        clientIp = String(forwarded[0]?.trim());
+      } else { clientIp = req.socket.remoteAddress || ''; }
+
       if (clientIp.startsWith('::ffff:')) {
-        clientIp = clientIp.slice(7); // Remove the IPv6 prefix
+        clientIp = clientIp.slice(7);
       }
       const currentTime = new Date();
       const userAgent = req.headers['user-agent'] || 'Unknown';

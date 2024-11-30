@@ -12,7 +12,7 @@
     <img src="https://img.shields.io/badge/-JavaScript-purple?style=for-the-badge&logoColor=white&logo=javascript&color=yellow" alt="javascript" />
     <img src="https://img.shields.io/badge/-ApexCharts-orange?style=for-the-badge&logoColor=white&logo=apexcharts&color=orange" alt="apexcharts" />
   </div>
-  <h3 align="center"> Short.en <br /> Link Shortener + QR Code Generator </h3>
+  <h3 align="center"> LeanURL <br /> Link Shortener + QR Code Generator </h3>
 
    <div align="center">
      Visually stunning link shortener for your personal use. Powerful admin dashboard with tons of features and enhanced performance. Ease of use and scalable.
@@ -25,9 +25,9 @@ A Link Shortener + QR Code Generator for personal use or use within a small team
 
 ### 💻 Technolgoies
 
-[![React JS](https://skillicons.dev/icons?i=react "React JS")](https://react.dev/ "React JS") [![Next JS](https://skillicons.dev/icons?i=next "Next JS")](https://nextjs.org/ "Next JS") ![Javascript](https://skillicons.dev/icons?i=js "Javascript") [![Mongo](https://skillicons.dev/icons?i=mongodb "Mongo")](https://www.typescriptlang.org/ "Typescript") [![Tailwind CSS](https://skillicons.dev/icons?i=tailwind "Tailwind CSS")](https://tailwindcss.com/ "Tailwind CSS") [![Vercel](https://skillicons.dev/icons?i=vercel "Vercel")](https://vercel.app/ "Vercel")
+[![React JS](https://skillicons.dev/icons?i=react "React JS")](https://react.dev/ "React JS") [![Next JS](https://skillicons.dev/icons?i=next "Next JS")](https://nextjs.org/ "Next JS") ![Javascript](https://skillicons.dev/icons?i=ts "Typescript") [![Mongo](https://skillicons.dev/icons?i=mongodb "Mongo")](https://www.typescriptlang.org/ "Typescript") [![Tailwind CSS](https://skillicons.dev/icons?i=tailwind "Tailwind CSS")](https://tailwindcss.com/ "Tailwind CSS") [![Vercel](https://skillicons.dev/icons?i=vercel "Vercel")](https://vercel.app/ "Vercel")
 
-- **Language**: Javascript
+- **Language**: Typescript (Migrated)
 - **Backend**: [Next.js 15](https://nextjs.org/) + [MongoDB](https://www.mongodb.com/) with Mongoose
 - **Frontend**: [Next.js 15](https://nextjs.org/) + UI Components via [`shadcn/ui`](https://ui.shadcn.com/) + Tailwind
 - **Others**: [Apexcharts](https://apexcharts.com/), [QRCode.React](https://www.npmjs.com/package/qrcode.react), NanoId, IP-API, React Icons, Axios

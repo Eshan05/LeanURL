@@ -1,12 +1,15 @@
+// @ts-nocheck
 /** @type {import('tailwindcss').Config} */
+const plugin = require('tailwindcss/plugin')
+
 module.exports = {
-	darkMode: ["class"],
 	content: [
 		'./pages/**/*.{ts,tsx}',
 		'./components/**/*.{ts,tsx}',
 		'./app/**/*.{ts,tsx}',
 		'./src/**/*.{ts,tsx,js,jsx}',
 	],
+	darkMode: ["class"],
 	prefix: "",
 	theme: {
 		container: {
@@ -21,6 +24,19 @@ module.exports = {
 				mono: ['"JetBrains Mono"', 'monospace']
 			},
 			colors: {
+				winter: {
+					'50': '#f3f7fb',
+					'100': '#e4edf5',
+					'200': '#cbdeed',
+					'300': '#adcce3',
+					'400': '#86b2d4',
+					'500': '#6a98c7',
+					'600': '#5680ba',
+					'700': '#4c6fa9',
+					'800': '#425b8b',
+					'900': '#394d6f',
+					'950': '#263145',
+				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -91,5 +107,15 @@ module.exports = {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require('tailwindcss-animate'),
+		plugin(function ({ addVariant, e }) {
+			addVariant('winter', ({ modifySelectors, separator }) => {
+				modifySelectors(({ className }) => {
+					// Modify selectors to include .winter in the class
+					return `.winter .${e(`winter${separator}${className}`)}`;
+				});
+			});
+		}),
+	],
 }

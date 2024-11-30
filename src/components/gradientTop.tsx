@@ -1,4 +1,5 @@
 export const GradientTop = () => {
+
   return (
     <aside
       aria-hidden="true"

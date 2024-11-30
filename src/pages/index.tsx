@@ -38,7 +38,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center h-screen">
+    <main className="flex flex-col items-center justify-center h-screen winter:bg-winter-200 winter:text-[#222a]">
       <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4">
         <h1 className="text-2xl font-bold">Hello :)</h1>
         <Input
@@ -46,7 +46,7 @@ export default function Home() {
           value={passcode}
           onChange={(e) => setPasscode(e.target.value)}
           placeholder="Enter passcode"
-          className="text-base"
+          className="text-base winter:bg-background/80 winter:border-winter-300/50"
         />
         <section className="flex space-x-3">
           <Button type="submit"

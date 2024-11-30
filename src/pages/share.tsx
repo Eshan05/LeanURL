@@ -141,7 +141,7 @@ export default function Home() {
                 Enter your link below. In case you want to<br className='md:hidden' /> see analytics or manage links
                 head over to the <Link href='/analytics' className='hover:underline hover:text-blue-500'><span>analytics page</span><LinkIcon className='inline-block w-6 ps-1 pe-1 aspect-square' /></Link><br className='md:hidden' /><span className='hidden lg:inline-flex'>(Press <kbd className="inline-flex items-center p-1 ml-2 mr-2 font-mono text-xs bg-gray-100 rounded ring-1 ring-gray-900/10 dark:bg-zinc-800 dark:ring-gray-900/50 dark:text-zinc-300 whitespace-nowrap">
                   <Command className="inline-block w-3 h-3" /><span className="text-[.25rem]">&nbsp;</span>+<span className="text-[.25rem]">&nbsp;</span>K
-                </kbd> to see all URLs).</span>
+                </kbd> to search for existing URLs).</span>
               </p>
             </article>
 

@@ -1,24 +1,20 @@
-import { Button } from "@components/ui/button"
+import { Button } from "@components/ui/button";
 import { useState, useEffect } from "react";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Snowflake } from "lucide-react";
 
 export const ThemeToggle = () => {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
+  const [theme, setTheme] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") === "dark";
+      return localStorage.getItem("theme") || "light"; // Default to light
     }
-    return false;
+    return "light";
   });
 
   useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.body.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [isDarkMode]);
+    document.body.classList.remove("dark", "light", "winter"); // Remove all themes first
+    document.body.classList.add(theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const [isClient, setIsClient] = useState(false);
 
@@ -26,7 +22,7 @@ export const ThemeToggle = () => {
     setIsClient(true);
     const handleShortcut = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === "m") {
-        setIsDarkMode((prev) => !prev);
+        setTheme((prev) => (prev === "dark" ? "light" : prev === "light" ? "winter" : "dark"));
       }
     };
 
@@ -41,12 +37,18 @@ export const ThemeToggle = () => {
   return (
     <Button
       aria-label="Toggle theme"
-      onClick={() => setIsDarkMode((prev) => !prev)}
+      onClick={() => setTheme((prev) => (prev === "dark" ? "light" : prev === "light" ? "winter" : "dark"))}
       variant="ghost"
       size="icon"
       className="w-5 h-5 transition-all duration-200 hover:bg-transparent !bg-transparent"
     >
-      {isDarkMode ? <Moon size={20} className='dark:text-white' /> : <Sun size={20} />}
+      {theme === "dark" ? (
+        <Moon size={20} className="dark:text-white" />
+      ) : theme === "winter" ? (
+        <Snowflake size={20} />
+      ) : (
+        <Sun size={20} />
+      )}
     </Button>
   );
 };
