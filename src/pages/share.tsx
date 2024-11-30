@@ -44,6 +44,9 @@ export default function Home() {
     if (expirationDate && scheduledDate && new Date(expirationDate) <= new Date(scheduledDate)) { return toast.error('Expiration date cannot be before or equal to scheduled date'); }
     if (expirationDate && new Date(expirationDate) <= new Date(Date.now())) { return toast.error('Expiration date cannot be in the past'); }
 
+    if (alias == 'share' || alias == 'analytics') { return toast.error(`Custom alias cannot be: share`); }
+    if (alias == 'analytics') { return toast.error(`Custom alias cannot be analytics`); }
+
     try {
       const res = await fetch('/api/shorten', {
         method: 'POST',
@@ -69,6 +72,8 @@ export default function Home() {
         else toast.error('An error occurred: ' + err.message);
       }
     }
+
+    return;
   };
 
   const BASE_URL = process.env.BASE_URL || originalUrl;
@@ -130,16 +135,16 @@ export default function Home() {
           <main className="max-w-2xl mx-auto text-center c-beige:text-beige-800">
             <p className="small-caps">URL Shortener + QR Code Generator</p>
 
-            <header className="max-w-2xl mt-5">
+            <header className="max-w-2xl mt-2">
               <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl">
                 Enter The Link!
               </h1>
             </header>
 
-            <article className="max-w-2xl mt-5">
+            <article className="max-w-2xl mt-7">
               <p className="text-base lg:text-lg text-muted-foreground c-beige:text-beige-700/60">
                 Enter your link below. In case you want to<br className='md:hidden' /> see analytics or manage links
-                head over to the <Link href='/analytics' className='hover:underline hover:text-blue-500'><span>analytics page</span><LinkIcon className='inline-block w-6 ps-1 pe-1 aspect-square' /></Link><br className='md:hidden' /><span className='hidden lg:inline-flex'>(Press <kbd className="inline-flex items-center p-1 ml-2 mr-2 font-mono text-xs bg-gray-100 rounded ring-1 ring-gray-900/10 dark:bg-zinc-800 dark:ring-gray-900/50 dark:text-zinc-300 whitespace-nowrap">
+                head over to the <Link href='/analytics' className='hover:underline hover:text-blue-500'><span>analytics page</span><LinkIcon className='inline-block w-6 ps-1 pe-1 aspect-square' /></Link><br className='md:hidden' /><span className='hidden lg:inline-flex'>(Press <kbd className="inline-flex items-center p-1 ml-2 mr-2 font-mono text-xs bg-gray-100 rounded c-beige:bg-primary ring-1 ring-gray-900/10 dark:bg-zinc-800 dark:ring-gray-900/50 dark:text-zinc-300 whitespace-nowrap">
                   <Command className="inline-block w-3 h-3" /><span className="text-[.25rem]">&nbsp;</span>+<span className="text-[.25rem]">&nbsp;</span>K
                 </kbd> to search for existing URLs).</span>
               </p>

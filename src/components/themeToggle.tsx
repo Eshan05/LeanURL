@@ -1,6 +1,6 @@
 import { Button } from "@components/ui/button";
 import { useState, useEffect } from "react";
-import { Sun, Moon, Snowflake } from "lucide-react";
+import { Sun, Moon } from "lucide-react";
 import { LuScroll } from "react-icons/lu";
 
 export const ThemeToggle = () => {

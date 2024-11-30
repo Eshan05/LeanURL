@@ -34,15 +34,24 @@
     "lint-ts": "tsc --noEmit"
   },
   "name": "qr-code-generator",
-  "version": "1.0.0",
-  "description": "This is a repository to be used by us to shorten URLs",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "A TS Project that generates QR codes for any URL and also gives a shortened URL",
+  "main": "index.tsx",
   "directories": {
-    "doc": "docs"
+    "doc": "docs",
+    "src": "src"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "URL Shortener",
+    "QR Code",
+    "next.js",
+    "react",
+    "apexcharts",
+    "shadcn",
+    "mongo"
+  ],
+  "author": "Eshan Nahar",
+  "license": "GPL-3.0-only",
   "devDependencies": {
     "@types/node": "22.9.3",
     "@types/react": "18.3.12",
@@ -52,5 +61,9 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
     "typescript": "5.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eshan05/LeanURL.git"
   }
 }

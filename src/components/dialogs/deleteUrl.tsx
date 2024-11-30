@@ -20,7 +20,7 @@ export function DeleteUrlDialog({ open, setOpen, urlToDelete, handleDelete }: De
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-[90%] sm:max-w-md">
+      <DialogContent className="max-w-[90%] sm:max-w-md" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Confirm Deletion</DialogTitle>
           <p>Are you sure you want to delete this URL? This action cannot be undone.</p>

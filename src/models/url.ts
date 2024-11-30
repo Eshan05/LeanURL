@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-const BASE_URL = process.env.BASE_URL || 'http://';
 const AccessSchema = new mongoose.Schema({
   count: { type: Number, default: 0 },
   lastAccessed: {

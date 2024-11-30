@@ -9,7 +9,7 @@
     <img src="https://img.shields.io/badge/-Shadcn-green?style=for-the-badge&logoColor=white&logo=shadcn&color=gray" alt="shadcn" />
     <img src="https://img.shields.io/badge/-ReactJs-61DAFB?logo=react&logoColor=white&style=for-the-badge" alt="reactdotjs" />
     <img src="https://img.shields.io/badge/-Tailwind_CSS-black?style=for-the-badge&logoColor=white&logo=tailwindcss&color=06B6D4" alt="tailwindcss" />
-    <img src="https://img.shields.io/badge/-JavaScript-purple?style=for-the-badge&logoColor=white&logo=javascript&color=yellow" alt="javascript" />
+    <img src="https://img.shields.io/badge/-Typescript-purple?style=for-the-badge&logoColor=white&logo=typescript&color=blue" alt="typescript" />
     <img src="https://img.shields.io/badge/-ApexCharts-orange?style=for-the-badge&logoColor=white&logo=apexcharts&color=orange" alt="apexcharts" />
   </div>
   <h3 align="center"> LeanURL <br /> Link Shortener + QR Code Generator </h3>

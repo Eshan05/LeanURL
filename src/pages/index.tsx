@@ -63,11 +63,11 @@ export default function Home() {
                 alt="..." />
             )}
           </Button>
-          <Button type="button" className="text-sm c-beige:bg-beige-50/60 c-beige:border-beige-200 c-beige:focus-visible:ring-beige-200 c-beige:text-beige-800/80 focus-visible:ring-offset-0"
-            variant="secondary"
+          <div
+            className="inline-flex items-center justify-center h-10 px-4 py-2 text-sm font-medium transition-colors rounded-md bg-secondary text-secondary-foreground whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring t-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-secondary/80 c-beige:bg-beige-50/60 c-beige:border-beige-200 c-beige:focus-visible:ring-beige-200 c-beige:text-beige-800/80 focus-visible:ring-offset-0"
             onClick={handleThemeClick}>
             <ThemeToggle />
-          </Button>
+          </div>
         </section>
       </form>
 

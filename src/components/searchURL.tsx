@@ -2,10 +2,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useMemo, useState, useEffect } from "react";
 import {
-  Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
   CommandDialog
@@ -96,7 +94,7 @@ const SearchUrls = () => {
         value={inputValue}
         className="px-4 pb-2 "
       /> */}
-      <div className="flex items-center px-3 pb-1 border-b" cmdk-input-wrapper="">
+      <div className="flex items-center px-3 pb-1 border-b c-beige:bg-beige-50" cmdk-input-wrapper="">
         <SearchIcon className="w-4 h-4 mr-2 opacity-50 shrink-0" />
         <Input
           className={
@@ -106,7 +104,7 @@ const SearchUrls = () => {
           onChange={handleSearchChange}
         />
       </div>
-      <CommandList className="px-2 py-4">
+      <CommandList className="px-2 py-4 c-beige:bg-beige-50">
         {urls.length === 0 ? (
           <CommandEmpty>{error ? error : "No URLs found"}</CommandEmpty>
         ) : (

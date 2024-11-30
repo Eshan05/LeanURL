@@ -49,7 +49,7 @@ const RecentAccessesDialog = ({ open, setOpen, recentAccesses }: RecentAccessesD
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-[90%] lg:max-w-[40%]">
+      <DialogContent className="max-w-[90%] lg:max-w-[40%]" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Recent Accesses</DialogTitle>
         </DialogHeader>

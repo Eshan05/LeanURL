@@ -152,12 +152,13 @@ export default function Analytics() {
         setTimeout(() => {
           element.classList.remove('animate-pulse');
           if (iconElement) {
-            iconElement.classList.add('animate-spin', 'text-blue-500');
+            iconElement.classList.remove('animate-spin', 'text-blue-500');
           }
+          console.log("R")
           window.history.replaceState(null, '', window.location.pathname);
         }, 2000);
       } else {
-        // console.log("Element not found with id:", query.id);
+        toast.error("URL doesn't exist");
       }
     }, 500);
   }, [query.id]);
@@ -209,9 +210,9 @@ export default function Analytics() {
 
       <div className="relative w-full py-24 overflow-x-hidden">
         <div className="w-full px-[1.15rem] py-10 mx-auto lg:px-8 lg:py-16">
-          <p className='mb-2 font-mono text-center small-caps'>LeanURL</p>
+          <p className='mb-2 font-mono text-center small-caps c-beige:text-beige-800'>LeanURL</p>
           <header className="relative flex flex-col items-center justify-center w-full mb-10 space-y-10 overflow-hidden">
-            <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl">
+            <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl c-beige:text-beige-800">
               Analytics
             </h1>
             <div className='flex space-x-2'>
