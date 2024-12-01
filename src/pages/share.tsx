@@ -12,6 +12,7 @@ import { GradientTop } from '@components/gradientTop';
 import { downloadQRCode } from '@utils/utils';
 import { useAuthen } from '@hooks/useAuthen';
 import Link from 'next/link';
+import { CustomQR } from '@/components/qrcustomize';
 
 export default function Home() {
   const authenticated = useAuthen();
@@ -265,22 +266,7 @@ export default function Home() {
                     >{shortenUrl}</a>
                   </header>
                   <footer className='p-3 bg-white rounded-lg shadow' ref={qrCodeRef}>
-                    <QRCodeSVG value={generateQRCodeValue(shortenUrl)}
-                      title={"Scan me!"}
-                      size={128}
-                      bgColor={"#ffffff"}
-                      fgColor={"#000000"}
-                      level={"H"}
-                      marginSize={1}
-                      imageSettings={{
-                        src: "https://images.vexels.com/content/137688/preview/logo-geometric-polygonal-shape-029edb.png",
-                        x: undefined,
-                        y: undefined,
-                        height: 24,
-                        width: 24,
-                        opacity: 1,
-                        excavate: true,
-                      }} />
+                    <CustomQR url={generateQRCodeValue(shortenUrl)} />
                   </footer>
                 </div>
               )}

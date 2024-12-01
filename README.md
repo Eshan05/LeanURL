@@ -30,7 +30,7 @@ A Link Shortener + QR Code Generator for personal use or use within a small team
 - **Language**: Typescript (Migrated)
 - **Backend**: [Next.js 15](https://nextjs.org/) + [MongoDB](https://www.mongodb.com/) with Mongoose
 - **Frontend**: [Next.js 15](https://nextjs.org/) + UI Components via [`shadcn/ui`](https://ui.shadcn.com/) + Tailwind
-- **Others**: [Apexcharts](https://apexcharts.com/), [QRCode.React](https://www.npmjs.com/package/qrcode.react), NanoId, IP-API, React Icons, Axios
+- **Others**: [Apexcharts](https://apexcharts.com/), [QR Code Styling](https://github.com/kozakdenys/qr-code-styling?tab=readme-ov-file), NanoId, IP-API, React Icons, Axios
 
 ## 🚀 Features
 
