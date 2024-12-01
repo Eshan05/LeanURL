@@ -1,7 +1,7 @@
 "use client";
 
 import { ChartArea, HomeIcon } from "lucide-react";
-import { ThemeToggle } from "./themeToggle";
+import { ThemeToggle } from "@components/themeToggle";
 import Link from "next/link";
 
 export const Nav = () => {

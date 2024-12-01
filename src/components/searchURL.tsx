@@ -8,10 +8,9 @@ import {
   CommandList,
   CommandDialog
 } from "@components/ui/command";
-import { DialogDescription, DialogTitle } from "./ui/dialog";
-import { LinkIcon, ExternalLinkIcon } from "lucide-react";
-import { Input } from "./ui/input";
-import { SearchIcon } from "lucide-react";
+import { DialogDescription, DialogTitle } from "@components/ui/dialog";
+import { Input } from "@components/ui/input";
+import { SearchIcon, LinkIcon, ExternalLinkIcon } from "lucide-react";
 import { URLDocument } from "@/types/types";
 
 const SearchUrls = () => {

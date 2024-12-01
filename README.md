@@ -30,11 +30,11 @@ A Link Shortener + QR Code Generator for personal use or use within a small team
 - **Language**: Typescript (Migrated)
 - **Backend**: [Next.js 15](https://nextjs.org/) + [MongoDB](https://www.mongodb.com/) with Mongoose
 - **Frontend**: [Next.js 15](https://nextjs.org/) + UI Components via [`shadcn/ui`](https://ui.shadcn.com/) + Tailwind
-- **Others**: [Apexcharts](https://apexcharts.com/), [QRCode.React](https://www.npmjs.com/package/qrcode.react), NanoId, IP-API, React Icons, Axios
+- **Others**: [Apexcharts](https://apexcharts.com/), [QR Code Styling](https://github.com/kozakdenys/qr-code-styling?tab=readme-ov-file), NanoId, IP-API, React Icons, Axios
 
 ## 🚀 Features
 
-- 🔗 **Shorten any link** and generate a corresponding **QR code** (with custom image). You can also assign a **custom alias** if needed.
+- 🔗 **Shorten any link** and generate a corresponding **QR code** (With tons of customization! See second image). You can also assign a **custom alias** if needed.
 - 📋 **Quickly copy** the shortened URL or **export the QR code** as a `PNG` file.
 - 🌙 **Toggle between themes** for a personalized viewing experience (Custom theme too!).
 - 🖥️ **Admin dashboard** that provides all the necessary operations to manage links, filter links, view detailed information for each, and export all data as a **CSV**.
@@ -66,6 +66,7 @@ npm run dev
 <div align="center">
 
 ![HomeQR](public/images/HomeDark_QR.png)
+![HomeBeigeCustomize](public/images/HomeBeige_Customize.png)
 ![SearchHome](public/images/SearchHome.png)
 ![Analytics](public/images/Analytics.png)
 ![AnalyticsDark_Search](public/images/AnalyticsDark_Search.png)
@@ -84,3 +85,4 @@ npm run dev
 - See LICENSE (GPLv3)
 - Feel free to raise issues if you notice anything wrong
 - [Hero section](https://shadcn-ui-blocks.vercel.app/blocks/hero-sections) 
+- [Color Picker](https://github.com/Eshan05/Miron/blob/main/components/custom-color-picker.tsx)

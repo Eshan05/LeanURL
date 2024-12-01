@@ -76,7 +76,7 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 47 42% 77%;
-    --input: 47 44% 94%;
+    --input: 47 42% 77%; /* Apparently the border for input */
     --ring: 47 46% 77%;
   }
 }
