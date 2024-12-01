@@ -2,7 +2,10 @@
 
 import React, { useEffect, useRef, useState, ChangeEvent } from "react";
 import QRCodeStyling, { Options, FileExtension } from "qr-code-styling";
-import ColorPicker from "./colorPicker";
+import ColorPicker from "@components/colorPicker";
+import { Button } from "@components/ui/button";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@components/ui/select";
+import { DownloadIcon } from "lucide-react";
 
 export const CustomQR = ({ url }: { url: string }) => {
   const [options, setOptions] = useState<Options>({
@@ -67,8 +70,10 @@ export const CustomQR = ({ url }: { url: string }) => {
     }));
   };
 
-  const onExtensionChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setFileExt(event.target.value as FileExtension);
+  // const onExtensionChange = (event: ChangeEvent<HTMLSelectElement>) => { setFileExt(event.target.value as FileExtension); };
+  const onExtensionChange = (value: FileExtension) => {
+    setFileExt(value);
+    console.log('Selected file extension:', value);
   };
 
   const onDownloadClick = () => {
@@ -79,128 +84,162 @@ export const CustomQR = ({ url }: { url: string }) => {
   };
 
   return (
-    <section className="flex gap-4">
-      <main>
-        <div className="" ref={ref} />
-        <div className="">
+    <section className="flex flex-col gap-4 md:flex-row">
+      <main className="flex flex-col items-center">
+        <div className="p-3 bg-white rounded-lg shadow" ref={ref} />
+        <div className="flex flex-row items-center justify-center gap-2 p-1 m-1 md:flex-row *:w-full">
           {/* <input value={options.data} onChange={onDataChange} className="" /> */}
-          <select onChange={onExtensionChange} value={fileExt}>
-            <option value="svg">SVG</option>
-            <option value="png">PNG</option>
-            <option value="jpeg">JPEG</option>
-            <option value="webp">WEBP</option>
-          </select>
-          <button onClick={onDownloadClick}>Download</button>
+          <Select value={fileExt} onValueChange={onExtensionChange}>
+            <SelectTrigger className="min-w-24">
+              <SelectValue placeholder="Select file format" />
+            </SelectTrigger>
+            <SelectContent className="text-sm">
+              <SelectGroup>
+                <SelectLabel>File Format</SelectLabel>
+                <SelectItem value="svg">SVG</SelectItem>
+                <SelectItem value="png">PNG</SelectItem>
+                <SelectItem value="jpeg">JPEG</SelectItem>
+                <SelectItem value="webp">WEBP</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Button onClick={onDownloadClick} size={"sm"} variant={"secondary"}><DownloadIcon className="w-4 h-4" /></Button>
         </div>
       </main>
       <aside>
-        <h3>Customize:</h3>
+        {/* <h3 className="text-base font-bold lg:text-lg text-muted-foreground c-beige:text-beige-700/60 small-caps">Customize</h3> */}
         <section>
-          <header>
-            <ColorPicker
-              value={options.backgroundOptions?.color}
-              onColorChange={(color: string) => {
-                setOptions(options => ({
-                  ...options,
-                  backgroundOptions: {
-                    ...options.backgroundOptions,
-                    color
-                  }
-                }));
-              }}
-            />
-            <ColorPicker
-              value={options.dotsOptions?.color}
-              onColorChange={(color: string) => {
-                setOptions(options => ({
-                  ...options,
-                  dotsOptions: {
-                    ...options.dotsOptions,
-                    color
-                  }
-                }));
-              }}
-            />
-            <ColorPicker
-              value={options.cornersSquareOptions?.color}
-              onColorChange={(color: string) => {
-                setOptions(options => ({
-                  ...options,
-                  cornersSquareOptions: {
-                    ...options.cornersSquareOptions,
-                    color
-                  }
-                }));
-              }}
-            />
-            <ColorPicker
-              value={options.cornersDotOptions?.color}
-              onColorChange={(color: string) => {
-                setOptions(options => ({
-                  ...options,
-                  cornersDotOptions: {
-                    ...options.cornersDotOptions,
-                    color
-                  }
-                }));
-              }}
-            />
+          <header className="flex items-center justify-center my-2 space-x-4 *:items-center">
+            <div className="flex flex-col">
+              <ColorPicker
+                value={options.backgroundOptions?.color}
+                onColorChange={(color: string) => {
+                  setOptions(options => ({
+                    ...options,
+                    backgroundOptions: {
+                      ...options.backgroundOptions,
+                      color
+                    }
+                  }));
+                }}
+              />
+              <p className="font-mono text-xs text-muted-foreground">BG</p>
+            </div>
+            <div className="flex flex-col">
+              <ColorPicker
+                value={options.dotsOptions?.color}
+                onColorChange={(color: string) => {
+                  setOptions(options => ({
+                    ...options,
+                    dotsOptions: {
+                      ...options.dotsOptions,
+                      color
+                    }
+                  }));
+                }}
+              />
+              <p className="font-mono text-xs text-muted-foreground">Dots</p>
+            </div>
+            <div className="flex flex-col">
+              <ColorPicker
+                value={options.cornersSquareOptions?.color}
+                onColorChange={(color: string) => {
+                  setOptions(options => ({
+                    ...options,
+                    cornersSquareOptions: {
+                      ...options.cornersSquareOptions,
+                      color
+                    }
+                  }));
+                }}
+              />
+              <p className="font-mono text-xs text-muted-foreground">Corners</p>
+            </div>
+            <div className="flex flex-col">
+              <ColorPicker
+                value={options.cornersDotOptions?.color}
+                onColorChange={(color: string) => {
+                  setOptions(options => ({
+                    ...options,
+                    cornersDotOptions: {
+                      ...options.cornersDotOptions,
+                      color
+                    }
+                  }));
+                }}
+              />
+              <p className="font-mono text-xs text-muted-foreground">Eyes</p>
+            </div>
           </header>
-          <article>
+          <article className="flex flex-col gap-3 md:flex-row">
             {/* Choosing types for dots in QRCode */}
-            <select
-              value={options.dotsOptions?.type}
-              onChange={(e) => {
+            <Select
+              value={options.dotsOptions?.type || 'square'}
+              onValueChange={(value) => {
                 setOptions((prevOptions) => ({
                   ...prevOptions,
                   dotsOptions: {
                     ...prevOptions.dotsOptions,
-                    type: e.target.value as 'square' | 'rounded' | 'extra-rounded' | 'classy' | 'classy-rounded' | 'dots', // Restrict to valid types
+                    type: value as 'square' | 'rounded' | 'extra-rounded' | 'classy' | 'classy-rounded' | 'dots',
                   },
                 }));
               }}
             >
-              <option value="square">Square</option>
-              <option value="rounded">Rounded</option>
-              <option value="extra-rounded">Extra-Rounded</option>
-              <option value="classy">Classy</option>
-              <option value="classy-rounded">Classy-Rounded</option>
-              <option value="dots">Dot</option>
-            </select>
+              <SelectTrigger>
+                <SelectValue placeholder="Choose Dot Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="square">Square</SelectItem>
+                <SelectItem value="rounded">Rounded</SelectItem>
+                <SelectItem value="extra-rounded">Extra-Rounded</SelectItem>
+                <SelectItem value="classy">Classy</SelectItem>
+                <SelectItem value="classy-rounded">Classy-Rounded</SelectItem>
+                <SelectItem value="dots">Dot</SelectItem>
+              </SelectContent>
+            </Select>
             {/* Choosing type of corner */}
-            <select
-              value={options.cornersSquareOptions?.type}
-              onChange={(e) => {
-                setOptions(options => ({
-                  ...options,
+            <Select
+              value={options.cornersSquareOptions?.type || 'square'}
+              onValueChange={(value) => {
+                setOptions((prevOptions) => ({
+                  ...prevOptions,
                   cornersSquareOptions: {
-                    ...options.cornersSquareOptions,
-                    type: e.target.value as 'square' | 'dot' | 'extra-rounded'
-                  }
+                    ...prevOptions.cornersSquareOptions,
+                    type: value as 'square' | 'dot' | 'extra-rounded',
+                  },
                 }));
               }}
             >
-              <option value="square">Square</option>
-              <option value="dot">Dot</option>
-              <option value="extra-rounded">Extra-Rounded</option>
-            </select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select Corner Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="square">Square</SelectItem>
+                <SelectItem value="dot">Dot</SelectItem>
+                <SelectItem value="extra-rounded">Extra-Rounded</SelectItem>
+              </SelectContent>
+            </Select>
             {/* Choosing type of corner dot */}
-            <select
+            <Select
               value={options.cornersDotOptions?.type}
-              onChange={(e) => {
+              onValueChange={(value) => {
                 setOptions(options => ({
                   ...options,
                   cornersDotOptions: {
                     ...options.cornersDotOptions,
-                    type: e.target.value as 'square' | 'dot'
+                    type: value as 'square' | 'dot'
                   }
                 }));
               }}
             >
-              <option value="square">Square</option>
-              <option value="dot">Dot</option>
-              <option value="extra-rounded">Extra-Rounded</option>
-            </select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select Corner Dot Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="square">Square</SelectItem>
+                <SelectItem value="dot">Dot</SelectItem>
+              </SelectContent>
+            </Select>
           </article>
         </section>
       </aside>

@@ -262,10 +262,10 @@ export default function Home() {
                     <h2 className='absolute -top-[20%] font-mono pe-2 ps-2 bg-[#fafafa] dark:bg-[#09090b] font-light text-md text-muted-foreground small-caps c-beige:bg-beige-100 c-beige:text-beige-700/60'>Short url</h2>
                     <a href={generateQRCodeValue(shortenUrl)}
                       target="_blank" rel="noopener noreferrer"
-                      className='inline-block px-6 py-4 font-mono border rounded-lg text-primary c-beige:text-beige-700 hover:underline'
+                      className='inline-block px-6 py-4 font-mono border rounded-lg text-primary c-beige:text-beige-600 hover:underline'
                     >{shortenUrl}</a>
                   </header>
-                  <footer className='p-3 bg-white rounded-lg shadow' ref={qrCodeRef}>
+                  <footer className='' ref={qrCodeRef}>
                     <CustomQR url={generateQRCodeValue(shortenUrl)} />
                   </footer>
                 </div>

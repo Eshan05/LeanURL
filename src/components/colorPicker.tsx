@@ -7,7 +7,7 @@ import Image from "next/image";
 
 interface ColorPickerProps {
   onColorChange: (color: string) => void;
-  value?: string; // Initial color value (optional)
+  value?: string;
 }
 
 const ColorPicker: React.FC<ColorPickerProps> = ({ onColorChange, value = "#000000" }) => {
@@ -25,23 +25,23 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ onColorChange, value = "#0000
         <Button
           onClick={() => setOpen(true)}
           variant="outline"
-          className="block"
+          className="grid p-0 aspect-square place-items-center"
         >
           <Image
-            src="/color-picker.png" // You can replace this with your icon or an image
+            src="/color-picker.png"
             alt="Color Picker"
-            width={40}
-            height={40}
+            width={20} height={20}
             className="rounded-full"
+            unoptimized={true}
           />
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent side="bottom" sideOffset={5} className="w-full mb-16">
+      <PopoverContent side="bottom" sideOffset={5} className="w-full mb-16 ">
         <div className="flex flex-col items-center">
           <HexColorPicker color={color} onChange={handleColorChange} />
           <Input
-            className="mt-2"
+            className="mt-2 font-mono"
             value={color}
             maxLength={7}
             onChange={(e) => handleColorChange(e.currentTarget.value)}
