@@ -38,7 +38,7 @@ export default function Analytics() {
     setShowConfirmation(!showConfirmation);
   };
 
-  const addDuplicateCounts = useMemo(() => (urls: URLDocument[]): URLWithDuplicateCount[] => {
+  const addDuplicateCounts = (urls: URLDocument[]): URLWithDuplicateCount[] => {
     // const urlCountMap: Record<string, number> = urls.reduce((acc, url) => {
     const urlCountMap: { [key: string]: number } = urls.reduce((acc, url) => {
       acc[url.originalUrl] = (acc[url.originalUrl] || 0) + 1;
@@ -49,9 +49,9 @@ export default function Analytics() {
       const count = urlCountMap[url.originalUrl] || 0;
       return { ...url, duplicateCount: count };
     })
-  }, []);
+  };
 
-  const fetchUrls = useCallback(async (): Promise<void> => {
+  const fetchUrls = async (): Promise<void> => {
     setLoading(true);
     try {
       const res = await fetch('/api/analytics');
@@ -63,13 +63,13 @@ export default function Analytics() {
     } finally {
       setLoading(false);
     }
-  }, [addDuplicateCounts]);
+  };
 
 
   useEffect(() => {
     fetchUrls();
-  }, [fetchUrls]);
-
+    // eslint-disable-next-line
+  }, []);
 
   const refreshData = () => {
     setLoading(true);
@@ -179,7 +179,7 @@ export default function Analytics() {
   }, [query.id, loading]);
 
 
-  const sortUrls = (urls: URLWithDuplicateCount[]) => {
+  const sortUrls = useCallback((urls: URLWithDuplicateCount[]) => {
     switch (sortOption) {
       // case 'dateAsc': return [...urls].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       // case 'dateDesc': return [...urls].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -206,7 +206,7 @@ export default function Analytics() {
       default:
         return urls;
     }
-  };
+  }, [sortOption]);
 
   const filteredUrls = useMemo(() => {
     const filtered = urls.filter((url) =>
@@ -214,7 +214,7 @@ export default function Analytics() {
       url.originalUrl.toLowerCase().includes(searchTerm.toLowerCase())
     );
     return sortUrls(filtered);
-  }, [urls, searchTerm, sortOption]);
+  }, [urls, searchTerm, sortUrls]);
 
   if (!authenticated) {
     return null;
@@ -266,17 +266,18 @@ export default function Analytics() {
               <span className="cursor-pointer">Confirm before delete</span>
             </label>
           </section>
-          {loading ? (
+          {loading && (
             <div className='flex items-center justify-center w-full py-5'>
               <Image src="/images/bars-scale.svg"
                 width={20} height={20}
                 className="dark:invert"
                 alt="..." />
             </div>
-          ) : (
+          )}
 
 
-            urls.length > 0 ? (
+          {!loading && urls.length > 0 ? (
+            <Suspense fallback={<div>Loading URLs...</div>}>
               <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {filteredUrls.map((url) => {
                   return (
@@ -372,10 +373,10 @@ export default function Analytics() {
                   )
                 })}
               </ul>
-
-            ) : (
-              <p>No URLs found</p>
-            ))}
+            </Suspense>
+          ) : (
+            !loading && <p>No URLs found</p>
+          )}
         </div>
         <Suspense fallback={<div></div>}>
           <DeleteUrlDialog
