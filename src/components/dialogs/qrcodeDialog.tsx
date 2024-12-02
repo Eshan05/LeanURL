@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogClose, DialogDescription } from '@components/ui/dialog';
 import { Button } from '@components/ui/button';
 import { downloadQRCode } from '@utils/utils';
@@ -30,7 +29,7 @@ const QRCodeDialog = ({ open, setOpen, shortenUrl }: QRCodeDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-[90%] max-w-max">
+      <DialogContent className="max-w-[90%] md:max-w-max">
         <DialogHeader>
           <DialogTitle className='flex space-x-2'>QR Code</DialogTitle>
         </DialogHeader>

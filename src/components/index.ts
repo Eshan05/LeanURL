@@ -3,8 +3,8 @@ import { Button } from "@components/ui/button";
 import { toast } from "sonner";
 
 import { Nav } from "@components/nav";
-import { DeleteUrlDialog } from "@components/dialogs/deleteUrl";
-import { EditUrlDialog } from "@components/dialogs/editUrl";
+import DeleteUrlDialog from "@components/dialogs/deleteUrl";
+import EditUrlDialog from "@components/dialogs/editUrl";
 import QRCodeDialog from "@components/dialogs/qrcodeDialog";
 import RecentAccessesDialog from "@components/dialogs/recentAccesses";
 import AccessGraphDialog from "@components/dialogs/graphDialog";

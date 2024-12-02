@@ -65,9 +65,6 @@ importers:
       qr-code-styling:
         specifier: ^1.8.4
         version: 1.8.4
-      qrcode.react:
-        specifier: ^4.1.0
-        version: 4.1.0(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -2136,11 +2133,6 @@ packages:
 
   qrcode-generator@1.4.4:
     resolution: {integrity: sha512-HM7yY8O2ilqhmULxGMpcHSF1EhJJ9yBj8gvDEuZ6M+KGJ0YY2hKpnXvRD+hZPLrDVck3ExIGhmPtSdcjC+guuw==}
-
-  qrcode.react@4.1.0:
-    resolution: {integrity: sha512-uqXVIIVD/IPgWLYxbOczCNAQw80XCM/LulYDADF+g2xDsPj5OoRwSWtIS4jGyp295wyjKstfG1qIv/I2/rNWpQ==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
@@ -4613,10 +4605,6 @@ snapshots:
       qrcode-generator: 1.4.4
 
   qrcode-generator@1.4.4: {}
-
-  qrcode.react@4.1.0(react@18.3.1):
-    dependencies:
-      react: 18.3.1
 
   queue-microtask@1.2.3: {}
 

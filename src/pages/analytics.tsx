@@ -1,14 +1,21 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState, useRef } from "react";
-
+import { useEffect, useState, useRef, useCallback, useMemo, Suspense, lazy } from "react";
 import { toast } from "sonner";
 import { QrCode, Calendar, Pencil, Link, ExternalLink, RefreshCcw, ChartSpline, Copy, Check, Trash2, MousePointerClick, Database } from "lucide-react";
-import { Nav, Input, Button, SortSelect, URLStatus, GradientTop, DeleteUrlDialog, EditUrlDialog, QRCodeDialog, RecentAccessesDialog, AccessGraphDialog } from "@components/index";
-import { Checkbox } from '@components/ui/checkbox';
-import { useHandleDialogs } from '@hooks/useHandleDialogs';
+import { Nav, Input, Button, SortSelect, URLStatus, GradientTop } from "@components/index";
+import { Checkbox } from '@/components/ui/checkbox';
 import { downloadCSV } from '@utils/utils';
+import { useHandleDialogs } from '@hooks/useHandleDialogs';
 import { useAuthen } from '@hooks/useAuthen';
 import { URLDocument, URLWithDuplicateCount, SortOption } from 'types/types';
+import Image from 'next/image';
+
+// Lazy load Dialog Components
+const DeleteUrlDialog = lazy(() => import('@components/dialogs/deleteUrl'));
+const EditUrlDialog = lazy(() => import('@components/dialogs/editUrl'));
+const QRCodeDialog = lazy(() => import('@components/dialogs/qrcodeDialog'));
+const RecentAccessesDialog = lazy(() => import('@components/dialogs/recentAccesses'));
+const AccessGraphDialog = lazy(() => import('@components/dialogs/graphDialog'));
 
 export default function Analytics() {
   const router = useRouter();
@@ -23,12 +30,13 @@ export default function Analytics() {
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<SortOption>('dateAsc')
   const [showConfirmation, setShowConfirmation] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
 
   const handleToggleConfirmation = () => {
     setShowConfirmation(!showConfirmation);
   };
 
-  const addDuplicateCounts = (urls: URLDocument[]): URLWithDuplicateCount[] => {
+  const addDuplicateCounts = useMemo(() => (urls: URLDocument[]): URLWithDuplicateCount[] => {
     // const urlCountMap: Record<string, number> = urls.reduce((acc, url) => {
     const urlCountMap: { [key: string]: number } = urls.reduce((acc, url) => {
       acc[url.originalUrl] = (acc[url.originalUrl] || 0) + 1;
@@ -39,9 +47,10 @@ export default function Analytics() {
       const count = urlCountMap[url.originalUrl] || 0;
       return { ...url, duplicateCount: count };
     })
-  };
+  }, []);
 
-  const fetchUrls = async (): Promise<void> => {
+  const fetchUrls = useCallback(async (): Promise<void> => {
+    setLoading(true);
     try {
       const res = await fetch('/api/analytics');
       const data: URLDocument[] = await res.json();
@@ -49,13 +58,16 @@ export default function Analytics() {
       setUrls(processedData);
     } catch (error) {
       setError('Failed to fetch URLs');
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [addDuplicateCounts]);
+
 
   useEffect(() => {
     fetchUrls();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchUrls]);
+
 
   const refreshData = () => {
     fetchUrls();
@@ -192,13 +204,23 @@ export default function Analytics() {
     }
   };
 
-  const filteredUrls = sortUrls(urls.filter((url) =>
-    url.shortenUrl.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    url.originalUrl.toLowerCase().includes(searchTerm.toLowerCase())
-  ));
+  const filteredUrls = useMemo(() => {
+    const filtered = urls.filter((url) =>
+      url.shortenUrl.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      url.originalUrl.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    return sortUrls(filtered);
+  }, [urls, searchTerm, sortOption]);
 
   if (!authenticated) {
     return null;
+  }
+
+  if (loading) {
+    return (<Image src="/images/bars-scale.svg"
+      width={20} height={20}
+      className="dark:invert"
+      alt="..." />)
   }
 
   return (
@@ -253,14 +275,15 @@ export default function Analytics() {
               {filteredUrls.map((url) => {
                 return (
                   // url._id
-                  <li key={url._id} id={url._id} className="p-4 rounded-lg shadow-lg url-card dark:border dark:bg-[#0c0e0f88] dark:backdrop-blur c-beige:bg-[hsl(48,44%,90%)] c-beige:text-beige-900">
+                  <li key={url._id} id={url._id}
+                    className="p-4 rounded-lg shadow-lg url-card dark:border dark:bg-[#0c0e0f88] dark:backdrop-blur c-beige:bg-[hsl(48,44%,90%)] c-beige:text-beige-900">
                     <header className="flex flex-col gap-0 !text-sm">
                       <h2 className="flex justify-between p-1 space-x-4">
                         <main className="flex items-center ml-1 space-x-4">
                           <Link className="w-5 h-5 short-link" />
                           <a href={url.shortenUrl}
                             target="_blank" rel="noopener noreferrer"
-                            className='inline-block px-3 py-1.5 font-mono border rounded-lg text-primary c-beige:text-beige-700 hover:underline'
+                            className='inline-block px-3 py-1.5 font-mono border rounded-lg text-primary c-beige:text-beige-700 hover:underline overflow-x-auto max-w-[128px] scrollbar-none whitespace-nowrap'
                           >{url.shortenUrl}</a>
                         </main>
                         <aside className="flex gap-2">
@@ -348,37 +371,39 @@ export default function Analytics() {
             <p>No URLs found</p>
           )}
         </div>
-        <DeleteUrlDialog
-          open={dialogs.delete.isOpen}
-          setOpen={() => { closeDialog("delete"); }}
-          urlToDelete={dialogs.delete.data || ""}
-          handleDelete={handleDelete}
-        />
-        <EditUrlDialog
-          open={dialogs.edit.isOpen}
-          setOpen={() => { closeDialog("edit"); }}
-          urlToEdit={dialogs.edit.data}
-          handleEdit={handleEdit}
-        />
-        <QRCodeDialog
-          open={dialogs.qrCode.isOpen}
-          setOpen={() => { closeDialog("qrCode"); }}
-          shortenUrl={dialogs.qrCode.data || ""}
-        // shortenUrl={dialogs.qrCode.data}
-        />
-        {dialogs.recents.data && (
-          <RecentAccessesDialog
-            open={dialogs.recents.isOpen}
-            setOpen={() => closeDialog("recents")}
-            recentAccesses={dialogs.recents.data?.accesses?.lastAccessed} />
-        )}
-        {dialogs.accessGraph.data && (
-          <AccessGraphDialog
-            open={dialogs.accessGraph.isOpen}
-            setOpen={() => closeDialog("accessGraph")}
-            recentAccesses={dialogs.accessGraph.data?.accesses?.lastAccessed}
+        <Suspense fallback={<div></div>}>
+          <DeleteUrlDialog
+            open={dialogs.delete.isOpen}
+            setOpen={() => { closeDialog("delete"); }}
+            urlToDelete={dialogs.delete.data || ""}
+            handleDelete={handleDelete}
           />
-        )}
+          <EditUrlDialog
+            open={dialogs.edit.isOpen}
+            setOpen={() => { closeDialog("edit"); }}
+            urlToEdit={dialogs.edit.data}
+            handleEdit={handleEdit}
+          />
+          <QRCodeDialog
+            open={dialogs.qrCode.isOpen}
+            setOpen={() => { closeDialog("qrCode"); }}
+            shortenUrl={dialogs.qrCode.data || ""}
+          // shortenUrl={dialogs.qrCode.data}
+          />
+          {dialogs.recents.data && (
+            <RecentAccessesDialog
+              open={dialogs.recents.isOpen}
+              setOpen={() => closeDialog("recents")}
+              recentAccesses={dialogs.recents.data?.accesses?.lastAccessed} />
+          )}
+          {dialogs.accessGraph.data && (
+            <AccessGraphDialog
+              open={dialogs.accessGraph.isOpen}
+              setOpen={() => closeDialog("accessGraph")}
+              recentAccesses={dialogs.accessGraph.data?.accesses?.lastAccessed}
+            />
+          )}
+        </Suspense>
       </div>
     </main>
   );
