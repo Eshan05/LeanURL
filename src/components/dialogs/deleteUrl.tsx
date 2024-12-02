@@ -8,7 +8,7 @@ interface DeleteUrlDialogProps {
   handleDelete: (url: string) => void;
 }
 
-export function DeleteUrlDialog({ open, setOpen, urlToDelete, handleDelete }: DeleteUrlDialogProps) {
+export default function DeleteUrlDialog({ open, setOpen, urlToDelete, handleDelete }: DeleteUrlDialogProps) {
   const handleCancel = () => {
     setOpen(false);
   };

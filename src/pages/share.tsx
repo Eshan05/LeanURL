@@ -1,6 +1,7 @@
+"use client";
+
 // import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
 import { Check, Copy, Github, LinkIcon, Trash2Icon, SearchIcon, Command, ImageDown } from 'lucide-react';
 
 import { Nav } from '@components/nav'

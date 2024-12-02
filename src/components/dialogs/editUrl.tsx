@@ -14,7 +14,7 @@ type EditUrlDialogProps = {
   handleEdit: (id: string, updatedFields: { shortenUrl: string, expirationDate?: Date, scheduledDate?: Date | null }) => void;
 };
 
-export function EditUrlDialog({ open, setOpen, urlToEdit, handleEdit }: EditUrlDialogProps) {
+export default function EditUrlDialog({ open, setOpen, urlToEdit, handleEdit }: EditUrlDialogProps) {
   const [newShortenUrl, setNewShortenUrl] = useState<string>(urlToEdit?.shortenUrl || "");
   const [newExpirationDate, setNewExpirationDate] = useState("");
   const [newScheduledDate, setNewScheduledDate] = useState("");
