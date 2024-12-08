@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
+import { useState } from "react";
 import { Input } from "@components/ui/input";
 import { Button } from "@components/ui/button";
 import { ThemeToggle } from "@components/themeToggle";
-import Image from "next/image";
 
 export default function Home() {
   const [passcode, setPasscode] = useState<string>("");

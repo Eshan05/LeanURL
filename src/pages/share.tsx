@@ -2,6 +2,7 @@
 
 // import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
+import Link from 'next/link';
 import { Check, Copy, Github, LinkIcon, Trash2Icon, SearchIcon, Command, ImageDown } from 'lucide-react';
 
 import { Nav } from '@components/nav'
@@ -10,10 +11,9 @@ import { Button } from '@components/ui/button'
 import { toast } from 'sonner';
 import SearchUrls from '@components/searchURL';
 import { GradientTop } from '@components/gradientTop';
+import { CustomQR } from '@/components/qrcustomize';
 import { downloadQRCode } from '@utils/utils';
 import { useAuthen } from '@hooks/useAuthen';
-import Link from 'next/link';
-import { CustomQR } from '@/components/qrcustomize';
 
 export default function Home() {
   const authenticated = useAuthen();
