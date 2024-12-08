@@ -38,7 +38,7 @@ A Link Shortener + QR Code Generator for *personal* use or use within a *small t
 - 📋 **Quickly copy** the shortened URL or **export the QR code** as a `PNG` file.
 - 🌙 **Toggle between themes** for a personalized viewing experience (Custom theme too!).
 - 🖥️ **Admin dashboard** that provides all the necessary operations to manage links, filter links, view detailed information for each, and export all data as a **CSV**.
-- 🎨 **Beautiful UI elements** designed using **Tailwind CSS** and `ChadCN`, along with icons from **Lucide**.
+- 🎨 **Beautiful UI elements** designed using **Tailwind CSS** and `ChadCN`, along with icons from **Lucide**. Mobile isn't left out!
 - 📈 **Insightful graphs** powered by **ApexCharts**, showing detailed analytics such as the number of times a shortened URL has been used, as well as recent accesses via timestamps, device, browser and country.
 - 📅 **Scheduling feature** for setting link live after a certain day and **Expiration Date** which automatically deletes the link from the database using **TTL**.
 - 🏗️ **Scalable** architecture to easily add new features as needed.
@@ -78,6 +78,7 @@ npm run dev
 ![AnalyticsDark_Recent](public/images/AnalyticsDark_Recent.png)
 ![AnalyticsDark_Toast](public/images/AnalyticsDark_Toast.png)
 ![AnalyticsDark_QR](public/images/AnalyticsDark_QR.png)
+![GraphsDark](public/images/GraphsDark.png)
 
 </div>
 

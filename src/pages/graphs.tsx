@@ -167,7 +167,7 @@ const Visualize: React.FC = () => {
                 setSelectedUrl(urls.find((url) => url._id === value) || null)
               }
             >
-              <SelectTrigger className="lg:max-w-[50%] lg:w-max">
+              <SelectTrigger className="lg:max-w-[50%] lg:w-max focus-visible:ring-0 focus-visible:outline-none">
                 <SelectValue placeholder="Select URL" />
                 <SelectIcon asChild>
                   <ChevronDown className='w-4 h-4 ml-4 opacity-50' />
