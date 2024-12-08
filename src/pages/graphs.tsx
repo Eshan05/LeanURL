@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic"; // Dynamically import ApexCharts
-import { URLDocument, URLWithDuplicateCount } from "@/types/types";
-import { Button } from "@components/ui/button";
-import { getStartOfWeekQ } from "@/lib/utils/utils";
-import { GradientTop, Nav, toast } from "@/components";
-import { ChevronDown, RefreshCcw } from "lucide-react";
 import Image from "next/image";
+
+import React, { useState, useEffect } from "react";
+import { URLDocument, URLWithDuplicateCount } from "@/types/types";
+import { ChevronDown, RefreshCcw } from "lucide-react";
+import { Button } from "@components/ui/button";
+import { GradientTop, Nav, toast } from "@/components";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SelectIcon } from "@radix-ui/react-select";
+import { getStartOfWeekQ } from "@/lib/utils/utils";
+import { useAuthen } from "@/hooks/useAuthen";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const Visualize: React.FC = () => {
+  const authenticated = useAuthen();
+
   const [urls, setUrls] = useState<URLWithDuplicateCount[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -136,6 +140,10 @@ const Visualize: React.FC = () => {
     ];
   };
 
+  if (!authenticated) {
+    return null;
+  }
+
   return (
     <main className="relative overflow-x-hidden flex flex-col items-center justify-center h-screen font-inter min-h-svh bg-zinc-50 dark:bg-[#09090b] c-beige:bg-beige-100">
       <div className='relative hidden'>
@@ -188,9 +196,9 @@ const Visualize: React.FC = () => {
             <main className="w-full *:w-full flex flex-col gap-4">
               <section className="flex flex-col gap-4 lg:flex-row *:flex-1">
                 {/* Area Chart */}
-                <div className="w-full overflow-auto scrollbar-none py-4 px-6 bg-white c-beige:bg-beige-50 dark:bg-[#0c0e0f88] backdrop-blur shadow-lg url-card rounded-lg">
-                  <h2 className="mb-4 text-lg font-bold lg:text-xl c-beige:text-beige-800 small-caps">Clicks per Day</h2>
-                  <p className="max-w-sm m-2 font-mono text-sm leading-4 lg:text-base text-muted-foreground c-beige:text-beige-700/60">The following chart shows the total number of clicks for each day. You can use scroll to expand on the X axis. It shows clicks for the current week accumulated by all the URLs.</p>
+                <div className="graph-card">
+                  <h2 className="">Clicks per Day</h2>
+                  <p className="">The following chart shows the total number of clicks for each day. You can use scroll to expand on the X axis. It shows clicks for the current week accumulated by all the URLs.</p>
                   <Chart
                     type="area"
                     height="365"
@@ -213,9 +221,9 @@ const Visualize: React.FC = () => {
                   />
                 </div>
                 { /* Tree Map */}
-                <div className="w-full overflow-auto scrollbar-none py-4 px-6 bg-white c-beige:bg-beige-50 dark:bg-[#0c0e0f88] backdrop-blur shadow-lg url-card rounded-lg">
-                  <h2 className="mb-4 text-lg font-bold lg:text-xl c-beige:text-beige-800 small-caps">Browser Distribution</h2>
-                  <p className="max-w-sm m-2 font-mono text-sm leading-4 lg:text-base text-muted-foreground c-beige:text-beige-700/60">The following treemap shows the distribution of browser usage. It is the cumulative distribution of browser usage for all the URLs. You can see for individual URLs in a tabular form back on analytics.</p>
+                <div className="graph-card">
+                  <h2 className="">Browser Distribution</h2>
+                  <p className="">The following treemap shows the distribution of browser usage. It is the cumulative distribution of browser usage for all the URLs. You can see for individual URLs in a tabular form back on analytics.</p>
                   <Chart
                     type="treemap"
                     series={[{ data: getTreeMapData(urls) }]}
@@ -243,9 +251,9 @@ const Visualize: React.FC = () => {
                 <article className="flex flex-col gap-4 xl:flex-row w-full *:flex-1">
                   {/* Heatmap */}
                   {selectedUrl && (
-                    <div className="w-full overflow-auto scrollbar-none py-4 px-6 bg-white c-beige:bg-beige-50 dark:bg-[#0c0e0f88] backdrop-blur shadow-lg url-card rounded-lg">
-                      <h2 className="mb-4 text-lg font-bold lg:text-xl c-beige:text-beige-800 small-caps">Heatmap</h2>
-                      <p className="max-w-sm m-2 font-mono text-sm leading-4 lg:text-base text-muted-foreground c-beige:text-beige-700/60">The heatmap shows the activity of the selected URL. It displays the number of clicks on each day over the entire year. Columns are days and rows are months, the colors are increasing in contrast as per clicks. Hover for total clicks.</p>
+                    <div className="graph-card">
+                      <h2 className="">Heatmap</h2>
+                      <p className="">The heatmap shows the activity of the selected URL. It displays the number of clicks on each day over the entire year. Columns are days and rows are months, the colors are increasing in contrast as per clicks. Hover for total clicks.</p>
                       <Chart
                         type="heatmap"
                         width="770"
@@ -283,9 +291,7 @@ const Visualize: React.FC = () => {
                               }
                             },
                           },
-                          dataLabels: {
-                            enabled: false,
-                          },
+                          dataLabels: { enabled: false, },
                           markers: {
                             strokeWidth: 0,
                             fillOpacity: 0,
@@ -293,9 +299,7 @@ const Visualize: React.FC = () => {
                             showNullDataPoints: false
                           },
                           grid: { show: false },
-                          tooltip: {
-                            shared: true,
-                          }
+                          tooltip: { shared: true, }
                         }}
                       />
 
@@ -304,9 +308,9 @@ const Visualize: React.FC = () => {
 
                   {/* Radar Chart */}
                   {selectedUrl && (
-                    <div className="w-full overflow-auto scrollbar-none py-4 px-6 bg-white c-beige:bg-beige-50 dark:bg-[#0c0e0f88] backdrop-blur shadow-lg url-card rounded-lg">
-                      <h2 className="mb-4 text-lg font-bold lg:text-xl c-beige:text-beige-800 small-caps">Radar Chart</h2>
-                      <p className="max-w-sm m-2 font-mono text-sm leading-4 lg:text-base text-muted-foreground c-beige:text-beige-700/60">The following radar chart displays the most accessed hours for the selected URL. It goes over the entire day, from 00:00 to 23:59 and spans over the entire lifetime of the URL.</p>
+                    <div className="graph-card">
+                      <h2 className="">Radar Chart</h2>
+                      <p className="">The following radar chart displays the most accessed hours for the selected URL. It goes over the entire day, from 00:00 to 23:59 and spans over the entire lifetime of the URL.</p>
                       <div className="flex items-center justify-center p-4 bg-transparent scrollbar-none min-w-[370px] min-h-[370px]">
                         <Chart
                           type="radar"

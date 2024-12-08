@@ -122,17 +122,22 @@
 .c-beige .apexcharts-heatmap-rect { stroke: #f8f6ee; }
 /* .apexcharts-gridline { stroke-width: 0; } */
 /* .apexcharts-grid-borders line { stroke-width: 0; } */
+.apexcharts-tooltip-title { background: unset !important; }
 
-.apexcharts-tooltip {
+.apexcharts-tooltip,
+.apexcharts-menu {
   background: #fff2 !important;
   backdrop-filter: blur(5px);
 }
 
-.dark .apexcharts-tooltip {
+.dark .apexcharts-tooltip,
+.dark .apexcharts-menu {
   background: #161b22aa;
   backdrop-filter: blur(5px);
 }
 
-.apexcharts-tooltip-title {
-  background: unset !important;
+.graph-card {
+  @apply w-full overflow-auto scrollbar-none py-4 px-6 bg-white c-beige:bg-beige-50 dark:bg-[#0c0e0f88] backdrop-blur shadow-lg url-card rounded-lg;
+  h2 { @apply mb-4 text-lg font-bold lg:text-xl c-beige:text-beige-800 small-caps }
+  p { @apply max-w-sm m-2 font-mono text-sm leading-4 lg:text-base text-muted-foreground c-beige:text-beige-700/60 }
 }
