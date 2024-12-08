@@ -11,7 +11,7 @@ import { SelectIcon } from "@radix-ui/react-select";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const AnalyticsDashboard: React.FC = () => {
+const Visualize: React.FC = () => {
   const [urls, setUrls] = useState<URLWithDuplicateCount[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -153,6 +153,26 @@ const AnalyticsDashboard: React.FC = () => {
             <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl c-beige:text-beige-800">
               Visualize
             </h1>
+            <Select
+              value={selectedUrl?._id || ""}
+              onValueChange={(value: string) =>
+                setSelectedUrl(urls.find((url) => url._id === value) || null)
+              }
+            >
+              <SelectTrigger className="lg:max-w-[50%] lg:w-max">
+                <SelectValue placeholder="Select URL" />
+                <SelectIcon asChild>
+                  <ChevronDown className='w-4 h-4 ml-4 opacity-50' />
+                </SelectIcon>
+              </SelectTrigger>
+              <SelectContent>
+                {urls.map((url) => (
+                  <SelectItem key={url._id} value={url._id}>
+                    {url.shortenUrl}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </header>
           {loading &&
             <div className='flex items-center justify-center w-full py-5'>
@@ -168,10 +188,12 @@ const AnalyticsDashboard: React.FC = () => {
             <main className="w-full *:w-full flex flex-col gap-4">
               <section className="flex flex-col gap-4 lg:flex-row *:flex-1">
                 {/* Area Chart */}
-                <div>
-                  <h2>Area Chart for Last 5 URLs</h2>
+                <div className="w-full overflow-auto scrollbar-none py-4 px-6 bg-white c-beige:bg-beige-50 dark:bg-[#0c0e0f88] backdrop-blur shadow-lg url-card rounded-lg">
+                  <h2 className="mb-4 text-lg font-bold lg:text-xl c-beige:text-beige-800 small-caps">Clicks per Day</h2>
+                  <p className="max-w-sm m-2 font-mono text-sm leading-4 lg:text-base text-muted-foreground c-beige:text-beige-700/60">The following chart shows the total number of clicks for each day. You can use scroll to expand on the X axis. It shows clicks for the current week accumulated by all the URLs.</p>
                   <Chart
                     type="area"
+                    height="365"
                     series={[
                       {
                         name: "Total Clicks",
@@ -179,9 +201,10 @@ const AnalyticsDashboard: React.FC = () => {
                       },
                     ]}
                     options={{
-                      chart: { type: "area", height: 350 },
+                      chart: { type: "area", height: 350, fontFamily: 'monospace' },
                       xaxis: { type: "datetime" },
-                      title: { text: "Total clicks accumulated" },
+                      colors: ['#1E90FF', '#FF6347', '#32CD32', '#FFD700'],
+                      title: { text: "Total clicks" },
                       dataLabels: {
                         enabled: true,
                         formatter: (val: number) => `${val}`,
@@ -190,47 +213,39 @@ const AnalyticsDashboard: React.FC = () => {
                   />
                 </div>
                 { /* Tree Map */}
-                <div>
-                  <h2>Browser Distribution</h2>
+                <div className="w-full overflow-auto scrollbar-none py-4 px-6 bg-white c-beige:bg-beige-50 dark:bg-[#0c0e0f88] backdrop-blur shadow-lg url-card rounded-lg">
+                  <h2 className="mb-4 text-lg font-bold lg:text-xl c-beige:text-beige-800 small-caps">Browser Distribution</h2>
+                  <p className="max-w-sm m-2 font-mono text-sm leading-4 lg:text-base text-muted-foreground c-beige:text-beige-700/60">The following treemap shows the distribution of browser usage. It is the cumulative distribution of browser usage for all the URLs. You can see for individual URLs in a tabular form back on analytics.</p>
                   <Chart
                     type="treemap"
                     series={[{ data: getTreeMapData(urls) }]}
                     options={{
-                      chart: { type: "treemap", height: 350 },
-                      title: { text: "Browser Usage Across URLs" },
+                      chart: { type: "treemap", height: 350, fontFamily: 'monospace', background: '0', foreColor: '#444' },
+                      title: { text: "Browser Usage" },
+                      colors: ['#1E90FFaa', '#FF6347aa', '#32CD32aa', '#FFD700aa'],
+                      plotOptions: {
+                        treemap: {
+                          enableShades: false,
+                          shadeIntensity: 0.5,
+                          distributed: true,
+                        }
+                      },
+                      grid: { show: false },
+                      stroke: { width: 2, show: false, lineCap: "round" },
                     }}
                   />
                 </div>
               </section>
               <section className="flex flex-col gap-4">
-                <header>
-                  <h2>Select URL:</h2>
-                  <Select
-                    value={selectedUrl?._id || ""}
-                    onValueChange={(value: string) =>
-                      setSelectedUrl(urls.find((url) => url._id === value) || null)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select URL" />
-                      <SelectIcon asChild>
-                        <ChevronDown className='w-4 h-4 opacity-50' />
-                      </SelectIcon>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {urls.map((url) => (
-                        <SelectItem key={url._id} value={url._id}>
-                          {url.shortenUrl}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <header className="flex-col hidden gap-2">
+                  <h2 className="text-base font-bold lg:text-lg text-muted-foreground c-beige:text-beige-700/60">Select URL:</h2>
                 </header>
                 <article className="flex flex-col gap-4 xl:flex-row w-full *:flex-1">
                   {/* Heatmap */}
                   {selectedUrl && (
-                    <div className="w-full overflow-auto scrollbar-none p-4 bg-white c-beige:bg-beige-50 dark:bg-[#0c0e0f88] backdrop-blur shadow-lg url-card rounded-lg">
-                      <h2 className="text-base lg:text-lg text-muted-foreground c-beige:text-beige-700/60 small-caps">Heatmap</h2>
+                    <div className="w-full overflow-auto scrollbar-none py-4 px-6 bg-white c-beige:bg-beige-50 dark:bg-[#0c0e0f88] backdrop-blur shadow-lg url-card rounded-lg">
+                      <h2 className="mb-4 text-lg font-bold lg:text-xl c-beige:text-beige-800 small-caps">Heatmap</h2>
+                      <p className="max-w-sm m-2 font-mono text-sm leading-4 lg:text-base text-muted-foreground c-beige:text-beige-700/60">The heatmap shows the activity of the selected URL. It displays the number of clicks on each day over the entire year. Columns are days and rows are months, the colors are increasing in contrast as per clicks. Hover for total clicks.</p>
                       <Chart
                         type="heatmap"
                         width="770"
@@ -243,6 +258,29 @@ const AnalyticsDashboard: React.FC = () => {
                             heatmap: {
                               radius: 4,
                               useFillColorAsStroke: false,
+                              colorScale: {
+                                ranges: [{
+                                  from: 1,
+                                  to: 10,
+                                  color: '#fdf156',
+                                  name: 'Low',
+                                }, {
+                                  from: 11,
+                                  to: 30,
+                                  color: '#ffc722',
+                                  name: 'Medium',
+                                }, {
+                                  from: 31,
+                                  to: 60,
+                                  color: '#ff9711',
+                                  name: 'High',
+                                }, {
+                                  from: 61,
+                                  to: 100,
+                                  color: '#04001a',
+                                  name: 'Century',
+                                }],
+                              }
                             },
                           },
                           dataLabels: {
@@ -266,17 +304,23 @@ const AnalyticsDashboard: React.FC = () => {
 
                   {/* Radar Chart */}
                   {selectedUrl && (
-                    <div>
-                      <h2>Radar Chart for Accessed Hours</h2>
-                      <Chart
-                        type="radar"
-                        series={getRadarChartData(selectedUrl.accesses.lastAccessed)}
-                        options={{
-                          chart: { type: "radar", height: 350 },
-                          xaxis: { categories: Array.from({ length: 24 }, (_, i) => `${i}:00`) },
-                          title: { text: "Most Accessed Hours" },
-                        }}
-                      />
+                    <div className="w-full overflow-auto scrollbar-none py-4 px-6 bg-white c-beige:bg-beige-50 dark:bg-[#0c0e0f88] backdrop-blur shadow-lg url-card rounded-lg">
+                      <h2 className="mb-4 text-lg font-bold lg:text-xl c-beige:text-beige-800 small-caps">Radar Chart</h2>
+                      <p className="max-w-sm m-2 font-mono text-sm leading-4 lg:text-base text-muted-foreground c-beige:text-beige-700/60">The following radar chart displays the most accessed hours for the selected URL. It goes over the entire day, from 00:00 to 23:59 and spans over the entire lifetime of the URL.</p>
+                      <div className="flex items-center justify-center p-4 bg-transparent scrollbar-none min-w-[370px] min-h-[370px]">
+                        <Chart
+                          type="radar"
+                          width="365"
+                          height="365"
+                          series={getRadarChartData(selectedUrl.accesses.lastAccessed)}
+                          options={{
+                            chart: { type: "radar", height: 350, fontFamily: 'monospace' },
+                            xaxis: { categories: Array.from({ length: 24 }, (_, i) => `${i}:00`) },
+                            title: { text: "Most Accessed Hours" },
+                            colors: ['#fdf156', '#ffc722', '#ff9711', '#04001a'],
+                          }}
+                        />
+                      </div>
                     </div>
                   )}
                 </article>
@@ -289,4 +333,4 @@ const AnalyticsDashboard: React.FC = () => {
   );
 };
 
-export default AnalyticsDashboard;
+export default Visualize;
