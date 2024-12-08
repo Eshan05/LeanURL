@@ -33,6 +33,7 @@ export default function Analytics() {
   const [sortOption, setSortOption] = useState<SortOption>('dateAsc')
   const [showConfirmation, setShowConfirmation] = useState<boolean>(true);
   const [loading, setLoading] = useState(true);
+  const [isPermanentDelete, setIsPermanentDelete] = useState<boolean>(false);
 
   const handleToggleConfirmation = () => {
     setShowConfirmation(!showConfirmation);
@@ -130,13 +131,15 @@ export default function Analytics() {
 
 
   const handleDelete = async (urlId: string) => {
+    const action = isPermanentDelete ? 'permanent' : 'soft'; // Determine the type of delete
     try {
-      const res = await fetch(`/api/analytics?id=${urlId}`, {
+      const res = await fetch(`/api/analytics?id=${urlId}&action=${action}`, {
         method: 'DELETE',
       });
+
       if (res.ok) {
         setUrls(urls.filter((url) => url._id !== urlId));  // Remove the deleted URL from the state
-        toast.success('URL deleted successfully!');
+        toast.success(isPermanentDelete ? 'URL permanently deleted' : 'URL deleted successfully!');
       } else {
         const { message } = await res.json();
         toast.error(message || 'Failed to delete URL');
@@ -264,6 +267,13 @@ export default function Analytics() {
             <label className='flex h-10 items-center justify-center rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 space-x-3'>
               <Checkbox checked={showConfirmation} onCheckedChange={handleToggleConfirmation} />
               <span className="cursor-pointer">Confirm before delete</span>
+            </label>
+            <label className='flex h-10 items-center justify-center rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 space-x-3'>
+              <Checkbox
+                checked={isPermanentDelete}
+                onCheckedChange={() => setIsPermanentDelete(prev => !prev)}
+              />
+              <span className="cursor-pointer">Delete without restores</span>
             </label>
           </section>
           {loading && (
