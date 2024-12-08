@@ -63,7 +63,7 @@ export const URLStatus = ({ url }: URLStatusProps) => {
   const handlePermanentDelete = async () => {
     setIsPermanentlyDeleting(true);
     try {
-      const response = await fetch(`/api/analytics?id=${url._id}&permanent=true`, { method: 'DELETE' });
+      const response = await fetch(`/api/analytics?id=${url._id}&action=permanent`, { method: 'DELETE' });
       if (response.ok) {
         setIsPermanentlyDeleting(false);
         toast.success('URL permanently deleted successfully!');
@@ -74,7 +74,8 @@ export const URLStatus = ({ url }: URLStatusProps) => {
       }
     } catch (error) {
       console.error('Error during permanent delete:', error);
-      setDeleteError('An unexpected error occurred. Please try again.');
+      // setDeleteError('An unexpected error occurred. Please try again.');
+      toast.error('An unexpected error occurred. Please try again.');
       setIsPermanentlyDeleting(false);
     }
   };
@@ -101,7 +102,7 @@ export const URLStatus = ({ url }: URLStatusProps) => {
         {url.deletedAt && (
           <div className="flex space-x-2">
             {isRestoring ? (
-              <span className="animate-pulse"><MdRestore /></span>
+              <span className="w-10 h-10 animate-pulse bg-transparent text-[#34aadf] hover:bg-[#d0e9f9] dark:hover:bg-[#34aadf1a] border border-[#34aadf88] dark:border-[#34aadf44] dark:text-[#34aadfbb] rounded-md grid place-items-center"><MdRestore /></span>
             ) : (
               <Button
                 size='icon'
@@ -112,9 +113,9 @@ export const URLStatus = ({ url }: URLStatusProps) => {
                 <MdRestore className="scale-125" />
               </Button>
             )}
-            {restoreError && <span className="mt-1 text-red-500">{restoreError}</span>}
+            {/* {restoreError && <span className="mt-1 text-red-500">{restoreError}</span>} */}
             {isPermanentlyDeleting ? (
-              <span className="animate-pulse"><BsDatabaseFillSlash /></span>
+              <span className="w-10 h-10 animate-pulse bg-transparent text-red-500 hover:bg-[#ffdede] dark:hover:bg-red-500/10 border border-red-500/50 dark:border-red-700/30 dark:text-red-700 rounded-md grid place-items-center"><BsDatabaseFillSlash /></span>
             ) : (
               <Button
                 size='icon'
@@ -125,7 +126,7 @@ export const URLStatus = ({ url }: URLStatusProps) => {
                 <BsDatabaseFillSlash />
               </Button>
             )}
-            {deleteError && <span className="mt-1 text-red-500">{deleteError}</span>}
+            {/* {deleteError && <span className="mt-1 text-red-500">{deleteError}</span>} */}
           </div>
         )}
         {url.duplicateCount > 1 && (

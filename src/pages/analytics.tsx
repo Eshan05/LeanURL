@@ -240,7 +240,7 @@ export default function Analytics() {
         <GradientTop />
       </div>
       <Nav />
-      <Button size="icon" className="fixed backdrop-blur bg-[#fffa] z-10 shadow rounded-full bottom-4 dark:border left-4 dark:bg-[#09090b]" onClick={refreshData}>
+      <Button size="icon" variant='secondary' className="fixed backdrop-blur bg-[#fffa] z-10 shadow rounded-full bottom-4 border left-4 dark:bg-[#09090b]" onClick={refreshData}>
         <RefreshCcw className="w-4 h-4 text-black dark:text-white" />
       </Button>
       <div className="relative w-full py-24 overflow-x-hidden">

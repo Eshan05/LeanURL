@@ -85,7 +85,7 @@ export const CustomQR = ({ url }: { url: string }) => {
   };
 
   return (
-    <section className="flex flex-col gap-4 md:flex-row">
+    <section className="flex flex-col gap-4 md:flex-row dark:bg-transparent">
       <main className="flex flex-col items-center">
         <div className="p-3 bg-white rounded-lg shadow" ref={ref} />
         <div className="flex flex-row items-center justify-center gap-2 p-1 m-1 md:flex-row *:w-full">
@@ -175,7 +175,7 @@ export const CustomQR = ({ url }: { url: string }) => {
               <p className="font-mono text-xs text-muted-foreground">Eyes</p>
             </div>
           </header>
-          <article className="flex flex-col gap-3 md:flex-row">
+          <article className="flex flex-col flex-wrap gap-3 lg:w-[80%] mx-auto md:flex-row">
             {/* Choosing types for dots in QRCode */}
             <Select
               value={options.dotsOptions?.type || 'square'}
