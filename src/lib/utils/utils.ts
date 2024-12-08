@@ -76,3 +76,13 @@ export const downloadQRCode = async (
     }
   }
 };
+
+export const getStartOfWeekQ = (): Date => {
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+  const offset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust to get Monday
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() + offset);
+  startOfWeek.setHours(0, 0, 0, 0);
+  return startOfWeek;
+};
