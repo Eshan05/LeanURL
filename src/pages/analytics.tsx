@@ -11,6 +11,7 @@ import { useHandleDialogs } from '@hooks/useHandleDialogs';
 import { useAuthen } from '@hooks/useAuthen';
 import { URLDocument, URLWithDuplicateCount, SortOption } from 'types/types';
 import Image from 'next/image';
+import { url } from 'inspector';
 
 // Lazy load Dialog Components
 const DeleteUrlDialog = lazy(() => import('@components/dialogs/deleteUrl'));
@@ -33,6 +34,7 @@ export default function Analytics() {
   const [sortOption, setSortOption] = useState<SortOption>('dateAsc')
   const [showConfirmation, setShowConfirmation] = useState<boolean>(true);
   const [loading, setLoading] = useState(true);
+  const [isPermanentDelete, setIsPermanentDelete] = useState<boolean>(false);
 
   const handleToggleConfirmation = () => {
     setShowConfirmation(!showConfirmation);
@@ -130,13 +132,15 @@ export default function Analytics() {
 
 
   const handleDelete = async (urlId: string) => {
+    const action = isPermanentDelete ? 'permanent' : 'soft'; // Determine the type of delete
     try {
-      const res = await fetch(`/api/analytics?id=${urlId}`, {
+      const res = await fetch(`/api/analytics?id=${urlId}&action=${action}`, {
         method: 'DELETE',
       });
+
       if (res.ok) {
         setUrls(urls.filter((url) => url._id !== urlId));  // Remove the deleted URL from the state
-        toast.success('URL deleted successfully!');
+        toast.success(isPermanentDelete ? 'URL permanently deleted' : 'URL deleted successfully!');
       } else {
         const { message } = await res.json();
         toast.error(message || 'Failed to delete URL');
@@ -180,29 +184,39 @@ export default function Analytics() {
 
 
   const sortUrls = useCallback((urls: URLWithDuplicateCount[]) => {
+    const deletedUrls = urls.filter((url) => url.deletedAt !== null);
+    const nonDeletedUrls = urls.filter((url) => url.deletedAt === null);
     switch (sortOption) {
       // case 'dateAsc': return [...urls].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       // case 'dateDesc': return [...urls].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       case 'dateAsc':
-        return [...urls].sort((a, b) => {
+        return [...nonDeletedUrls].sort((a, b) => {
           const dateA = new Date(a.createdAt).getTime();
           const dateB = new Date(b.createdAt).getTime();
           return dateA - dateB;
         });
       case 'dateDesc':
-        return [...urls].sort((a, b) => {
+        return [...nonDeletedUrls].sort((a, b) => {
           const dateA = new Date(a.createdAt).getTime();
           const dateB = new Date(b.createdAt).getTime();
           return dateB - dateA;
         });
       case 'clicksAsc':
-        return [...urls].sort((a, b) => a.accesses.count - b.accesses.count);
+        return [...nonDeletedUrls].sort((a, b) => a.accesses.count - b.accesses.count);
       case 'clicksDesc':
-        return [...urls].sort((a, b) => b.accesses.count - a.accesses.count);
+        return [...nonDeletedUrls].sort((a, b) => b.accesses.count - a.accesses.count);
       case 'duplicateAsc':
-        return [...urls]
+        return [...nonDeletedUrls]
           .filter((url) => url.duplicateCount > 1)
           .sort((a, b) => a.duplicateCount - b.duplicateCount);
+      case 'toBeDeleted':
+        return [...deletedUrls].sort((a, b) => {
+          const dateA = new Date(a.deletedAt!).getTime();
+          const dateB = new Date(b.deletedAt!).getTime();
+          return dateA - dateB;
+        })
+      case 'everything':
+        return [...urls];
       default:
         return urls;
     }
@@ -226,8 +240,11 @@ export default function Analytics() {
         <GradientTop />
       </div>
       <Nav />
-
+      <Button size="icon" variant='secondary' className="fixed backdrop-blur bg-[#fffa] z-10 shadow rounded-full bottom-4 border left-4 dark:bg-[#09090b]" onClick={refreshData}>
+        <RefreshCcw className="w-4 h-4 text-black dark:text-white" />
+      </Button>
       <div className="relative w-full py-24 overflow-x-hidden">
+
         <div className="w-full px-[1.15rem] py-10 mx-auto lg:px-8 lg:py-16">
           <p className='mb-2 font-mono text-center small-caps c-beige:text-beige-800'>LeanURL</p>
           <header className="relative flex flex-col items-center justify-center w-full mb-10 space-y-10 overflow-hidden">
@@ -242,7 +259,7 @@ export default function Analytics() {
                 <RefreshCcw className="w-4 h-4 mr-2 group-hover:animate-spin" /> Refresh Data
               </Button>
             </div>
-            <section className="flex items-center p-2 border rounded-lg dark:bg-[#0c0e0f] bg-white c-beige:bg-[#f7f4e9]">
+            <section className="flex items-center p-2 border rounded-lg dark:bg-[#0c0e0f88] bg-white c-beige:bg-[#f7f4e9]">
               <Input
                 ref={inputRef}
                 type="text"
@@ -265,6 +282,13 @@ export default function Analytics() {
               <Checkbox checked={showConfirmation} onCheckedChange={handleToggleConfirmation} />
               <span className="cursor-pointer">Confirm before delete</span>
             </label>
+            <label className='flex h-10 items-center justify-center rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 space-x-3'>
+              <Checkbox
+                checked={isPermanentDelete}
+                onCheckedChange={() => setIsPermanentDelete(prev => !prev)}
+              />
+              <span className="cursor-pointer">Delete without restores</span>
+            </label>
           </section>
           {loading && (
             <div className='flex items-center justify-center w-full py-5'>
@@ -278,7 +302,7 @@ export default function Analytics() {
 
           {!loading && urls.length > 0 ? (
             <Suspense fallback={<div>Loading URLs...</div>}>
-              <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 lg:px-6">
                 {filteredUrls.map((url) => {
                   return (
                     // url._id

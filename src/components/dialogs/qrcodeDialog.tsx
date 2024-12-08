@@ -35,7 +35,7 @@ const QRCodeDialog = ({ open, setOpen, shortenUrl }: QRCodeDialogProps) => {
         </DialogHeader>
         <DialogDescription className='hidden' />
         <div className='grid p-2 place-items-center'>
-          <section className="p-3 bg-white rounded-lg" ref={qrCodeRef}>
+          <section className="p-3 bg-transparent rounded-lg" ref={qrCodeRef}>
             <CustomQR url={generateQRCodeValue(shortenUrl)} />
           </section>
         </div>

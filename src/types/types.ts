@@ -25,6 +25,7 @@ export type URLDocument = {
 
 export type URLWithDuplicateCount = URLDocument & {
   duplicateCount: number;
+  deletedAt?: Date | null;
 };
 
-export type SortOption = 'dateAsc' | 'dateDesc' | 'clicksAsc' | 'clicksDesc' | 'duplicateAsc';
+export type SortOption = 'dateAsc' | 'dateDesc' | 'clicksAsc' | 'clicksDesc' | 'duplicateAsc' | 'toBeDeleted' | 'everything';
