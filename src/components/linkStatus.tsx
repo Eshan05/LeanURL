@@ -4,6 +4,7 @@ import { MdRestore } from "react-icons/md";
 import { PiStackDuotone } from "react-icons/pi";
 import { toast } from "sonner";
 import { Button } from "@components/ui/button";
+import { BsDatabaseFillSlash } from "react-icons/bs";
 
 type URL = {
   _id: string;
@@ -105,7 +106,7 @@ export const URLStatus = ({ url }: URLStatusProps) => {
               <Button
                 size='icon'
                 onClick={handleRestore}
-                className="px-3 py-1 bg-[#e5f7ff] dark:bg-[#002b3d] rounded-full text-[#34aadf] hover:bg-[#d0e9f9] border border-[#34aadf88]"
+                className="px-3 py-1 bg-transparent text-[#34aadf] hover:bg-[#d0e9f9] dark:hover:bg-[#34aadf1a] border border-[#34aadf88] dark:border-[#34aadf44] dark:text-[#34aadfbb]"
                 disabled={isRestoring}
               >
                 <MdRestore className="scale-125" />
@@ -113,22 +114,22 @@ export const URLStatus = ({ url }: URLStatusProps) => {
             )}
             {restoreError && <span className="mt-1 text-red-500">{restoreError}</span>}
             {isPermanentlyDeleting ? (
-              <span className="animate-pulse"><ImFire /></span>
+              <span className="animate-pulse"><BsDatabaseFillSlash /></span>
             ) : (
               <Button
                 size='icon'
                 onClick={handlePermanentDelete}
-                className="px-3 py-1 bg-[#ffecec] dark:bg-[#410b00] rounded-full text-red-500 hover:bg-[#ffdede] border border-red-500/50"
+                className="px-3 py-1 bg-transparent text-red-500 hover:bg-[#ffdede] dark:hover:bg-red-500/10 border border-red-500/50 dark:border-red-700/30 dark:text-red-700"
                 disabled={isPermanentlyDeleting}
               >
-                <ImFire />
+                <BsDatabaseFillSlash />
               </Button>
             )}
             {deleteError && <span className="mt-1 text-red-500">{deleteError}</span>}
           </div>
         )}
         {url.duplicateCount > 1 && (
-          <span title="Duplicate count" className="flex flex-row items-center justify-center px-2 py-1 space-x-2 text-base border rounded-full"><PiStackDuotone className="w-4 h-4" /><span>{url.duplicateCount}</span></span>)}
+          <span title="Duplicate count" className="flex flex-row items-center justify-center px-2 py-1 space-x-2 text-base border rounded"><PiStackDuotone className="w-4 h-4" /><span>{url.duplicateCount}</span></span>)}
       </aside>
     </section>
   );

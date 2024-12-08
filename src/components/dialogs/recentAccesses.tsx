@@ -49,15 +49,15 @@ const RecentAccessesDialog = ({ open, setOpen, recentAccesses }: RecentAccessesD
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-[90%] lg:max-w-[40%]" aria-describedby={undefined}>
+      <DialogContent className="max-w-[90%] lg:max-w-[40%] max-h-[80vh] rounded" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Recent Accesses</DialogTitle>
         </DialogHeader>
-
+        {/* Putting 60vh max height here works too  */}
         <div className="overflow-x-hidden md:p-3">
           {recentAccesses.length > 0 ? (
             <>
-              <main className='flex flex-col space-y-3 overflow-x-auto'>
+              <main className='flex flex-col space-y-3 overflow-auto max-h-[55vh]'>
                 <table className="min-w-full border-collapse table-auto">
                   <thead>
                     <tr>

@@ -12,8 +12,8 @@ export const useAuthen = () => {
     if (authCookie && authCookie.split('=')[1] === 'true') {
       setAuthenticated(true);
     } else {
-      const redirectUrl = encodeURIComponent(router.asPath);
-      router.push(`/login?redirect=${redirectUrl}`);
+      // const redirectUrl = encodeURIComponent(router.asPath);
+      router.push(`/`);
     }
   }, [router]);
 

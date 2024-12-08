@@ -42,7 +42,8 @@ A Link Shortener + QR Code Generator for personal use or use within a small team
 - 📈 **Insightful graphs** powered by **ApexCharts**, showing detailed analytics such as the number of times a shortened URL has been used, as well as recent accesses via timestamps, device, browser and country.
 - 📅 **Scheduling feature** for setting link live after a certain day and **Expiration Date** which automatically deletes the link from the database using **TTL**.
 - 🏗️ **Scalable** architecture to easily add new features as needed.
-- 🔒 ** Restrictive** access, because who would want someone to come and abuse the service
+- 🔒 **Restrictive** access, because who would want someone to come and abuse the service
+- 😓 **Restoration** capability incase you or your team member accidentally deleted an old URL
 
 
 ## 🤝 Usage 
