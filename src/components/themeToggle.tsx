@@ -44,11 +44,11 @@ export const ThemeToggle = () => {
       className="w-5 h-5 transition-all duration-200 hover:bg-transparent !bg-transparent"
     >
       {theme === "dark" ? (
-        <Moon size={20} className="dark:text-white" />
+        <Moon className="w-5 h-5 dark:text-white" />
       ) : theme === "c-beige" ? (
-        <LuScroll size={20} />
+        <LuScroll className="w-5 h-5 c-beige:text-beige-800" />
       ) : (
-        <Sun size={20} />
+        <Sun className="w-5 h-5" />
       )}
     </Button>
   );

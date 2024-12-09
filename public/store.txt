@@ -1,0 +1,23 @@
+const getAreaChartData = (urls: URLWithDuplicateCount[]) => {
+    const startOfWeek = getStartOfWeekQ();
+
+    // Aggregate total clicks across all URLs by date
+    const totalClicksByDate: Record<string, number> = {};
+
+    urls.forEach((url) => {
+      url.accesses.lastAccessed
+        .filter((access) => new Date(access.date) >= startOfWeek) // Only include accesses from this week
+        .forEach((access) => {
+          const date = new Date(access.date).toLocaleDateString();
+          totalClicksByDate[date] = (totalClicksByDate[date] || 0) + 1;
+        });
+    });
+
+    // Convert aggregated data into the format required by ApexCharts
+    const seriesData = Object.entries(totalClicksByDate).map(([date, count]) => ({
+      x: date,
+      y: count,
+    }));
+
+    return seriesData;
+  };

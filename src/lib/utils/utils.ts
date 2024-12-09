@@ -86,3 +86,10 @@ export const getStartOfWeekQ = (): Date => {
   startOfWeek.setHours(0, 0, 0, 0);
   return startOfWeek;
 };
+
+export const getStartOfMonthQ = () => {
+  const now = new Date();
+  now.setDate(1);  // Set the date to the first day of the current month
+  now.setHours(0, 0, 0, 0);  // Set the time to midnight
+  return now;
+};

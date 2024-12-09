@@ -1,8 +1,7 @@
-import { useRef } from 'react';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogClose, DialogDescription } from '@components/ui/dialog';
-import { Button } from '@components/ui/button';
-import { downloadQRCode } from '@utils/utils';
 import { CustomQR } from '@components/qrcustomize';
+import { Button } from '@components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@components/ui/dialog';
+import { useRef } from 'react';
 
 interface QRCodeDialogProps {
   open: boolean;

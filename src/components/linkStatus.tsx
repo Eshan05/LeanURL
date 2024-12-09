@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { ImFire } from "react-icons/im";
 import { MdRestore } from "react-icons/md";
 import { PiStackDuotone } from "react-icons/pi";
+import { BsDatabaseFillSlash } from "react-icons/bs";
 import { toast } from "sonner";
 import { Button } from "@components/ui/button";
-import { BsDatabaseFillSlash } from "react-icons/bs";
 
 type URL = {
   _id: string;

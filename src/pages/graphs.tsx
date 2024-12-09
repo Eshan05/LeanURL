@@ -1,15 +1,14 @@
+"use client";
+
 import dynamic from "next/dynamic"; // Dynamically import ApexCharts
 import Image from "next/image";
 
-import React, { useState, useEffect } from "react";
-import { URLDocument, URLWithDuplicateCount } from "@/types/types";
-import { ChevronDown, RefreshCcw } from "lucide-react";
-import { Button } from "@components/ui/button";
-import { GradientTop, Nav, toast } from "@/components";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { SelectIcon } from "@radix-ui/react-select";
-import { getStartOfWeekQ } from "@/lib/utils/utils";
+import { GradientTop, Nav, toast, SearchUrls } from "@/components";
+import { Button, Select, SelectContent, SelectIcon, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ui-index";
 import { useAuthen } from "@/hooks/useAuthen";
+import { URLDocument, URLWithDuplicateCount } from "@/types/types";
+import { ChevronDown, ExternalLinkIcon, LinkIcon, RefreshCcw, SearchIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -20,6 +19,7 @@ const Visualize: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedUrl, setSelectedUrl] = useState<URLWithDuplicateCount | null>(null);
+  const [timeframe, setTimeframe] = useState<string>("week"); // Or 'month', 'year'
 
   const fetchUrls = async (): Promise<void> => {
     setLoading(true);
@@ -77,28 +77,37 @@ const Visualize: React.FC = () => {
       }));
   };
 
-  const getAreaChartData = (urls: URLWithDuplicateCount[]) => {
-    const startOfWeek = getStartOfWeekQ();
+  const getStartDate = (timeframe: string): Date => {
+    const now = new Date();
+    if (timeframe === "month") {
+      return new Date(now.getFullYear(), now.getMonth(), 1);
+    } else if (timeframe === "year") {
+      return new Date(now.getFullYear(), 0, 1);
+    }
+    // Default to "week"
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay());
+    return startOfWeek;
+  };
 
-    // Aggregate total clicks across all URLs by date
+  const getAreaChartData = (urls: URLWithDuplicateCount[], timeframe: string) => {
+    const startDate = getStartDate(timeframe);
+
     const totalClicksByDate: Record<string, number> = {};
 
     urls.forEach((url) => {
       url.accesses.lastAccessed
-        .filter((access) => new Date(access.date) >= startOfWeek) // Only include accesses from this week
+        .filter((access) => new Date(access.date) >= startDate)
         .forEach((access) => {
           const date = new Date(access.date).toLocaleDateString();
           totalClicksByDate[date] = (totalClicksByDate[date] || 0) + 1;
         });
     });
 
-    // Convert aggregated data into the format required by ApexCharts
-    const seriesData = Object.entries(totalClicksByDate).map(([date, count]) => ({
+    return Object.entries(totalClicksByDate).map(([date, count]) => ({
       x: date,
       y: count,
     }));
-
-    return seriesData;
   };
 
   const getTreeMapData = (urls: URLWithDuplicateCount[]) => {
@@ -140,6 +149,14 @@ const Visualize: React.FC = () => {
     ];
   };
 
+  const handleSearchMobile = () => {
+    const event = new KeyboardEvent('keydown', {
+      key: 'k',
+      metaKey: true,
+    });
+    document.dispatchEvent(event);
+  }
+
   if (!authenticated) {
     return null;
   }
@@ -149,6 +166,7 @@ const Visualize: React.FC = () => {
       <div className='relative hidden'>
         <GradientTop />
       </div>
+      <SearchUrls />
       <Nav />
       <Button size="icon" variant='secondary' className="fixed backdrop-blur bg-[#fffa] z-10 shadow rounded-full bottom-4 border left-4 dark:bg-[#09090b]" onClick={refreshData}>
         <RefreshCcw className="w-4 h-4 text-black dark:text-white" />
@@ -161,26 +179,37 @@ const Visualize: React.FC = () => {
             <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl c-beige:text-beige-800">
               Visualize
             </h1>
-            <Select
-              value={selectedUrl?._id || ""}
-              onValueChange={(value: string) =>
-                setSelectedUrl(urls.find((url) => url._id === value) || null)
-              }
-            >
-              <SelectTrigger className="lg:max-w-[50%] lg:w-max focus-visible:ring-0 focus-visible:outline-none">
-                <SelectValue placeholder="Select URL" />
-                <SelectIcon asChild>
-                  <ChevronDown className='w-4 h-4 ml-4 opacity-50' />
-                </SelectIcon>
-              </SelectTrigger>
-              <SelectContent>
-                {urls.map((url) => (
-                  <SelectItem key={url._id} value={url._id}>
-                    {url.shortenUrl}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <section className="flex items-center justify-center space-x-2">
+              <Button type="button" variant="outline" className="flex" onClick={handleSearchMobile}>
+                <span className="flex w-4 aspect-square">
+                  <SearchIcon />
+                </span>
+              </Button>
+              <Select
+                value={selectedUrl?._id || ""}
+                onValueChange={(value: string) =>
+                  setSelectedUrl(urls.find((url) => url._id === value) || null)
+                }
+              >
+                <SelectTrigger className="lg:max-w-[50%] min-w-[200px] w-max max-w-[300px] focus-visible:ring-0 focus-visible:outline-none focus:ring-0 focus:ring-offset-0">
+                  <SelectValue placeholder="Select URL" />
+                  <SelectIcon asChild>
+                    <ChevronDown className='w-4 h-4 ml-4 opacity-50' />
+                  </SelectIcon>
+                </SelectTrigger>
+                <SelectContent>
+                  {urls.map((url) => (
+                    <SelectItem key={url._id} value={url._id}>
+                      {url.shortenUrl}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </section>
+            <footer className="*:flex *:items-center *:space-x-4 flex flex-col space-y-2 text-xs">
+              <p><LinkIcon className="w-5 h-5" /><span className="inline-block px-3 py-1.5 font-mono border rounded-lg text-primary hover:underline overflow-x-auto max-w-[128px] scrollbar-none whitespace-nowrap c-beige:text-beige-700">{selectedUrl?.shortenUrl}</span></p>
+              <p> <ExternalLinkIcon className="w-5 h-5" /><span className="inline-block px-3 py-1.5 font-mono border rounded-lg text-primary hover:underline overflow-x-auto max-w-[128px] scrollbar-none whitespace-nowrap c-beige:text-beige-700">{selectedUrl?.originalUrl}</span></p>
+            </footer>
           </header>
           {loading &&
             <div className='flex items-center justify-center w-full py-5'>
@@ -194,18 +223,35 @@ const Visualize: React.FC = () => {
           {/* URL Selector */}
           {!loading && !error && (
             <main className="w-full *:w-full flex flex-col gap-4">
+              {/* Timeframe Selector */}
               <section className="flex flex-col gap-4 lg:flex-row *:flex-1">
                 {/* Area Chart */}
                 <div className="graph-card">
-                  <h2 className="">Clicks per Day</h2>
-                  <p className="">The following chart shows the total number of clicks for each day. You can use scroll to expand on the X axis. It shows clicks for the current week accumulated by all the URLs.</p>
+                  <h2 className="mb-2">Clicks per Day</h2>
+                  <Select
+                    value={timeframe}
+                    onValueChange={(value) => setTimeframe(value)}
+                  >
+                    <SelectTrigger className="w-40 mt-4">
+                      <SelectValue placeholder="Select Timeframe" />
+                      <SelectIcon asChild>
+                        <ChevronDown className="w-4 h-4 opacity-50" />
+                      </SelectIcon>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="week">This Week</SelectItem>
+                      <SelectItem value="month">This Month</SelectItem>
+                      <SelectItem value="year">This Year</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="mt-2">The following chart shows the total number of clicks for each day. You can use scroll to expand on the X axis. It shows clicks for the current week accumulated by all the URLs.</p>
                   <Chart
                     type="area"
                     height="365"
                     series={[
                       {
                         name: "Total Clicks",
-                        data: getAreaChartData(urls),
+                        data: getAreaChartData(urls, timeframe),
                       },
                     ]}
                     options={{
@@ -252,7 +298,7 @@ const Visualize: React.FC = () => {
                   {/* Heatmap */}
                   {selectedUrl && (
                     <div className="graph-card">
-                      <h2 className="">Heatmap</h2>
+                      <h2 className="">Heatmap ({selectedUrl.accesses.count} Total)</h2>
                       <p className="">The heatmap shows the activity of the selected URL. It displays the number of clicks on each day over the entire year. Columns are days and rows are months, the colors are increasing in contrast as per clicks. Hover for total clicks.</p>
                       <Chart
                         type="heatmap"

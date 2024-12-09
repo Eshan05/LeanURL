@@ -1,19 +1,16 @@
 "use client";
 
 // import { useRouter } from 'next/router';
-import { useRef, useState } from 'react';
+import { Check, Command, Copy, Github, ImageDown, LinkIcon, SearchIcon, Trash2Icon } from 'lucide-react';
 import Link from 'next/link';
-import { Check, Copy, Github, LinkIcon, Trash2Icon, SearchIcon, Command, ImageDown } from 'lucide-react';
+import { useRef, useState } from 'react';
 
-import { Nav } from '@components/nav'
-import { Input } from '@components/ui/input'
-import { Button } from '@components/ui/button'
-import { toast } from 'sonner';
-import SearchUrls from '@components/searchURL';
-import { GradientTop } from '@components/gradientTop';
-import { CustomQR } from '@/components/qrcustomize';
-import { downloadQRCode } from '@utils/utils';
+import { CustomQR, GradientTop, Nav, SearchUrls } from '@/components';
+import { Button } from '@components/ui/button';
+import { Input } from '@components/ui/input';
 import { useAuthen } from '@hooks/useAuthen';
+import { downloadQRCode } from '@utils/utils';
+import { toast } from 'sonner';
 
 export default function Home() {
   const authenticated = useAuthen();

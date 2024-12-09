@@ -11,5 +11,7 @@ import AccessGraphDialog from "@components/dialogs/graphDialog";
 import { GradientTop } from '@components/gradientTop';
 import { URLStatus } from '@components/linkStatus';
 import SortSelect from '@components/analyticsSort';
+import { CustomQR } from "@components/qrcustomize";
+import SearchUrls from "@components/searchURL";
 
-export { Nav, Input, Button, toast, DeleteUrlDialog, EditUrlDialog, QRCodeDialog, RecentAccessesDialog, AccessGraphDialog, GradientTop, URLStatus, SortSelect };
+export { Nav, Input, CustomQR, SearchUrls, Button, toast, DeleteUrlDialog, EditUrlDialog, QRCodeDialog, RecentAccessesDialog, AccessGraphDialog, GradientTop, URLStatus, SortSelect };

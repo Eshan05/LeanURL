@@ -49,8 +49,9 @@ const SearchUrls = () => {
 
   // Fetch URLs whenever the final search query changes
   useEffect(() => {
+    if (!searchQuery.trim() || !open) return;
     fetchUrls(searchQuery);
-  }, [searchQuery]);
+  }, [searchQuery, open]);
 
   // Handle changes in the search input field
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,6 +73,7 @@ const SearchUrls = () => {
     if (e.key === "k" && (e.metaKey || e.ctrlKey || e.altKey)) {
       e.preventDefault();
       setOpen((prev: boolean) => !prev);
+      fetchUrls(searchQuery);
     }
   }, [filteredUrls, selectedIndex]);
 
