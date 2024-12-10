@@ -120,17 +120,20 @@
 
 .dark .apexcharts-heatmap-rect, .dark .apexcharts-treemap-rect { stroke: #0d0e10; }
 .c-beige .apexcharts-heatmap-rect { stroke: #f8f6ee; }
+.dark .apexcharts-legend-text { color: #a1a1aaaa !important; }
 /* .apexcharts-gridline { stroke-width: 0; } */
 /* .apexcharts-grid-borders line { stroke-width: 0; } */
 .apexcharts-tooltip-title { background: unset !important; }
 
 .apexcharts-tooltip,
+.apexcharts-custom-tooltip,
 .apexcharts-menu {
   background: #fff2 !important;
   backdrop-filter: blur(5px);
 }
 
 .dark .apexcharts-tooltip,
+.dark .apexcharts-custom-tooltip,
 .dark .apexcharts-menu {
   background: #161b22aa;
   backdrop-filter: blur(5px);

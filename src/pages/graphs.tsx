@@ -9,17 +9,32 @@ import { useAuthen } from "@/hooks/useAuthen";
 import { URLDocument, URLWithDuplicateCount } from "@/types/types";
 import { ChevronDown, ExternalLinkIcon, LinkIcon, RefreshCcw, SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import ColorPicker from "@/components/colorPicker";
+import { generateAnalogousColors, generateHeatmapColors, generateTreemapColors } from "@/lib/utils/utils";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+
+interface ChartOptions {
+  backgroundOptions: { color: string; };
+  areaChartColor: string;
+  areaChartColors: string[];
+  treemapColor: string;
+  treemapColors: string[];
+  heatmapColor: string;
+  heatmapColors: string[];
+  radarChartColor: string;
+}
 
 const Visualize: React.FC = () => {
   const authenticated = useAuthen();
 
   const [urls, setUrls] = useState<URLWithDuplicateCount[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedUrl, setSelectedUrl] = useState<URLWithDuplicateCount | null>(null);
   const [timeframe, setTimeframe] = useState<string>("week"); // Or 'month', 'year'
+  const [showIndividualLines, setShowIndividualLines] = useState<boolean>(false);
 
   const fetchUrls = async (): Promise<void> => {
     setLoading(true);
@@ -90,25 +105,59 @@ const Visualize: React.FC = () => {
     return startOfWeek;
   };
 
-  const getAreaChartData = (urls: URLWithDuplicateCount[], timeframe: string) => {
+  const getAreaChartData = (
+    urls: URLWithDuplicateCount[],
+    timeframe: string,
+    showIndividualLines: boolean
+  ) => {
     const startDate = getStartDate(timeframe);
 
-    const totalClicksByDate: Record<string, number> = {};
+    if (showIndividualLines) {
+      // Individual lines for each URL
+      const filteredUrls = urls
+        .map((url) => ({
+          name: url.shortenUrl,
+          data: url.accesses.lastAccessed
+            .filter((access) => new Date(access.date) >= startDate)
+            .reduce((acc, access) => {
+              const date = new Date(access.date).toLocaleDateString();
+              const existingEntry = acc.find((item) => item.x === date);
+              if (existingEntry) {
+                existingEntry.y += 1;
+              } else {
+                acc.push({ x: date, y: 1 });
+              }
+              return acc;
+            }, [] as { x: string; y: number }[]),
+        }))
+        .filter((urlData) => urlData.data.some((dataPoint) => dataPoint.y > 0)); // Filter out URLs with 0 clicks
 
-    urls.forEach((url) => {
-      url.accesses.lastAccessed
-        .filter((access) => new Date(access.date) >= startDate)
-        .forEach((access) => {
-          const date = new Date(access.date).toLocaleDateString();
-          totalClicksByDate[date] = (totalClicksByDate[date] || 0) + 1;
-        });
-    });
+      return filteredUrls;
+    } else {
+      // Total clicks for all URLs (single line)
+      const totalClicksByDate: Record<string, number> = {};
 
-    return Object.entries(totalClicksByDate).map(([date, count]) => ({
-      x: date,
-      y: count,
-    }));
+      urls.forEach((url) => {
+        url.accesses.lastAccessed
+          .filter((access) => new Date(access.date) >= startDate)
+          .forEach((access) => {
+            const date = new Date(access.date).toLocaleDateString();
+            totalClicksByDate[date] = (totalClicksByDate[date] || 0) + 1;
+          });
+      });
+
+      return [
+        {
+          name: "Total Clicks",
+          data: Object.entries(totalClicksByDate).map(([date, count]) => ({
+            x: date,
+            y: count,
+          })),
+        },
+      ];
+    }
   };
+
 
   const getTreeMapData = (urls: URLWithDuplicateCount[]) => {
     const browserCounts: Record<string, number> = {};
@@ -157,9 +206,20 @@ const Visualize: React.FC = () => {
     document.dispatchEvent(event);
   }
 
-  if (!authenticated) {
-    return null;
-  }
+  const [options, setOptions] = useState<ChartOptions>({
+    backgroundOptions: {
+      color: "#ffffff", // Default color
+    },
+    areaChartColor: "#000000", // Default color for area chart
+    areaChartColors: [], // Empty array initially
+    treemapColor: "#ff0000", // Default color for treemap
+    treemapColors: [], // Empty array for treemap
+    heatmapColor: "#00ff00", // Default color for heatmap
+    heatmapColors: [], // Empty array for heatmap
+    radarChartColor: "#0000ff", // Default color for radar chart
+  });
+
+  if (!authenticated) return null;
 
   return (
     <main className="relative overflow-x-hidden flex flex-col items-center justify-center h-screen font-inter min-h-svh bg-zinc-50 dark:bg-[#09090b] c-beige:bg-beige-100">
@@ -206,10 +266,68 @@ const Visualize: React.FC = () => {
                 </SelectContent>
               </Select>
             </section>
-            <footer className="*:flex *:items-center *:space-x-4 flex flex-col space-y-2 text-xs">
-              <p><LinkIcon className="w-5 h-5" /><span className="inline-block px-3 py-1.5 font-mono border rounded-lg text-primary hover:underline overflow-x-auto max-w-[128px] scrollbar-none whitespace-nowrap c-beige:text-beige-700">{selectedUrl?.shortenUrl}</span></p>
-              <p> <ExternalLinkIcon className="w-5 h-5" /><span className="inline-block px-3 py-1.5 font-mono border rounded-lg text-primary hover:underline overflow-x-auto max-w-[128px] scrollbar-none whitespace-nowrap c-beige:text-beige-700">{selectedUrl?.originalUrl}</span></p>
-            </footer>
+            <section className="flex items-center justify-center my-2 space-x-4 *:items-center">
+              <div className="flex flex-col">
+                <ColorPicker
+                  value={options.areaChartColor}
+                  onColorChange={(color: string) => {
+                    setOptions((options) => ({
+                      ...options,
+                      areaChartColor: color,
+                      areaChartColors: generateAnalogousColors(color),
+                    }));
+                  }}
+                />
+                <p className="font-mono text-xs text-muted-foreground">Area</p>
+              </div>
+
+              <div className="flex flex-col">
+                <ColorPicker
+                  value={options.treemapColor}
+                  onColorChange={(color: string) => {
+                    setOptions((options) => ({
+                      ...options,
+                      treemapColor: color,
+                      treemapColors: generateTreemapColors(color),
+                    }));
+                  }}
+                />
+                <p className="font-mono text-xs text-muted-foreground">Tree</p>
+              </div>
+
+              <div className="flex flex-col">
+                <ColorPicker
+                  value={options.heatmapColor}
+                  onColorChange={(color: string) => {
+                    setOptions((options) => ({
+                      ...options,
+                      heatmapColor: color,
+                      heatmapColors: generateHeatmapColors(color),
+                    }));
+                  }}
+                />
+                <p className="font-mono text-xs text-muted-foreground">Heat</p>
+              </div>
+
+              <div className="flex flex-col">
+                <ColorPicker
+                  value={options.radarChartColor}
+                  onColorChange={(color: string) => {
+                    setOptions((options) => ({
+                      ...options,
+                      radarChartColor: color, // Only base color for radar
+                    }));
+                  }}
+                />
+                <p className="font-mono text-xs text-muted-foreground">Radar</p>
+
+              </div>
+            </section>
+            {selectedUrl &&
+              <footer className="*:flex *:items-center *:space-x-4 flex flex-col space-y-2 text-xs">
+                <p><LinkIcon className="w-5 h-5" /><span className="inline-block px-3 py-1.5 font-mono border rounded-lg text-primary hover:underline overflow-x-auto w-[128px] scrollbar-none whitespace-nowrap c-beige:text-beige-700">{selectedUrl?.shortenUrl}</span></p>
+                <p><ExternalLinkIcon className="w-5 h-5" /><span className="inline-block px-3 py-1.5 font-mono border rounded-lg text-primary hover:underline overflow-x-auto w-[128px] scrollbar-none whitespace-nowrap c-beige:text-beige-700">{selectedUrl?.originalUrl}</span></p>
+              </footer>}
           </header>
           {loading &&
             <div className='flex items-center justify-center w-full py-5'>
@@ -228,41 +346,53 @@ const Visualize: React.FC = () => {
                 {/* Area Chart */}
                 <div className="graph-card">
                   <h2 className="mb-2">Clicks per Day</h2>
-                  <Select
-                    value={timeframe}
-                    onValueChange={(value) => setTimeframe(value)}
-                  >
-                    <SelectTrigger className="w-40 mt-4">
-                      <SelectValue placeholder="Select Timeframe" />
-                      <SelectIcon asChild>
-                        <ChevronDown className="w-4 h-4 opacity-50" />
-                      </SelectIcon>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="week">This Week</SelectItem>
-                      <SelectItem value="month">This Month</SelectItem>
-                      <SelectItem value="year">This Year</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <header className="flex flex-col gap-2 mt-4 md:flex-row">
+                    <Select
+                      value={timeframe}
+                      onValueChange={(value) => setTimeframe(value)}
+                    >
+                      <SelectTrigger className="w-40">
+                        <SelectValue placeholder="Select Timeframe" />
+                        <SelectIcon asChild>
+                          <ChevronDown className="w-4 h-4 opacity-50" />
+                        </SelectIcon>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="week">This Week</SelectItem>
+                        <SelectItem value="month">This Month</SelectItem>
+                        <SelectItem value="year">This Year</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Button type="button" variant="outline" onClick={() => setShowIndividualLines((prev) => !prev)}>
+                      <Checkbox
+                        checked={showIndividualLines}
+                        onCheckedChange={(checked) => setShowIndividualLines((prev) => !prev)}
+                        className="mr-2 pointer-events-none"
+                      />
+                      {showIndividualLines
+                        ? "All URLs"
+                        : "Individual URLs"}
+                    </Button>
+                  </header>
                   <p className="mt-2">The following chart shows the total number of clicks for each day. You can use scroll to expand on the X axis. It shows clicks for the current week accumulated by all the URLs.</p>
                   <Chart
                     type="area"
                     height="365"
-                    series={[
-                      {
-                        name: "Total Clicks",
-                        data: getAreaChartData(urls, timeframe),
-                      },
-                    ]}
+                    series={getAreaChartData(urls, timeframe, showIndividualLines)}
                     options={{
+                      title: {
+                        text: showIndividualLines
+                          ? "Individual Clicks"
+                          : "Total Clicks",
+                      },
                       chart: { type: "area", height: 350, fontFamily: 'monospace' },
                       xaxis: { type: "datetime" },
-                      colors: ['#1E90FF', '#FF6347', '#32CD32', '#FFD700'],
-                      title: { text: "Total clicks" },
+                      colors: options.areaChartColors,
                       dataLabels: {
                         enabled: true,
                         formatter: (val: number) => `${val}`,
                       },
+                      legend: { show: showIndividualLines }
                     }}
                   />
                 </div>
@@ -276,7 +406,7 @@ const Visualize: React.FC = () => {
                     options={{
                       chart: { type: "treemap", height: 350, fontFamily: 'monospace', background: '0', foreColor: '#444' },
                       title: { text: "Browser Usage" },
-                      colors: ['#1E90FFaa', '#FF6347aa', '#32CD32aa', '#FFD700aa'],
+                      colors: options.treemapColors,
                       plotOptions: {
                         treemap: {
                           enableShades: false,
@@ -313,27 +443,13 @@ const Visualize: React.FC = () => {
                               radius: 4,
                               useFillColorAsStroke: false,
                               colorScale: {
-                                ranges: [{
-                                  from: 1,
-                                  to: 10,
-                                  color: '#fdf156',
-                                  name: 'Low',
-                                }, {
-                                  from: 11,
-                                  to: 30,
-                                  color: '#ffc722',
-                                  name: 'Medium',
-                                }, {
-                                  from: 31,
-                                  to: 60,
-                                  color: '#ff9711',
-                                  name: 'High',
-                                }, {
-                                  from: 61,
-                                  to: 100,
-                                  color: '#04001a',
-                                  name: 'Century',
-                                }],
+                                ranges: [
+                                  { from: 1, to: 20, color: options.heatmapColors[0], name: 'Low' },
+                                  { from: 21, to: 40, color: options.heatmapColors[1], name: 'Medium' },
+                                  { from: 41, to: 60, color: options.heatmapColors[2], name: 'High' },
+                                  { from: 61, to: 80, color: options.heatmapColors[3], name: 'Century' },
+                                  { from: 81, to: 120, color: options.heatmapColors[4], name: 'Fire' },
+                                ],
                               }
                             },
                           },
@@ -367,7 +483,7 @@ const Visualize: React.FC = () => {
                             chart: { type: "radar", height: 350, fontFamily: 'monospace' },
                             xaxis: { categories: Array.from({ length: 24 }, (_, i) => `${i}:00`) },
                             title: { text: "Most Accessed Hours" },
-                            colors: ['#fdf156', '#ffc722', '#ff9711', '#04001a'],
+                            colors: [options.radarChartColor],
                           }}
                         />
                       </div>
