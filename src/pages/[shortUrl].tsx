@@ -52,7 +52,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         };
       }
 
-      const forwarded = req.headers["x-forwarded-for"];
+      const forwarded = req.headers["x-vercel-forwarded-for"] || req.headers["x-forwarded-for"];
       console.log('Forwarded IP:', forwarded);
       // let clientIp = forwarded ? String(forwarded.split(',')[0].trim()) : req.socket.remoteAddress;
       let clientIp = '';
