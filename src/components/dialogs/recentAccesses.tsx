@@ -15,10 +15,10 @@ interface RecentAccessesDialogProps {
 const RecentAccessesDialog = ({ open, setOpen, recentAccesses }: RecentAccessesDialogProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const limitedRecentAccess = recentAccesses.slice(0, 100).reverse();
-  const totalPages = Math.ceil(recentAccesses.length / itemsPerPage);
+  const limitedRecentAccess = [...recentAccesses].reverse().slice(0, 100);
+  const totalPages = Math.ceil(limitedRecentAccess.length / itemsPerPage);
 
-  const currentItems = recentAccesses.slice(
+  const currentItems = limitedRecentAccess.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
