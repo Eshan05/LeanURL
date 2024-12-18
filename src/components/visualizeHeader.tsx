@@ -1,6 +1,5 @@
 import { Button, Select, SelectContent, SelectIcon, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ui-index";
-import { URLDocument, URLWithDuplicateCount } from "@/types/types";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ChartColorOptions, URLWithDuplicateCount } from "@/types/types";
 import ColorPicker from "@/components/colorPicker";
 import { generateAnalogousColors, generateHeatmapColors, generateTreemapColors } from "@/lib/utils/utils";
 import { ChevronDown, ExternalLinkIcon, LinkIcon, SearchIcon } from "lucide-react";
@@ -11,26 +10,8 @@ interface VisualizeHeaderProps {
   selectedUrl: URLWithDuplicateCount | null;
   onSearchMobile: () => void;
   onUrlSelect: (url: URLWithDuplicateCount | null) => void;
-  options: {
-    backgroundOptions: { color: string; };
-    areaChartColor: string;
-    areaChartColors: string[];
-    treemapColor: string;
-    treemapColors: string[];
-    heatmapColor: string;
-    heatmapColors: string[];
-    radarChartColor: string;
-  };
-  setOptions: React.Dispatch<React.SetStateAction<{
-    backgroundOptions: { color: string; };
-    areaChartColor: string;
-    areaChartColors: string[];
-    treemapColor: string;
-    treemapColors: string[];
-    heatmapColor: string;
-    heatmapColors: string[];
-    radarChartColor: string;
-  }>>;
+  options: ChartColorOptions;
+  setOptions: React.Dispatch<React.SetStateAction<ChartColorOptions>>;
 }
 
 const VisualizeHeader: React.FC<VisualizeHeaderProps> = ({

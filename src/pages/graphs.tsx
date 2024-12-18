@@ -3,27 +3,17 @@
 import dynamic from "next/dynamic"; // Dynamically import ApexCharts
 import Image from "next/image";
 
+import React, { useState, useEffect } from "react";
+import { ChartColorOptions, URLDocument, URLWithDuplicateCount } from "@/types/types";
+import { ChevronDown, RefreshCcw } from "lucide-react";
 import { GradientTop, Nav, toast, SearchUrls } from "@/components";
 import { Button, Select, SelectContent, SelectIcon, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ui-index";
 import { useAuthen } from "@/hooks/useAuthen";
-import { URLDocument, URLWithDuplicateCount } from "@/types/types";
-import { ChevronDown, ExternalLinkIcon, LinkIcon, RefreshCcw, SearchIcon } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const VisualizeHeader = dynamic(() => import("@/components/visualizeHeader"), { ssr: false });
+const VisualizeHeader = dynamic(() => import("@/components/visualizeHeader"), { ssr: false, });
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-interface ChartOptions {
-  backgroundOptions: { color: string; };
-  areaChartColor: string;
-  areaChartColors: string[];
-  treemapColor: string;
-  treemapColors: string[];
-  heatmapColor: string;
-  heatmapColors: string[];
-  radarChartColor: string;
-}
 
 const Visualize: React.FC = () => {
   const authenticated = useAuthen();
@@ -68,11 +58,13 @@ const Visualize: React.FC = () => {
   const refreshData = () => {
     setLoading(true);
     fetchUrls();
-    toast.success('Data refreshed successfully!');
+    toast.success("Data refreshed successfully!");
   };
 
   // Chart Data Generators
-  const getHeatmapData = (accesses: URLDocument["accesses"]["lastAccessed"]) => {
+  const getHeatmapData = (
+    accesses: URLDocument["accesses"]["lastAccessed"]
+  ) => {
     // Heatmap logic: Transform accesses to a month-day grid
     return Array(12)
       .fill(0)
@@ -110,6 +102,7 @@ const Visualize: React.FC = () => {
     showIndividualLines: boolean
   ) => {
     const startDate = getStartDate(timeframe);
+    const startDate1 = new Date(getStartDate(timeframe).getTime() + 1000 * 60 * 60 * 24);
 
     if (showIndividualLines) {
       // Individual lines for each URL
@@ -145,18 +138,20 @@ const Visualize: React.FC = () => {
           });
       });
 
-      return [
-        {
-          name: "Total Clicks",
-          data: Object.entries(totalClicksByDate).map(([date, count]) => ({
-            x: date,
-            y: count,
-          })),
-        },
-      ];
+      const totalClicksData = Object.entries(totalClicksByDate)
+        .map(([date, count]) => ({
+          // Convert date to a Date object (or timestamp)
+          x: new Date(date).getTime(),  // Use timestamp for better sorting in datetime axis
+          y: count,
+        }))
+        .sort((a, b) => a.x - b.x); // Sort by timestamp to ensure chronological order
+
+      return [{
+        name: "Total Clicks",
+        data: totalClicksData,
+      }];
     }
   };
-
 
   const getTreeMapData = (urls: URLWithDuplicateCount[]) => {
     const browserCounts: Record<string, number> = {};
@@ -167,7 +162,8 @@ const Visualize: React.FC = () => {
           ? "Chrome"
           : /Firefox/i.test(access.userAgent)
             ? "Firefox"
-            : /Safari/i.test(access.userAgent) && !/Chrome/i.test(access.userAgent)
+            : /Safari/i.test(access.userAgent) &&
+              !/Chrome/i.test(access.userAgent)
               ? "Safari"
               : /Edge/i.test(access.userAgent)
                 ? "Edge"
@@ -198,40 +194,42 @@ const Visualize: React.FC = () => {
   };
 
   const handleSearchMobile = () => {
-    const event = new KeyboardEvent('keydown', {
-      key: 'k',
+    const event = new KeyboardEvent("keydown", {
+      key: "k",
       metaKey: true,
     });
     document.dispatchEvent(event);
-  }
+  };
 
-  const [options, setOptions] = useState<ChartOptions>({
-    backgroundOptions: {
-      color: "#ffffff", // Default color
-    },
-    areaChartColor: "#000000", // Default color for area chart
-    areaChartColors: [], // Empty array initially
-    treemapColor: "#ff0000", // Default color for treemap
-    treemapColors: [], // Empty array for treemap
-    heatmapColor: "#00ff00", // Default color for heatmap
-    heatmapColors: [], // Empty array for heatmap
-    radarChartColor: "#0000ff", // Default color for radar chart
+  const [options, setOptions] = useState<ChartColorOptions>({
+    backgroundOptions: { color: "#ffffff", }, // Default color
+    areaChartColor: "#000000",                // Default color for area chart
+    areaChartColors: [],                      // Empty array initially
+    treemapColor: "#ff0000",                  // Default color for treemap
+    treemapColors: [],                        // Empty array for treemap
+    heatmapColor: "#00ff00",                  // Default color for heatmap
+    heatmapColors: [],                        // Empty array for heatmap
+    radarChartColor: "#0000ff",               // Default color for radar chart
   });
 
   if (!authenticated) return null;
 
   return (
     <main className="relative overflow-x-hidden flex flex-col items-center justify-center h-screen font-inter min-h-svh bg-zinc-50 dark:bg-[#09090b] c-beige:bg-beige-100">
-      <div className='relative hidden'>
+      <div className="relative hidden">
         <GradientTop />
       </div>
       <SearchUrls />
       <Nav />
-      <Button size="icon" variant='secondary' className="fixed backdrop-blur bg-[#fffa] z-10 shadow rounded-full bottom-4 border left-4 dark:bg-[#09090b]" onClick={refreshData}>
+      <Button
+        size="icon"
+        variant="secondary"
+        className="fixed backdrop-blur bg-[#fffa] z-10 shadow rounded-full bottom-4 border left-4 dark:bg-[#09090b]"
+        onClick={refreshData}
+      >
         <RefreshCcw className="w-4 h-4 text-black dark:text-white" />
       </Button>
-      <div className="relative w-full py-24 overflow-x-hidden">
-
+      <article className="relative w-full py-24 overflow-x-hidden">
         <div className="w-full px-[1.15rem] py-10 mx-auto lg:px-8 lg:py-16">
           <p className='mb-2 font-mono text-center small-caps c-beige:text-beige-800'>LeanURL</p>
           {!loading && (
@@ -245,24 +243,28 @@ const Visualize: React.FC = () => {
             />
           )}
           {/* The above has the select URL feature, the search button for mobile, the color pickers which update options (And thank god work) and it updates the selected URL via onUrlSelect and also an event is emitted from it via onSearchMobile. Also shows the link footer */}
-          {loading &&
-            <div className='flex items-center justify-center w-full py-5'>
-              <Image src="/images/bars-scale.svg"
-                width={20} height={20}
+          {loading && (
+            <div className="flex items-center justify-center w-full py-5">
+              <Image
+                src="/images/bars-scale.svg"
+                width={20}
+                height={20}
                 className="dark:invert"
-                alt="..." />
-            </div>}
+                alt="..."
+              />
+            </div>
+          )}
           {error && <p className="text-red-500">{error}</p>}
 
           {/* URL Selector */}
           {!loading && !error && (
             <main className="w-full *:w-full flex flex-col gap-4">
               {/* Timeframe Selector */}
-              <section className="flex flex-col gap-4 lg:flex-row *:flex-1">
+              <section className="flex flex-row gap-4 lg:flex-row *:flex-1">
                 {/* Area Chart */}
                 <div className="graph-card">
-                  <h2 className="mb-2">Clicks per Day</h2>
-                  <header className="flex flex-col gap-2 mt-4 md:flex-row">
+                  <h2 className="mb-2 c-beige:text-beige-700">Clicks per Day</h2>
+                  <header className="flex flex-row gap-2 mt-4 md:flex-row">
                     <Select
                       value={timeframe}
                       onValueChange={(value) => setTimeframe(value)}
@@ -279,48 +281,76 @@ const Visualize: React.FC = () => {
                         <SelectItem value="year">This Year</SelectItem>
                       </SelectContent>
                     </Select>
-                    <Button type="button" variant="outline" onClick={() => setShowIndividualLines((prev) => !prev)}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-max"
+                      onClick={() => setShowIndividualLines((prev) => !prev)}
+                    >
                       <Checkbox
                         checked={showIndividualLines}
+                        // @ts-ignore
                         onCheckedChange={(checked) => setShowIndividualLines((prev) => !prev)}
                         className="mr-2 pointer-events-none"
                       />
-                      {showIndividualLines
-                        ? "All URLs"
-                        : "Individual URLs"}
+                      {showIndividualLines ? "All URLs" : "Individual URLs"}
                     </Button>
                   </header>
-                  <p className="mt-2">The following chart shows the total number of clicks for each day. You can use scroll to expand on the X axis. It shows clicks for the current week accumulated by all the URLs.</p>
+                  <p className="mt-2">
+                    The following chart shows the total number of clicks for
+                    each day. You can use scroll to expand on the X axis. It
+                    shows clicks for the current week accumulated by all the
+                    URLs.
+                  </p>
                   <Chart
-                    type="area"
+                    type={showIndividualLines ? "area" : "area"}
                     height="365"
-                    series={getAreaChartData(urls, timeframe, showIndividualLines)}
+                    series={getAreaChartData(
+                      urls,
+                      timeframe,
+                      showIndividualLines
+                    )}
                     options={{
                       title: {
                         text: showIndividualLines
                           ? "Individual Clicks"
                           : "Total Clicks",
                       },
-                      chart: { type: "area", height: 350, fontFamily: 'monospace' },
-                      xaxis: { type: "datetime" },
+                      chart: {
+                        type: "area",
+                        height: 350,
+                        fontFamily: "monospace",
+                      },
+                      xaxis: {
+                        type: "datetime",
+                        labels: {
+                          datetimeUTC: false,
+                        }
+                      },
                       colors: options.areaChartColors,
                       dataLabels: {
                         enabled: true,
                         formatter: (val: number) => `${val}`,
                       },
-                      legend: { show: showIndividualLines }
+                      legend: { show: showIndividualLines },
                     }}
                   />
                 </div>
-                { /* Tree Map */}
+                {/* Tree Map */}
                 <div className="graph-card">
-                  <h2 className="">Browser Distribution</h2>
+                  <h2 className="c-beige:text-beige-700">Browser Distribution</h2>
                   <p className="">The following treemap shows the distribution of browser usage. It is the cumulative distribution of browser usage for all the URLs. You can see for individual URLs in a tabular form back on analytics.</p>
                   <Chart
                     type="treemap"
                     series={[{ data: getTreeMapData(urls) }]}
                     options={{
-                      chart: { type: "treemap", height: 350, fontFamily: 'monospace', background: '0', foreColor: '#444' },
+                      chart: {
+                        type: "treemap",
+                        height: 350,
+                        fontFamily: "monospace",
+                        background: "0",
+                        foreColor: "#444",
+                      },
                       title: { text: "Browser Usage" },
                       colors: options.treemapColors,
                       plotOptions: {
@@ -328,7 +358,7 @@ const Visualize: React.FC = () => {
                           enableShades: false,
                           shadeIntensity: 0.5,
                           distributed: true,
-                        }
+                        },
                       },
                       grid: { show: false },
                       stroke: { width: 2, show: false, lineCap: "round" },
@@ -344,15 +374,22 @@ const Visualize: React.FC = () => {
                   {/* Heatmap */}
                   {selectedUrl && (
                     <div className="graph-card">
-                      <h2 className="">Heatmap ({selectedUrl.accesses.count} Total)</h2>
+                      <h2 className="c-beige:text-beige-700">Heatmap ({selectedUrl.accesses.count} Total)</h2>
                       <p className="">The heatmap shows the activity of the selected URL. It displays the number of clicks on each day over the entire year. Columns are days and rows are months, the colors are increasing in contrast as per clicks. Hover for total clicks.</p>
                       <Chart
                         type="heatmap"
                         width="770"
                         height="365"
-                        series={getHeatmapData(selectedUrl.accesses.lastAccessed)}
+                        series={getHeatmapData(
+                          selectedUrl.accesses.lastAccessed
+                        )}
                         options={{
-                          chart: { type: "heatmap", height: 350, background: 'transparent', fontFamily: 'monospace' },
+                          chart: {
+                            type: "heatmap",
+                            height: 350,
+                            background: "transparent",
+                            fontFamily: "monospace",
+                          },
                           title: { text: "Heatmap of Activity" },
                           plotOptions: {
                             heatmap: {
@@ -380,14 +417,13 @@ const Visualize: React.FC = () => {
                           tooltip: { shared: true, }
                         }}
                       />
-
                     </div>
                   )}
 
                   {/* Radar Chart */}
                   {selectedUrl && (
                     <div className="graph-card">
-                      <h2 className="">Radar Chart</h2>
+                      <h2 className="c-beige:text-beige-700">Radar Chart</h2>
                       <p className="">The following radar chart displays the most accessed hours for the selected URL. It goes over the entire day, from 00:00 to 23:59 and spans over the entire lifetime of the URL.</p>
                       <div className="flex items-center justify-center p-4 bg-transparent scrollbar-none min-w-[370px] min-h-[370px]">
                         <Chart
@@ -410,7 +446,7 @@ const Visualize: React.FC = () => {
             </main>
           )}
         </div>
-      </div>
+      </article>
     </main>
   );
 };

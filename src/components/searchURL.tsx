@@ -85,68 +85,72 @@ const SearchUrls = () => {
   }, [filteredUrls, selectedIndex, handleKeyDown]);
 
   return (
-    // @ts-ignore
-    <CommandDialog open={open} onOpenChange={setOpen} className="border rounded-lg max-w-3/4 lg:w-1/4">
-      <DialogTitle className="hidden"></DialogTitle>
-      <DialogDescription className="hidden"></DialogDescription>
-      {/* <CommandInput
+    <aside className="border rounded-lg max-w-3/4 lg:w-1/4">
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <DialogTitle className="hidden"></DialogTitle>
+        <DialogDescription className="hidden"></DialogDescription>
+        {/* <CommandInput
         placeholder="Search for a link..."
         onChange={handleSearchChange}
         value={inputValue}
         className="px-4 pb-2 "
-      /> */}
-      <div className="flex items-center px-3 pb-1 border-b c-beige:bg-beige-50" cmdk-input-wrapper="">
-        <SearchIcon className="w-4 h-4 mr-2 opacity-50 shrink-0" />
-        <Input
-          className={
-            "flex h-11 w-full rounded-md bg-transparent py-3 px-4 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 border-none focus-visible:ring-0 focus-visible:ring-offset-0"}
-          placeholder="Search for a link..."
-          value={inputValue}
-          onChange={handleSearchChange}
-        />
-      </div>
-      <CommandList className="px-2 py-4 c-beige:bg-beige-50">
-        {urls.length === 0 ? (
-          <CommandEmpty>{error ? error : "No URLs found"}</CommandEmpty>
-        ) : (
-          <CommandGroup heading={searchQuery ? "Search Results" : "Recent URLs"}>
-            {filteredUrls.map((url, index) => (
-              <CommandItem
-                key={index}
-                onSelect={() => { router.push(`/analytics?id=${url._id}`); }}
-                className="border-b last:border-b-0">
-                <article className="flex items-center gap-2 p-1 space-x-1">
-                  <img
-                    src={`http://www.google.com/s2/favicons?sz=64&domain=${url.originalUrl}`}
-                    width="32" height="32"
-                    alt="L" loading="lazy"
-                    className='block rounded aspect-square'
-                  />
-                  <section className="flex flex-col space-y-2">
-                    <main className="flex items-center space-x-3 font-mono">
-                      <ExternalLinkIcon className="w-4 h-4" />
-                      <a
-                        href={url.originalUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm font-normal hover:text-blue-400 hover:underline">
-                        {url.originalUrl.replace(/^https?:\/\//, '')}</a>
-                    </main>
-                    <div className="flex items-center space-x-3 font-mono text-muted-foreground">
-                      <LinkIcon className="w-4 h-4" />
-                      <Link
-                        href={`/analytics?id=${url._id}`} passHref
-                        target="_blank" className="text-[.75rem] hover:underline">
-                        {url.shortenUrl} </Link>
-                    </div>
-                  </section>
-                </article>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        )}
-      </CommandList>
-    </CommandDialog>
+            /> */}
+        <div className="flex items-center px-3 pb-1 border-b c-beige:bg-beige-50" cmdk-input-wrapper="">
+          <SearchIcon className="w-4 h-4 mr-2 opacity-50 shrink-0" />
+          <Input
+            className={
+              "flex h-11 w-full rounded-md bg-transparent py-3 px-4 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 border-none focus-visible:ring-0 focus-visible:ring-offset-0"}
+            placeholder="Search for a link..."
+            value={inputValue}
+            onChange={handleSearchChange}
+          />
+        </div>
+        <CommandList className="px-2 py-4 c-beige:bg-beige-50">
+          {urls.length === 0 ? (
+            <CommandEmpty>{error ? error : "No URLs found"}</CommandEmpty>
+          ) : (
+            <CommandGroup heading={searchQuery ? "Search Results" : "Recent URLs"}>
+              {filteredUrls.map((url, index) => (
+                <CommandItem
+                  key={index}
+                  onSelect={() => { router.push(`/analytics?id=${url._id}`); }}
+                  className="border-b last:border-b-0">
+                  <article className="flex items-center gap-2 p-1 space-x-1">
+                    <img
+                      src={`http://www.google.com/s2/favicons?sz=64&domain=${url.originalUrl}`}
+                      width="32" height="32"
+                      alt="L" loading="lazy"
+                      className='block rounded aspect-square'
+                    />
+                    <section className="flex flex-col space-y-2">
+                      <main className="flex items-center space-x-2 font-mono">
+                        <ExternalLinkIcon className="w-4 h-4" />
+                        <a
+                          href={url.originalUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="!text-xs font-normal hover:text-blue-400 hover:underline inline-block px-2 py-1 font-mono border rounded-lg text-primary overflow-x-auto w-52 scrollbar-none whitespace-nowrap c-beige:text-beige-700"
+                        >
+                          {url.originalUrl.replace(/^https?:\/\//, '')}
+                        </a>
+                      </main>
+                      <div className="flex items-center space-x-2 font-mono text-muted-foreground">
+                        <LinkIcon className="w-4 h-4" />
+                        <Link
+                          href={`/analytics?id=${url._id}`} passHref
+                          target="_blank" className="text-[.75rem] hover:underline inline-block px-2">
+                          {url.shortenUrl} </Link>
+                      </div>
+                    </section>
+                  </article>
+                  <p className="flex ml-auto font-mono text-muted-foreground">{url.accesses.count}</p>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
+        </CommandList>
+      </CommandDialog>
+    </aside>
   );
 };
 

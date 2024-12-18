@@ -43,8 +43,9 @@ export default function Home() {
     if (expirationDate && scheduledDate && new Date(expirationDate) <= new Date(scheduledDate)) { return toast.error('Expiration date cannot be before or equal to scheduled date'); }
     if (expirationDate && new Date(expirationDate) <= new Date(Date.now())) { return toast.error('Expiration date cannot be in the past'); }
 
-    if (alias == 'share' || alias == 'analytics') { return toast.error(`Custom alias cannot be: share`); }
+    if (alias == 'share') { return toast.error(`Custom alias cannot be share`); }
     if (alias == 'analytics') { return toast.error(`Custom alias cannot be analytics`); }
+    if (alias == 'graphs') { return toast.error(`Custom alias cannot be graphs`); }
 
     try {
       const res = await fetch('/api/shorten', {

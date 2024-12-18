@@ -9,11 +9,14 @@ import { ChevronDown, DownloadIcon } from "lucide-react";
 import { SelectIcon } from "@radix-ui/react-select";
 
 export const CustomQR = ({ url }: { url: string }) => {
+  const sanitizedUrl = url.startsWith("undefined")
+    ? url.replace("undefined", 'process.env.BASE_URL')
+    : url;
   const [options, setOptions] = useState<Options>({
     width: 132,
     height: 132,
     type: 'svg',
-    data: url,
+    data: sanitizedUrl,
     image: 'https://images.vexels.com/content/137688/preview/logo-geometric-polygonal-shape-029edb.png',
     margin: 0,
     qrOptions: { // Object

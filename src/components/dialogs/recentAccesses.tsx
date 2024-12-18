@@ -15,6 +15,7 @@ interface RecentAccessesDialogProps {
 const RecentAccessesDialog = ({ open, setOpen, recentAccesses }: RecentAccessesDialogProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const limitedRecentAccess = recentAccesses.slice(0, 100).reverse();
   const totalPages = Math.ceil(recentAccesses.length / itemsPerPage);
 
   const currentItems = recentAccesses.slice(
@@ -55,7 +56,7 @@ const RecentAccessesDialog = ({ open, setOpen, recentAccesses }: RecentAccessesD
         </DialogHeader>
         {/* Putting 60vh max height here works too  */}
         <div className="overflow-x-hidden md:p-3">
-          {recentAccesses.length > 0 ? (
+          {limitedRecentAccess.length > 0 ? (
             <>
               <main className='flex flex-col space-y-3 overflow-auto max-h-[55vh]'>
                 <table className="min-w-full border-collapse table-auto">
