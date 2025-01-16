@@ -6,6 +6,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     await dbConnect();
 
+    if (req.method === "GET" && req.query.action === "recent-ten") {
+      try {
+        const urls = await Url.find({ "accesses.lastAccessed": { $exists: true } })
+          .sort({ "accesses.lastAccessed.date": -1 })
+          .limit(10);
+
+        return res.status(200).json(urls);
+      } catch (error) {
+        console.error("Error fetching URLs:", error);
+        return res.status(500).json({ error: "Failed to fetch URLs" });
+      }
+    }
+
     if (req.method === 'GET') {
       const urls = await Url.find({ q: { $exists: false } });
       return res.status(200).json(urls);

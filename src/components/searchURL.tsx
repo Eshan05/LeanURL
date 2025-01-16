@@ -143,7 +143,7 @@ const SearchUrls = () => {
                       </div>
                     </section>
                   </article>
-                  <p className="flex ml-auto font-mono text-muted-foreground">{url.accesses.count}</p>
+                  <p className="flex ml-auto font-mono text-sm text-muted-foreground">{url.accesses.count}</p>
                 </CommandItem>
               ))}
             </CommandGroup>

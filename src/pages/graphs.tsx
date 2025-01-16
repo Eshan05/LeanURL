@@ -13,7 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const VisualizeHeader = dynamic(() => import("@/components/visualizeHeader"), { ssr: false, });
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
+const LastRecent = dynamic(() => import("@/components/dialogs/last-recent"), { ssr: false, });
 
 const Visualize: React.FC = () => {
   const authenticated = useAuthen();
@@ -24,6 +24,7 @@ const Visualize: React.FC = () => {
   const [selectedUrl, setSelectedUrl] = useState<URLWithDuplicateCount | null>(null);
   const [timeframe, setTimeframe] = useState<string>("week"); // Or 'month', 'year'
   const [showIndividualLines, setShowIndividualLines] = useState<boolean>(false);
+  const [openRecent, setOpenRecent] = useState<boolean>(false);
 
   const fetchUrls = async (): Promise<void> => {
     setLoading(true);
@@ -237,12 +238,16 @@ const Visualize: React.FC = () => {
               urls={urls}
               selectedUrl={selectedUrl}
               onSearchMobile={handleSearchMobile}
+              onRecentSelect={setOpenRecent}
               onUrlSelect={setSelectedUrl}
               options={options}
               setOptions={setOptions}
             />
           )}
           {/* The above has the select URL feature, the search button for mobile, the color pickers which update options (And thank god work) and it updates the selected URL via onUrlSelect and also an event is emitted from it via onSearchMobile. Also shows the link footer */}
+          {openRecent && (
+            <LastRecent open={openRecent} setOpen={setOpenRecent} />
+          )}
           {loading && (
             <div className="flex items-center justify-center w-full py-5">
               <Image
