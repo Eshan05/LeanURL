@@ -1,6 +1,9 @@
 import dbConnect from "@utils/db";
 import Url from '@models/url';
 import { NextApiRequest, NextApiResponse } from "next";
+import { nanoid } from 'nanoid'
+import { SignJWT } from 'jose'
+import { setCookie } from 'cookies-next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -10,8 +13,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const url = await Url.findOne({ q: passcode });
 
       if (url) {
-        res.setHeader('Set-Cookie', 'authenticated=true; Path=/; Max-Age=3600; SameSite=Strict');
-        // res.setHeader('Set-Cookie', 'authenticated=true; Path=/; Max-Age=86400; HttpOnly; Secure; SameSite=Strict');
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET || '5322c9714a5e9451e84e9f4da58074b4d2af21cb9bafa65a2bbdf8de9f95e5b3');
+        const payload = { passcode: url.q, uniqueId: nanoid() };
+
+        const token = await new SignJWT(payload)
+          .setProtectedHeader({ alg: 'HS256' })
+          .setExpirationTime('2h')
+          .sign(secret)
+
+        setCookie('authToken', token, {
+          req,
+          res,
+          path: '/',
+          maxAge: 7200,
+          sameSite: 'strict',
+          httpOnly: process.env.NODE_ENV === 'production',
+          secure: process.env.NODE_ENV === 'production',
+        });
 
         return res.status(200).json({ message: 'Authenticated successfully' });
       } else {

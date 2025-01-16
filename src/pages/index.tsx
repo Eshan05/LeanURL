@@ -44,7 +44,7 @@ export default function Home() {
       <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4">
         <h1 className="text-3xl font-bold c-beige:text-beige-700/90">Hello :)</h1>
         <Input
-          type="text"
+          type="password"
           value={passcode}
           onChange={(e) => setPasscode(e.target.value)}
           placeholder="Enter passcode"
@@ -73,7 +73,7 @@ export default function Home() {
         </section>
       </form>
 
-      {error && <p>{error}</p>}
+      {error && <p className="mt-2">{error}</p>}
     </main>
   );
 }

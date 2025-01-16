@@ -48,9 +48,20 @@ export default function Home() {
     if (alias == 'graphs') { return toast.error(`Custom alias cannot be graphs`); }
 
     try {
+      const tokenRow = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+      const token = tokenRow && tokenRow.split('=')[1];
+      console.log(token)
+      if (!token) {
+        setError('No token found. Please log in.');
+        return;
+      }
+
       const res = await fetch('/api/shorten', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify({
           originalUrl: formattedUrl,
           alias,

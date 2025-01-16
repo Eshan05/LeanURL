@@ -51,15 +51,15 @@ const URLSchema = new mongoose.Schema(
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date, default: null },
   },
-  { timestamps: true }
+  { timestamps: true, collection: "Links" }
 );
 
 // TTL index on expirationDate, expires after the date specified in the field
 URLSchema.index({ expirationDate: 1 }, { expireAfterSeconds: 0 });
 URLSchema.index({ deletedAt: 1 }, { expireAfterSeconds: 3600 });
 
-URLSchema.index({ originalUrl: 1 });
-URLSchema.index({ shortenUrl: 1 });
+if (!URLSchema.indexes().some((index) => index[0].hasOwnProperty("originalUrl"))) URLSchema.index({ originalUrl: 1 });
+if (!URLSchema.indexes().some((index) => index[0].hasOwnProperty("shortenUrl"))) URLSchema.index({ shortenUrl: 1 });
 
 URLSchema.pre('save', function (next) {
   const TWO_YEARS = 2 * 365 * 24 * 60 * 60 * 1000; // Milliseconds
