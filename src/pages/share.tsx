@@ -11,6 +11,7 @@ import { Input } from '@components/ui/input';
 import { useAuthen } from '@hooks/useAuthen';
 import { downloadQRCode } from '@utils/utils';
 import { toast } from 'sonner';
+import { getAuthToken } from '@/lib/utils';
 
 export default function Home() {
   const authenticated = useAuthen();
@@ -48,8 +49,7 @@ export default function Home() {
     if (alias == 'graphs') { return toast.error(`Custom alias cannot be graphs`); }
 
     try {
-      const tokenRow = document.cookie.split('; ').find(row => row.startsWith('authToken='));
-      const token = tokenRow && tokenRow.split('=')[1];
+      const token = getAuthToken();
       console.log(token)
       if (!token) {
         setError('No token found. Please log in.');

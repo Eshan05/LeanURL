@@ -10,7 +10,7 @@ export const useAuthen = () => {
   useEffect(() => {
     const checkAuthentication = async () => {
       const token = await getCookie('authToken');
-      console.log(token)
+      // console.log(token)
 
       if (token && typeof token === 'string' && token.trim() !== '') {
         try {
@@ -18,12 +18,12 @@ export const useAuthen = () => {
           await jwtVerify(token, secret, { algorithms: ['HS256'] });
           setAuthenticated(true);
         } catch (error) {
-          console.error("T:", error);
+          // console.error("T:", error);
           setAuthenticated(false);
           router.push(`/`);
         }
       } else {
-        console.log("No token found");
+        // console.log("No token found");
         setAuthenticated(false);
         router.push(`/`);
       }
