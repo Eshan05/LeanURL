@@ -46,7 +46,7 @@ const LastRecent = ({ open, setOpen }: RecentAccessesDialogProps) => {
   if (!urls) return <div></div>;
 
   const handleRefresh = () => {
-    mutate("/api/analytics?action=recent-ten");
+    mutate("/api/analytics?action=recent-ten"); // Trigger re-fetch for the specific key
   };
 
   return (
@@ -78,11 +78,11 @@ const LastRecent = ({ open, setOpen }: RecentAccessesDialogProps) => {
                   <tbody>
                     {urls.map((url: URLDocument) => (
                       <tr key={url._id} className="max-h-14">
-                        <td className="inline-flex items-center p-1.5 m-1 font-mono border text-xs dark:border-neutral-700 rounded-md text-primary hover:underline overflow-x-auto w-[60px] lg:w-28 scrollbar-none whitespace-nowrap c-beige:text-beige-700">{url.shortenUrl}</td>
+                        <td className="inline-flex items-center p-1.5 m-1 font-mono border text-xs dark:border-neutral-700 rounded-md text-primary hover:underline overflow-x-auto w-20 lg:w-28 scrollbar-none whitespace-nowrap c-beige:text-beige-700">{url.shortenUrl}</td>
                         <td className="px-4 py-2 font-mono text-sm text-muted-foreground min-w-[120px] whitespace-nowrap">{new Date(url.accesses.lastAccessed[0]?.date).toLocaleString()}</td>
                         {/* <td
                           className="py-2 text-sm text-muted-foreground" align="center">{url.accesses.lastAccessed[0]?.country}</td> */}
-                        {/* Removing this because in any case it does not work, */}
+                        {/* Removing this because in any case it does not work, in above do w-[60px] for width management if this is added again */}
                         <td className="py-2 text-sm text-muted-foreground" align="center">{getBrowserIcon(url.accesses.lastAccessed[0]?.userAgent)}</td>
                         <td className="py-2 pl-5 text-sm text-muted-foreground">{getDeviceType(url.accesses.lastAccessed[0]?.userAgent)}</td>
                       </tr>
@@ -92,7 +92,7 @@ const LastRecent = ({ open, setOpen }: RecentAccessesDialogProps) => {
               </main>
             </>)}
         </div>
-        <DialogFooter>
+        <DialogFooter className="gap-2 mx-8 sm:ml-0 sm:justify-start">
           <Button onClick={handleRefresh} variant={'outline'}>Refresh</Button>
           <DialogClose asChild>
             <Button variant="outline">Close</Button>
