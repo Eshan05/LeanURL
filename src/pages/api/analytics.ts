@@ -1,8 +1,12 @@
 import dbConnect from '@utils/db';
 import Url from '@models/url';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { authenticate } from '@/lib/utils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const isAuthenticated = await authenticate(req, res);
+  if (!isAuthenticated) return;
+
   try {
     await dbConnect();
 

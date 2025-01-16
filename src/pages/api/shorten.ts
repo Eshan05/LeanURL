@@ -3,21 +3,14 @@ import Url from '@models/url';
 import { nanoid } from 'nanoid';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { jwtVerify } from 'jose';
+import { authenticate } from '@/lib/utils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') { return res.status(405).json({ message: 'Method not allowed' }); }
 
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ message: 'Unauthorized: Missing authorization header' });
-  const token = authHeader.split(' ')[1];
-  if (!token) return res.status(401).json({ message: 'Unauthorized: Missing token' });
-
-  try {
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET || '');
-    await jwtVerify(token, secret, { algorithms: ['HS256'] });
-  } catch (error) {
-    console.error("Token verification failed:", error);
-    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+  const isAuthenticated = await authenticate(req, res);
+  if (!isAuthenticated) {
+    return;
   }
 
   const { originalUrl, alias, expirationDate, scheduledDate } = req.body;

@@ -10,6 +10,7 @@ import { GradientTop, Nav, toast, SearchUrls } from "@/components";
 import { Button, Select, SelectContent, SelectIcon, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/ui-index";
 import { useAuthen } from "@/hooks/useAuthen";
 import { Checkbox } from "@/components/ui/checkbox";
+import { getAuthToken } from "@/lib/utils";
 
 const VisualizeHeader = dynamic(() => import("@/components/visualizeHeader"), { ssr: false, });
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -29,7 +30,12 @@ const Visualize: React.FC = () => {
   const fetchUrls = async (): Promise<void> => {
     setLoading(true);
     try {
-      const res = await fetch("/api/analytics");
+      const token = getAuthToken()
+      const res = await fetch("/api/analytics", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data: URLDocument[] = await res.json();
 
       // Add duplicate counts

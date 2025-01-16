@@ -12,10 +12,20 @@ import { PiDevicesLight, PiGoogleChromeLogoLight } from "react-icons/pi";
 import { FaFirefox, FaSafari, FaEdge, FaChrome, FaMobileAlt, FaLaptop } from "react-icons/fa";
 import { Button } from "@components/ui/button";
 import { URLDocument } from "@/types/types";
+import { getAuthToken } from "@/lib/utils";
 
-// Function to fetch data
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
+const fetcher = async (url: string) => {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('No token found. Please log in.');
+  }
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.json();
+};
 const getBrowserIcon = (userAgent: string) => {
   if (/Chrome/i.test(userAgent)) {
     return <PiGoogleChromeLogoLight />;

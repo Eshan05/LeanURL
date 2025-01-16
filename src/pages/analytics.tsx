@@ -11,6 +11,7 @@ import { downloadCSV } from '@utils/utils';
 import { useHandleDialogs } from '@hooks/useHandleDialogs';
 import { useAuthen } from '@hooks/useAuthen';
 import { URLDocument, URLWithDuplicateCount, SortOption } from 'types/types';
+import { getAuthToken } from '@/lib/utils';
 
 // Lazy load Dialog Components
 const DeleteUrlDialog = lazy(() => import('@components/dialogs/deleteUrl'));
@@ -55,7 +56,12 @@ export default function Analytics() {
   const fetchUrls = async (): Promise<void> => {
     setLoading(true);
     try {
-      const res = await fetch('/api/analytics');
+      const token = getAuthToken();
+      const res = await fetch('/api/analytics', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data: URLDocument[] = await res.json();
       const processedData: URLWithDuplicateCount[] = addDuplicateCounts(data);
       setUrls(processedData);
@@ -105,10 +111,12 @@ export default function Analytics() {
 
   const handleEdit = async (urlId: string, updatedFields: Partial<URLDocument>) => {
     try {
+      const token = getAuthToken()
       const res = await fetch(`/api/analytics?id=${urlId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(updatedFields),
       });
@@ -133,8 +141,12 @@ export default function Analytics() {
   const handleDelete = async (urlId: string) => {
     const action = isPermanentDelete ? 'permanent' : 'soft'; // Determine the type of delete
     try {
+      const token = getAuthToken();
       const res = await fetch(`/api/analytics?id=${urlId}&action=${action}`, {
         method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
       });
 
       if (res.ok) {
