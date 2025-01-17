@@ -1,8 +1,7 @@
-import dbConnect from '@utils/db';
 import Url from '@models/url';
+import dbConnect from '@utils/db';
 import { Parser } from 'json2csv';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { authenticate } from '@/lib/utils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {

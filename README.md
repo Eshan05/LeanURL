@@ -30,7 +30,7 @@ A Link Shortener + QR Code Generator for *personal* use or use within a *small t
 - **Language**: Typescript (Migrated)
 - **Backend**: [Next.js 15](https://nextjs.org/) + [MongoDB](https://www.mongodb.com/) with Mongoose
 - **Frontend**: [Next.js 15](https://nextjs.org/) + UI Components via [`shadcn/ui`](https://ui.shadcn.com/) + Tailwind
-- **Others**: [Apexcharts](https://apexcharts.com/), [QR Code Styling](https://github.com/kozakdenys/qr-code-styling?tab=readme-ov-file), NanoId, IP-API, React Icons, Axios
+- **Others**: [Apexcharts](https://apexcharts.com/), [QR Code Styling](https://github.com/kozakdenys/qr-code-styling?tab=readme-ov-file), NanoId, IP-API, React Icons, Axios, Jose, `cookies-next`
 
 ## 🚀 Features
 
@@ -42,7 +42,7 @@ A Link Shortener + QR Code Generator for *personal* use or use within a *small t
 - 📈 **Insightful graphs** powered by **ApexCharts**, showing detailed analytics such as the number of times a shortened URL has been used, as well as recent accesses via timestamps, device, browser and country.
 - 📅 **Scheduling feature** for setting link live after a certain day and **Expiration Date** which automatically deletes the link from the database using **TTL**.
 - 🏗️ **Scalable** architecture to easily add new features as needed.
-- 🔒 **Restrictive** access, because who would want someone to come and abuse the service
+- 🔒 **Restrictive** access, because who would want someone to come and abuse the service (Uses JWT Tokens)
 - 😓 **Restoration** capability incase you or your team member accidentally deleted an old URL
 
 

@@ -1,9 +1,8 @@
-import dbConnect from '@utils/db';
+import { authenticate } from '@/lib/utils';
 import Url from '@models/url';
+import dbConnect from '@utils/db';
 import { nanoid } from 'nanoid';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { jwtVerify } from 'jose';
-import { authenticate } from '@/lib/utils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') { return res.status(405).json({ message: 'Method not allowed' }); }

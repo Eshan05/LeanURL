@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // If there's a search query, perform a case-insensitive search by originalUrl or shortenUrl
       if (search && typeof search === 'string') {
-        const regex = new RegExp(search, 'i'); // Create case-insensitive regex
+        const regex = new RegExp(search, 'i');
         const urls = await Url.find({
           $or: [
             { originalUrl: { $regex: regex } },
@@ -23,8 +23,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // If no search query, fetch only the 10 most recent URLs
       const urls = await Url.find({ q: { $exists: false } })
-        .sort({ createdAt: -1 })  // Sort by the most recent
-        .limit(10)  // Limit to 10 most recent
+        .sort({ createdAt: -1 })
+        .limit(10)
         .exec();
 
       return res.status(200).json(urls);

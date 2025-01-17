@@ -27,8 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           path: '/',
           maxAge: 7200,
           sameSite: 'strict',
-          httpOnly: process.env.NODE_ENV === 'production',
-          secure: process.env.NODE_ENV === 'production',
+          httpOnly: process.env.NODE_ENV === 'production', // Make false if not working
+          secure: process.env.NODE_ENV === 'production', // Same
         });
 
         return res.status(200).json({ message: 'Authenticated successfully' });

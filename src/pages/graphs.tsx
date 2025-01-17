@@ -238,7 +238,7 @@ const Visualize: React.FC = () => {
       </Button>
       <article className="relative w-full py-24 overflow-x-hidden">
         <div className="w-full px-[1.15rem] py-10 mx-auto lg:px-8 lg:py-16">
-          <p className='mb-2 font-mono text-center small-caps c-beige:text-beige-800'>LeanURL</p>
+          <p className='my-4 font-mono text-center small-caps c-beige:text-beige-800'>LeanURL</p>
           {!loading && (
             <VisualizeHeader
               urls={urls}
